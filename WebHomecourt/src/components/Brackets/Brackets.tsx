@@ -22,5 +22,5 @@ export type Matchup = {
   percent_a: number
   percent_b: number
   active: boolean
-  voted: boolean
+  voted: number
 }
