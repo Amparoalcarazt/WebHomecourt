@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
-import { supabase } from "../lib/supabase";
+import { useEffect, useState } from 'react'
+import { supabase } from "../lib/supabase"
 import Nav from '../components/Nav'
+import StoreRow from '../components/LakerStore/StoreRow.tsx'
 
 //import DisplayUserCards from "../components/CollectedCard"
 
@@ -25,6 +26,7 @@ export type StorePacks = {
   pack_type_id: number,
   name: string,
   closed_URL: string,
+  pack_name: string | null, // Pack data empty if no cards are present for that category
   cost: number | null, // Pack data empty if no cards are present for that category
   num_cards: number | null, // Pack data empty if no cards are present for that category
   is_active: boolean | null // Pack data empty if no cards are present for that category
@@ -43,7 +45,7 @@ async function getPacksStore() {
   }
 
   console.log("raw rpc data:", data);
-console.log("is array?", Array.isArray(data));
+  console.log("is array?", Array.isArray(data));
 
   // Data is not formatted as array, entcs hace un array vacío and sends that will show no user colls
   if (!Array.isArray(data)) return []
@@ -58,6 +60,7 @@ console.log("is array?", Array.isArray(data));
       pack_type_id: row.pack_type_id,
       name: row.name,
       closed_URL: row.closed_URL,
+      pack_name: row.pack_name,
       cost: row.cost, // Pack data empty if no cards are present for that category
       num_cards: row.num_cards, // Pack data empty if no cards are present for that category
       is_active: row.is_active
@@ -69,7 +72,8 @@ console.log("is array?", Array.isArray(data));
 
 // <DisplayUserCards userId="ac3a5447-1b6f-4324-8830-5ddc2d7b2c47"></DisplayUserCards>
 function Store() {
-  const [packs, setPacks] = useState<StorePacks[]>([]);
+  const [packs, setPacks] = useState<StorePacks[]>([]); // Array w packs
+
 
   // Initial function to render
   useEffect(() => {
@@ -85,6 +89,8 @@ function Store() {
     loadPacks();
   }, []);
 
+  //const packTypeIds = [...new Set(packs.map((pack) => pack.pack_type_id))]; // Checks the established packs to extract the ids 
+
   return (
     <div className="flex flex-col items-center justify-center">
       <Nav current="Store" />
@@ -95,7 +101,11 @@ function Store() {
           <p className="justify-start text-white mt-2 text-xl text-zinc-300">The virtual home of your collection</p>
         </div>
 
-        {/* Load the packs */}
+        {/* Load the packs by giving id of each section */}
+        <StoreRow packTypeId={1} packs={packs} />
+        <StoreRow packTypeId={2} packs={packs} />
+        <StoreRow packTypeId={3} packs={packs} />
+        <StoreRow packTypeId={4} packs={packs} />
       </div>
 
 
