@@ -1,4 +1,7 @@
+import { useEffect, useState } from 'react';
+import { supabase } from "../lib/supabase";
 import Nav from '../components/Nav'
+
 //import DisplayUserCards from "../components/CollectedCard"
 
 /* 
@@ -16,8 +19,72 @@ Page flow
 * Now the cards are added to the user collection, they can close the pop-up and yeah that's over. Dang that was long.  
 */
 
+// Types of data 
+export type StorePacks = {
+  pack_id: number | null, // Pack data empty if no cards are present for that category
+  pack_type_id: number,
+  name: string,
+  closed_URL: string,
+  cost: number | null, // Pack data empty if no cards are present for that category
+  num_cards: number | null, // Pack data empty if no cards are present for that category
+  is_active: boolean | null // Pack data empty if no cards are present for that category
+};
+
+// API calls
+// Gets the listing of all packs to display on website
+async function getPacksStore() {
+  // Call supabase funct
+  const { data, error } = await supabase.rpc("get_packs_store");
+
+  // Smth died
+  if (error) {
+    console.error("Supabase error:", error.message)
+    throw new Error("Failed to get packs")
+  }
+
+  console.log("raw rpc data:", data);
+console.log("is array?", Array.isArray(data));
+
+  // Data is not formatted as array, entcs hace un array vacío and sends that will show no user colls
+  if (!Array.isArray(data)) return []
+
+  console.log("raw data:", JSON.stringify(data, null, 2)) // A ver como se ve lo q fue fetched
+
+  // Takes results del data and turns into the CollectedCard obj
+  const packs: StorePacks[] = data.map(row => {
+    // Creates the game items 
+    return {
+      pack_id: row.pack_id, // Pack data empty if no cards are present for that category
+      pack_type_id: row.pack_type_id,
+      name: row.name,
+      closed_URL: row.closed_URL,
+      cost: row.cost, // Pack data empty if no cards are present for that category
+      num_cards: row.num_cards, // Pack data empty if no cards are present for that category
+      is_active: row.is_active
+    }
+  });
+
+  return packs;
+}
+
 // <DisplayUserCards userId="ac3a5447-1b6f-4324-8830-5ddc2d7b2c47"></DisplayUserCards>
 function Store() {
+  const [packs, setPacks] = useState<StorePacks[]>([]);
+
+  // Initial function to render
+  useEffect(() => {
+    async function loadPacks() {
+      try {
+        const result = await getPacksStore();
+        setPacks(result);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadPacks();
+  }, []);
+
   return (
     <div className="flex flex-col items-center justify-center">
       <Nav current="Store" />
