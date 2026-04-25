@@ -1,6 +1,7 @@
-//import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { StorePacks } from '../../pages/Store';
 import type { StoreUser } from '../../pages/Store';
+import OpenPack from './OpenPack.tsx'; 
 import IconButton from '../IconButton.tsx';
 
 type StoreRowProps = {
@@ -11,6 +12,25 @@ type StoreRowProps = {
 
 // Pass the pack type and the user info itself
 function StoreRow({ packTypeId, packs, storeUser }: StoreRowProps) {
+    // Pop-up info
+    const [openPack, setOpenPack] = useState<null | { packId: number, packImg: string, packName: string }>(null); // To open and close pop-up
+    const userId = storeUser.user_id ?? ''; // Pass directly to pop-up
+
+    // Open the pop-up
+    function openPop(pack: StorePacks) {
+        if (!pack.pack_id) return;
+        setOpenPack({
+            packId: pack.pack_id,
+            packImg: pack.closed_URL,
+            packName: pack.pack_name ?? '',
+        });
+    }
+
+    // Handler to close the pop-up
+    function closePop() {
+        setOpenPack(null);
+    }
+
     const rowPacks = packs.filter((pack) => pack.pack_type_id === packTypeId);
 
     if (rowPacks.length === 0) return null;
@@ -31,6 +51,18 @@ function StoreRow({ packTypeId, packs, storeUser }: StoreRowProps) {
 
     return (
         <div className="mt-8 w-full">
+
+            {openPack && (
+                <OpenPack
+                    open={true}
+                    onClose={closePop}
+                    userId={userId}
+                    packId={openPack.packId}
+                    packImg={openPack.packImg}
+                    packName={openPack.packName}
+                />
+            )}
+
             <h2 className="font-bold mb-2">{rowTitle}</h2>
 
             {/* Ensure there are packs matching it */}
@@ -70,10 +102,10 @@ function StoreRow({ packTypeId, packs, storeUser }: StoreRowProps) {
                                                     <span className="material-symbols-outlined text-black text-2xl">payments</span>
                                                 }
                                                 text={`${pack.cost}`} // Converted to string cause not accepted otherwise 
-                                                onClick={() => { }} // Does nada
+                                                onClick={() => openPop(pack)}//{() => { }} // Will need some business logic but pretty much render the OpenPack compoennt and pass the info it needs
                                                 className="w-full md:w-28 mt-2 text-md"
                                             />
-                                            ) : (
+                                        ) : (
                                             // Not enough credits
                                             < IconButton
                                                 type="primarydisable"
