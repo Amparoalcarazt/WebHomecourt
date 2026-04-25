@@ -1,13 +1,16 @@
 //import { useEffect, useState } from 'react';
-import type { StorePacks } from '../../pages/Store'; // Has to be a type cosa estupida
+import type { StorePacks } from '../../pages/Store';
+import type { StoreUser } from '../../pages/Store';
 import IconButton from '../IconButton.tsx';
 
 type StoreRowProps = {
     packTypeId: number;
     packs: StorePacks[];
+    storeUser: StoreUser;
 };
 
-function StoreRow({ packTypeId, packs }: StoreRowProps) {
+// Pass the pack type and the user info itself
+function StoreRow({ packTypeId, packs, storeUser }: StoreRowProps) {
     const rowPacks = packs.filter((pack) => pack.pack_type_id === packTypeId);
 
     if (rowPacks.length === 0) return null;
@@ -57,17 +60,33 @@ function StoreRow({ packTypeId, packs }: StoreRowProps) {
                                         <p className="text-Gris-Oscuro">Win up to {pack.num_cards} cards{cardDesc}</p>
                                     </div>
 
-                                    
+
                                     {/* Align to bottom, decide button to use depending if user can afford it or not */}
-                                    <IconButton
-                                        type="yellow"
-                                        leftIcon={
-                                            <span className="material-symbols-outlined text-black text-2xl">payments</span>
-                                        }
-                                        text={`${pack.cost}`} // Converted to string cause not accepted otherwise 
-                                        onClick={() => { }} // Does nada
-                                        className="w-full md:w-28 mt-2"
-                                    />
+                                    <div>
+                                        {storeUser.credits >= (pack.cost ?? 0) ? (
+                                            <IconButton
+                                                type="yellow"
+                                                leftIcon={
+                                                    <span className="material-symbols-outlined text-black text-2xl">payments</span>
+                                                }
+                                                text={`${pack.cost}`} // Converted to string cause not accepted otherwise 
+                                                onClick={() => { }} // Does nada
+                                                className="w-full md:w-28 mt-2 text-md"
+                                            />
+                                            ) : (
+                                            // Not enough credits
+                                            < IconButton
+                                                type="primarydisable"
+                                                leftIcon={
+                                                    <span className="material-symbols-outlined text-gray-100 text-2xl">payments</span>
+                                                }
+                                                text={`${pack.cost}`} // Converted to string cause not accepted otherwise
+                                                onClick={() => { }} // Will need pop-up logic to check if the user is poor and try to click just sends error like oh no you're poor, or reminds them to sign in if they aren't
+                                                className="w-full md:w-28 mt-2 text-md"
+                                            />
+                                        )}
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

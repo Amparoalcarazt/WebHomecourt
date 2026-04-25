@@ -12,10 +12,10 @@ interface IconButtonProp {
 
 // Record sirve para poder alt el style and kinda "inject it" depending on the var recieved
 const typeStyles: Record<string, string> = {
-    primary: "bg-morado-lakers text-white flex items-center outline-3 outline-morado-lakers hover:bg-morado-bajo hover:outline-morado-bajo selected:bg-morado-oscuro",
-    secondary: "bg-transparent text-morado-lakers flex items-center outline-3 outline-morado-lakers hover:text-morado-bajo hover:outline-morado-bajo selected:text-morado-oscuro selected:outline-morado-oscuro",
-    tertiary: "bg-transparent text-morado-lakers flex items-center underline hover:text-morado-bajo selected:text-morado-oscuro",
-    primarydisable: "bg-disabled text-gray-100 flex items-center outline-3 outline-disabled",
+    primary: "bg-morado-lakers text-white flex items-center justify-center gap-2.5 outline-3 outline-morado-lakers hover:bg-morado-bajo hover:outline-morado-bajo selected:bg-morado-oscuro",
+    secondary: "bg-transparent text-morado-lakers flex items-center justify-center gap-2.5 outline-3 outline-morado-lakers hover:text-morado-bajo hover:outline-morado-bajo selected:text-morado-oscuro selected:outline-morado-oscuro",
+    tertiary: "bg-transparent text-morado-lakers flex items-center justify-center gap-2.5 underline hover:text-morado-bajo selected:text-morado-oscuro",
+    primarydisable: "bg-disabled text-gray-100 flex items-center justify-center gap-2.5 outline-3 outline-disabled",
     yellow: "bg-amarillo-lakers text-black flex items-center justify-center gap-2.5"
 };
 

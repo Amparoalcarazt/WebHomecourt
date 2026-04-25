@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { supabase } from "../lib/supabase"
 import Nav from '../components/Nav'
 import StoreRow from '../components/LakerStore/StoreRow.tsx'
+import { useAuth } from "../context/AuthContext"; // Adjust path if needed
+
 
 //import DisplayUserCards from "../components/CollectedCard"
 
@@ -31,6 +33,13 @@ export type StorePacks = {
   num_cards: number | null, // Pack data empty if no cards are present for that category
   is_active: boolean | null // Pack data empty if no cards are present for that category
 };
+
+// User id and credits to interact w store 
+export type StoreUser = {
+  user_id: string | null, // UUID
+  credits: number | 0, // Has credits or is poor and shouldn't be here
+  signedIn: boolean
+}
 
 // API calls
 // Gets the listing of all packs to display on website
@@ -70,13 +79,45 @@ async function getPacksStore() {
   return packs;
 }
 
-// <DisplayUserCards userId="ac3a5447-1b6f-4324-8830-5ddc2d7b2c47"></DisplayUserCards>
+// Get the user info formatted as that type
+export function getStoreUser(): StoreUser {
+  const { user } = useAuth();
+  // Declare base user, default not signed in w no money
+  const [storeUser, setStoreUser] = useState<StoreUser>({
+    user_id: null,
+    credits: 0,
+    signedIn: false
+  });
+
+  useEffect(() => {
+    if (!user) {
+      setStoreUser({ user_id: null, credits: 0, signedIn: false });
+      return;
+    }
+    supabase
+      .from("user_laker")
+      .select("credits")
+      .eq("user_id", user.id)
+      .single()
+      .then(({ data, error }) => {
+        if (error || !data) {
+          setStoreUser({ user_id: user.id, credits: 0, signedIn: true });
+        } else {
+          setStoreUser({ user_id: user.id, credits: data.credits ?? 0, signedIn: true });
+        }
+      });
+  }, [user]);
+
+  return storeUser;
+}
+
 function Store() {
   const [packs, setPacks] = useState<StorePacks[]>([]); // Array w packs
-
+  const storeUser = getStoreUser();
 
   // Initial function to render
   useEffect(() => {
+    // Shows packs 
     async function loadPacks() {
       try {
         const result = await getPacksStore();
@@ -87,32 +128,43 @@ function Store() {
     }
 
     loadPacks();
-  }, []);
 
-  //const packTypeIds = [...new Set(packs.map((pack) => pack.pack_type_id))]; // Checks the established packs to extract the ids 
+    // Gets user info 
+    if (!storeUser.signedIn) {
+      console.log("User not signed in");
+    } else if (storeUser.credits === 0) {
+      console.log("No credits found for user or user has 0 credits");
+    } else {
+      console.log(`User ${storeUser.user_id} has ${storeUser.credits} credits`);
+    }
 
-  return (
-    <div className="flex flex-col items-center justify-center">
-      <Nav current="Store" />
-      <div className="px-4 py-5 md:px-14 md:py-5 bg-zinc-100 w-full">
-        {/* Title comp */}
-        <div className="w-full px-3 py-4 md:px-5 md:py-7 bg-violet-950 rounded-2xl shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] outline outline-1 outline-offset-[-1px] outline-black/25 flex flex-col justify-left items-left overflow-hidden">
-          <h1 className="justify-start text-white title1">Lakers Store</h1>
-          <p className="justify-start text-white mt-2 text-xl text-zinc-300">The virtual home of your collection</p>
-        </div>
+}, [storeUser]);
 
-        {/* Load the packs by giving id of each section */}
-        <StoreRow packTypeId={1} packs={packs} />
-        <StoreRow packTypeId={2} packs={packs} />
-        <StoreRow packTypeId={3} packs={packs} />
-        <StoreRow packTypeId={4} packs={packs} />
+//const packTypeIds = [...new Set(packs.map((pack) => pack.pack_type_id))]; // Checks the established packs to extract the ids 
+
+return (
+  <div className="flex flex-col items-center justify-center">
+    <Nav current="Store" />
+    <div className="px-4 py-5 md:px-14 md:py-5 bg-zinc-100 w-full">
+      {/* Title comp */}
+      <div className="w-full px-3 py-4 md:px-5 md:py-7 bg-violet-950 rounded-2xl shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] outline outline-1 outline-offset-[-1px] outline-black/25 flex flex-col justify-left items-left overflow-hidden">
+        <h1 className="justify-start text-white title1">Lakers Store</h1>
+        <p className="justify-start text-white mt-2 text-xl text-zinc-300">The virtual home of your collection</p>
       </div>
 
-
+      {/* Load the packs by giving id of each section */}
+      {/*<p>{storeUser.credits} and {storeUser.signedIn? "Signed in" : "Not signed in"}</p>*/}
+      <StoreRow packTypeId={1} packs={packs} storeUser={storeUser}/>
+      <StoreRow packTypeId={2} packs={packs} storeUser={storeUser}/>
+      <StoreRow packTypeId={3} packs={packs} storeUser={storeUser}/>
+      <StoreRow packTypeId={4} packs={packs} storeUser={storeUser}/>
     </div>
 
 
-  )
+  </div>
+
+
+)
 }
 
 export default Store
