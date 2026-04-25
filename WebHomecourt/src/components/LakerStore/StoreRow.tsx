@@ -1,5 +1,6 @@
 //import { useEffect, useState } from 'react';
 import type { StorePacks } from '../../pages/Store'; // Has to be a type cosa estupida
+import IconButton from '../IconButton.tsx';
 
 type StoreRowProps = {
     packTypeId: number;
@@ -11,12 +12,12 @@ function StoreRow({ packTypeId, packs }: StoreRowProps) {
 
     if (rowPacks.length === 0) return null;
 
-    const rowTitle = rowPacks[0].name; 
+    const rowTitle = rowPacks[0].name;
     let cardDesc;
 
     // To show descriptions for hardcoded card types
     if (rowTitle == "Player Pack") {
-        cardDesc = " featuring this player"; 
+        cardDesc = " featuring this player";
     } else if (rowTitle == "Team Pack")
         cardDesc = " featuring players from the Lakers lineup";
     else {
@@ -38,27 +39,37 @@ function StoreRow({ packTypeId, packs }: StoreRowProps) {
                     {actualPacks.map((pack) => (
                         <div
                             key={pack.pack_id}
-                            className="md:w-[26.875rem] md:h-[17.25rem] p-4 mb-4 bg-white rounded-xl shadow-[0px_4px_6px_-4px_rgba(0,0,0,0.10)] shadow-lg outline outline-[0.80px] outline-offset-[-0.80px] outline-gray-100"
+                            className="w-[18rem] md:w-[26.875rem] md:h-[15rem] p-4 mb-4 bg-white rounded-xl shadow-[0px_4px_6px_-4px_rgba(0,0,0,0.10)] shadow-lg outline outline-[0.80px] outline-offset-[-0.80px] outline-gray-100"
                         >
-                            {/* Left side logo and team name */}
-                            <div className="flex flex-row flex-1 items-start mt-2 mb-1">
+                            {/* Left side logo and team name, using h full to use full height of container and align button */}
+                            <div className="flex flex-row items-stretch mt-2 mb-1">
                                 <img
                                     src={pack.closed_URL}
                                     alt={pack.name}
-                                    className="w-32 h-auto"
+                                    className="w-20 md:w-32 h-auto"
                                 />
-                                {/* Name of pack and id */}
-                                <div className="flex flex-col items-start ml-3">
-                                    <h4 className="font-bold">{pack.pack_name}</h4>
-                                    <p>{rowTitle} #{pack.pack_id}</p>
-                                    <p>Win up to {pack.num_cards} cards{cardDesc}</p>
+                                {/* Name of pack and cost */}
+                                <div className="flex flex-col ml-3 mt-4 w-full">
+                                    {/* Pack details */}
+                                    <div>
+                                        <h4 className="font-bold">{pack.pack_name}</h4>
+                                        <h5 className="font-semibold mb-2">{rowTitle} #{pack.pack_id}</h5>
+                                        <p className="text-Gris-Oscuro">Win up to {pack.num_cards} cards{cardDesc}</p>
+                                    </div>
+
+                                    
+                                    {/* Align to bottom, decide button to use depending if user can afford it or not */}
+                                    <IconButton
+                                        type="yellow"
+                                        leftIcon={
+                                            <span className="material-symbols-outlined text-black text-2xl">payments</span>
+                                        }
+                                        text={`${pack.cost}`} // Converted to string cause not accepted otherwise 
+                                        onClick={() => { }} // Does nada
+                                        className="w-full md:w-28 mt-2"
+                                    />
                                 </div>
                             </div>
-
-                            {/* Bottom info */}
-                            <p>{pack.name}</p>
-                            <p>Cost: {pack.cost}</p>
-                            <p>Cards: {pack.num_cards}</p>
                         </div>
                     ))}
                 </div>
