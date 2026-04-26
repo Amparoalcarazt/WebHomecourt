@@ -12,7 +12,7 @@ function MatchContainer( {refetch, ...match }: MatchContainerProps) {
     ):(
       <MatchupClosed match =  {match}/>
     )}
-  </div>
+    </div>
   )
 }
 export default MatchContainer

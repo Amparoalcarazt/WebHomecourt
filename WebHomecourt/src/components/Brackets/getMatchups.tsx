@@ -1,5 +1,4 @@
 import { supabase } from "../../lib/supabase"
-import type { Matchup } from "./Brackets"
 
 export async function getMatchups(questionId: number) {
   const usertest = "testuserid"
