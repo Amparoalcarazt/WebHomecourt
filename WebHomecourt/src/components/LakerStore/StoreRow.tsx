@@ -18,10 +18,22 @@ const RightArrow = () => {
   const { scrollNext } = useContext(VisibilityContext);
   return (
     <div
-      className="absolute right-0 top-1/2 -translate-y-1/2 cursor-pointer p-2 hover:bg-gray-200"
+      className="absolute right-0 top-1/2 rounded-lg -translate-y-1/2 cursor-pointer p-2 hover:bg-gray-200"
       onClick={() => scrollNext()} // Used chat to see how to make the scroll next based on documentaiton
     >
-      <img src="/arrow_forward_ios.svg" alt="Scroll right" className="w-16 h-16" />
+      <img src="/arrow_forward_ios.svg" alt="Scroll right" className="w-26 h-16" />
+    </div>
+  );
+};
+
+const LeftArrow = () => {
+  const { scrollPrev } = useContext(VisibilityContext);
+  return (
+    <div
+      className="absolute left-0 top-1/2 rounded-lg -translate-y-1/2 cursor-pointer p-2 hover:bg-gray-200 rotate-180 z-20"
+      onClick={() => scrollPrev()} // Used chat to see how to make the scroll next based on documentaiton
+    >
+      <img src="/arrow_forward_ios.svg" alt="Scroll left" className="w-26 h-16" />
     </div>
   );
 };
@@ -88,7 +100,7 @@ function StoreRow({ packTypeId, packs, storeUser }: StoreRowProps) {
             ) : (
                 // Need relative to make it scroll from side to side 
                 <div className="relative">
-                    <ScrollMenu RightArrow={RightArrow}>
+                    <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
                         {actualPacks.map((pack) => (
                             <PackCard
                                 itemId={String(pack.pack_id!)} // Doesn't work without ! to ensure not null
