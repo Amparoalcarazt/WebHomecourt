@@ -79,17 +79,18 @@ function StoreRow({ packTypeId, packs, storeUser }: StoreRowProps) {
             {actualPacks.length === 0 ? (
                 <p className="w-fit p-4 mb-4 bg-white rounded-xl shadow-[0px_4px_6px_-4px_rgba(0,0,0,0.10)] shadow-lg outline outline-[0.80px] outline-offset-[-0.80px] outline-gray-100">There are currently no {rowTitle}s available, please check back later!</p>
             ) : (
-                <div className="flex flex-wrap gap-5">
-                    {actualPacks.map((pack) => (
-                        <PackCard
-                            pack={pack}
-                            rowTitle={rowTitle}
-                            cardDesc={cardDesc ?? ""}
-                            storeUser={storeUser}
-                            openPop={openPop}
-                        />
-                    ))}
-                </div>
+                <ScrollMenu>
+                        {actualPacks.map((pack) => (
+                            <PackCard
+                                itemId={pack.pack_id!}
+                                pack={pack} // Should be like the id tracking I guess?
+                                rowTitle={rowTitle}
+                                cardDesc={cardDesc ?? ""}
+                                storeUser={storeUser}
+                                openPop={openPop}
+                            />
+                        ))}
+                </ScrollMenu>
             )}
         </div>
     );
