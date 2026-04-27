@@ -3,6 +3,7 @@ export interface Question {
   question_text: string
   start_date: string
   end_date: string
+  winner: string
 }
 
 export type Answer={

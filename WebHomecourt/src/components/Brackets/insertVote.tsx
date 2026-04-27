@@ -3,17 +3,22 @@ import { supabase } from "../../lib/supabase"
 import { useAuth } from "../../hooks/Perfil/useAuth"
 
 export async function submitVote(matchupId: number, selectedId: number) {
-  const  userId  = "testuserid"
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
 
-  if (!userId) throw new Error("Not authenticated")
+  const user = session?.user;
 
+  if (!user) {
+    console.warn("User not logged in");
+    return [];
+  }
   const { error } = await supabase
     .from("user_vote")
     .insert({
-      user_id: userId,
+      user_id: user.id,
       matchup_id: matchupId,
       selected_id: selectedId
     })
-
   if (error) throw error
 }

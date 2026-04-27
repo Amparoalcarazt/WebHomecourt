@@ -4,12 +4,13 @@ import { useEffect, useState, useCallback } from "react"
 import { getMatchups } from "../components/Brackets/getMatchups"
 import type { Matchup } from "../components/Brackets/Brackets"
 import MatchContainer from "../components/Brackets/MatchContainer"
+import LastQuestion from "../components/Brackets/LastQuestion"
 import type { Question } from "../components/Brackets/Brackets"
 import {getQuestionById} from "../components/Brackets/getQuestionById"
+
 function Brackets() {
-  //const [searchParams] = useSearchParams()
-  //const question_id = searchParams.get('pregunta_id')
-  const question_id= 1
+  const [searchParams] = useSearchParams()
+  const question_id = searchParams.get('question_id')
   const [question, setQuestion] = useState<Question | null> (null);
   useEffect(() => {
     const loadQuestion = async () => {
@@ -63,7 +64,7 @@ const roundLabels: Record<number, string> = {
           </div>
           <div className="bg-white rounded-2xl shadow outline-gray-500">
           {question && ( 
-          <h2 className="text-[#3B195C] py-6 text-center justify-start"> {question.question_text}</h2>)}
+          <h1 className="text-[#3B195C] py-6 text-center justify-start"> {question.question_text}</h1>)}
             <div className={`flex flex-row gap-6 p-6 w-full overflow-x-auto transition-opacity ${refreshing ? 'opacity-60' : 'opacity-100'}`}>
               {Object.entries(rounds)
                 .sort(([a], [b]) => +a - +b)
@@ -86,6 +87,7 @@ const roundLabels: Record<number, string> = {
               ))}
           </div>
         </div>
+        <LastQuestion/>
       </div>
     </div>
   )
