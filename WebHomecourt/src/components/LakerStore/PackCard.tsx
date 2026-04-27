@@ -3,9 +3,11 @@ import type { StorePacks } from '../../pages/Store';
 import type { StoreUser } from '../../pages/Store';
 import OpenPack from './OpenPack.tsx';
 import IconButton from '../IconButton.tsx';
+import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu'; // External to make side scrolling
+
 
 type PackCardProp = {
-    itemId: number,
+    itemId: string,
     pack: StorePacks
     rowTitle: string,
     cardDesc: string,
@@ -16,7 +18,8 @@ type PackCardProp = {
 function PackCard(prop: PackCardProp) {
     return (
         <div
-            key={prop.pack.pack_id}
+            itemID={prop.itemId}
+            //key={prop.pack.pack_id}
             className="w-[18rem] md:w-[25rem] md:h-[15rem] p-4 mb-4 mr-5 bg-white rounded-xl shadow-[0px_4px_6px_-4px_rgba(0,0,0,0.10)] shadow-lg outline outline-[0.80px] outline-offset-[-0.80px] outline-gray-100"
         >
             {/* Left side logo and team name, using h full to use full height of container and align button */}

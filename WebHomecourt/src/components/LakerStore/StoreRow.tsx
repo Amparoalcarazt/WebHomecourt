@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import type { StorePacks } from '../../pages/Store';
 import type { StoreUser } from '../../pages/Store';
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu'; // External to make side scrolling
@@ -13,17 +13,24 @@ type StoreRowProps = {
     storeUser: StoreUser;
 };
 
+// For arrows
+const RightArrow = () => {
+  const { scrollNext } = useContext(VisibilityContext);
+  return (
+    <div
+      className="absolute right-0 top-1/2 -translate-y-1/2 cursor-pointer p-2 hover:bg-gray-200"
+      onClick={() => scrollNext()} // Used chat to see how to make the scroll next based on documentaiton
+    >
+      <img src="/arrow_forward_ios.svg" alt="Scroll right" className="w-16 h-16" />
+    </div>
+  );
+};
+
 // Pass the pack type and the user info itself
 function StoreRow({ packTypeId, packs, storeUser }: StoreRowProps) {
     // Pop-up info
     const [openPack, setOpenPack] = useState<null | { packId: number, packImg: string, packName: string, packCost: number }>(null); // To open and close pop-up
     const userId = storeUser.user_id ?? ''; // Pass directly to pop-up
-
-    // Robando de Regina para hacer pages de las paginas scrollable
-    const [page, setPage] = useState(0)
-    const PAGE_SIZE = 3
-    const totalPages = Math.ceil(packs.length / PAGE_SIZE)
-    const paginated = packs.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE)
 
     // Open the pop-up
     function openPop(pack: StorePacks) {
@@ -79,10 +86,12 @@ function StoreRow({ packTypeId, packs, storeUser }: StoreRowProps) {
             {actualPacks.length === 0 ? (
                 <p className="w-fit p-4 mb-4 bg-white rounded-xl shadow-[0px_4px_6px_-4px_rgba(0,0,0,0.10)] shadow-lg outline outline-[0.80px] outline-offset-[-0.80px] outline-gray-100">There are currently no {rowTitle}s available, please check back later!</p>
             ) : (
-                <ScrollMenu>
+                // Need relative to make it scroll from side to side 
+                <div className="relative">
+                    <ScrollMenu RightArrow={RightArrow}>
                         {actualPacks.map((pack) => (
                             <PackCard
-                                itemId={pack.pack_id!}
+                                itemId={String(pack.pack_id!)} // Doesn't work without ! to ensure not null
                                 pack={pack} // Should be like the id tracking I guess?
                                 rowTitle={rowTitle}
                                 cardDesc={cardDesc ?? ""}
@@ -90,7 +99,8 @@ function StoreRow({ packTypeId, packs, storeUser }: StoreRowProps) {
                                 openPop={openPop}
                             />
                         ))}
-                </ScrollMenu>
+                    </ScrollMenu>
+                </div>
             )}
         </div>
     );
