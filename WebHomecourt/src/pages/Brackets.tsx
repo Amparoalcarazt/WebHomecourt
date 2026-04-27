@@ -33,7 +33,7 @@ function Brackets() {
   const fetchMatchups = useCallback(async () => {
     setRefreshing(true)
     const data = await getMatchups(question_id)
-    setMatchups(data)         // actualiza datos
+    setMatchups(data)// actualiza datos
     setRefreshing(false)
   }, [question_id])
 
@@ -62,8 +62,8 @@ const roundLabels: Record<number, string> = {
             <h5 className=" text-white">Help your favorites win by voting for them</h5>
           </div>
           <div className="bg-white rounded-2xl shadow outline-gray-500">
-            {question_id && (<h2 className="text-[#3B195C] py-6 text-center justify-start">{question.question_text}</h2>)}
-          
+          {question && ( 
+          <h2 className="text-[#3B195C] py-6 text-center justify-start"> {question.question_text}</h2>)}
             <div className={`flex flex-row gap-6 p-6 w-full overflow-x-auto transition-opacity ${refreshing ? 'opacity-60' : 'opacity-100'}`}>
               {Object.entries(rounds)
                 .sort(([a], [b]) => +a - +b)
@@ -82,12 +82,12 @@ const roundLabels: Record<number, string> = {
                         <MatchContainer key={m.matchup_id} {...m} refetch={fetchMatchups} />
                       ))}
                     </div>
-                  </div>
-                ))}
-            </div>
+                </div>
+              ))}
           </div>
         </div>
       </div>
+    </div>
   )
 }
 
