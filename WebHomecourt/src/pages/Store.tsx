@@ -4,9 +4,6 @@ import Nav from '../components/Nav'
 import StoreRow from '../components/LakerStore/StoreRow.tsx'
 import { useAuth } from "../context/AuthContext"; // Adjust path if needed
 
-
-//import DisplayUserCards from "../components/CollectedCard"
-
 /* 
 Page flow
 * Get user credits when loading the screen and store in variable to help show the available packs
@@ -140,8 +137,6 @@ function Store() {
 
 }, [storeUser]);
 
-//const packTypeIds = [...new Set(packs.map((pack) => pack.pack_type_id))]; // Checks the established packs to extract the ids 
-
 return (
   <div className="flex flex-col items-center justify-center">
     <Nav current="Store" />
@@ -159,11 +154,7 @@ return (
       <StoreRow packTypeId={3} packs={packs} storeUser={storeUser}/>
       <StoreRow packTypeId={4} packs={packs} storeUser={storeUser}/>
     </div>
-
-
   </div>
-
-
 )
 }
 
