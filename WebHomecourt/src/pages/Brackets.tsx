@@ -4,10 +4,26 @@ import { useEffect, useState, useCallback } from "react"
 import { getMatchups } from "../components/Brackets/getMatchups"
 import type { Matchup } from "../components/Brackets/Brackets"
 import MatchContainer from "../components/Brackets/MatchContainer"
+import type { Question } from "../components/Brackets/Brackets"
+import {getQuestionById} from "../components/Brackets/getQuestionById"
 function Brackets() {
   //const [searchParams] = useSearchParams()
-  //const preguntaId = searchParams.get('pregunta_id')
-  const preguntaId= 1
+  //const question_id = searchParams.get('pregunta_id')
+  const question_id= 1
+  const [question, setQuestion] = useState<Question | null> (null);
+  useEffect(() => {
+    const loadQuestion = async () => {
+      try {
+        const q = await getQuestionById(question_id)
+        setQuestion(q)
+        
+      } catch (error) {
+        console.error("Error loading question:", error)
+        setQuestion(null)
+      }
+    }
+  loadQuestion()}, [question_id])
+  
   const [matchups, setMatchups] = useState<Matchup[]>([])
   const [refreshing, setRefreshing] = useState(false)
 
@@ -16,10 +32,10 @@ function Brackets() {
   )
   const fetchMatchups = useCallback(async () => {
     setRefreshing(true)
-    const data = await getMatchups(preguntaId)
+    const data = await getMatchups(question_id)
     setMatchups(data)         // actualiza datos
     setRefreshing(false)
-  }, [preguntaId])
+  }, [question_id])
 
   useEffect(() => {
     fetchMatchups()
@@ -46,7 +62,7 @@ const roundLabels: Record<number, string> = {
             <h5 className=" text-white">Help your favorites win by voting for them</h5>
           </div>
           <div className="bg-white rounded-2xl shadow outline-gray-500">
-            {preguntaId && (<h2 className="text-[#3B195C] py-6 text-center justify-start">Pregunta ID: {preguntaId}</h2>)}
+            {question_id && (<h2 className="text-[#3B195C] py-6 text-center justify-start">{question.question_text}</h2>)}
           
             <div className={`flex flex-row gap-6 p-6 w-full overflow-x-auto transition-opacity ${refreshing ? 'opacity-60' : 'opacity-100'}`}>
               {Object.entries(rounds)
