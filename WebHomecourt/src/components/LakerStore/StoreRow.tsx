@@ -11,6 +11,7 @@ type StoreRowProps = {
     packTypeId: number;
     packs: StorePacks[];
     storeUser: StoreUser;
+    onCreditsUpdated: (newCredits: number) => void; // To let update the number of credits
 };
 
 // For arrows
@@ -39,7 +40,7 @@ const LeftArrow = () => {
 };
 
 // Pass the pack type and the user info itself
-function StoreRow({ packTypeId, packs, storeUser }: StoreRowProps) {
+function StoreRow({ packTypeId, packs, storeUser, onCreditsUpdated }: StoreRowProps) {
     // Pop-up info
     const [openPack, setOpenPack] = useState<null | { packId: number, packImg: string, tearImg: string, openingImg: string, packName: string, packCost: number }>(null); // To open and close pop-up
     const userId = storeUser.user_id ?? ''; // Pass directly to pop-up
@@ -53,7 +54,7 @@ function StoreRow({ packTypeId, packs, storeUser }: StoreRowProps) {
             tearImg: pack.tear_URL,
             openingImg: pack.opening_URL,
             packName: pack.pack_name ?? '',
-            packCost: pack.cost ?? 0
+            packCost: pack.cost ?? 0,
         });
     }
 
@@ -93,6 +94,7 @@ function StoreRow({ packTypeId, packs, storeUser }: StoreRowProps) {
                     openingImg={openPack.openingImg}
                     packName={openPack.packName}
                     packCost={openPack.packCost}
+                    onCreditsUpdated={onCreditsUpdated}
                 />
             )}
 

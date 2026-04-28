@@ -16,6 +16,7 @@ type OpenPackProp = {
     openingImg: string, // About to open img
     packName: string, // To display as open it onClick={onClose}
     packCost: number // Show how much package costs to ensure user wants to buy
+    onCreditsUpdated: (newCredits: number) => void; // Todo pq react no puede auto refresh no manches
 }
 
 // Information about wins from the API
@@ -148,9 +149,10 @@ function OpenPack(prop: OpenPackProp) {
 
                 const updatedCredits = cards[0]?.updated_credits ?? 0; // Checks first item if they have updated_credits field or otherwise set as 0
                 console.log(`New credits: ${updatedCredits}`);
+                prop.onCreditsUpdated(updatedCredits); // Pass to general store
 
                 if (updatedCredits < prop.packCost) {
-                    setOpenTextButton(`NOT ENOUGH CREDITS. You have ${updatedCredits} credits`);
+                    setOpenTextButton(`Not enough credits, you have ${updatedCredits} remaining`);
                     setOpenEnabled(false);
                 } else {
                     setOpenEnabled(true);
@@ -167,11 +169,11 @@ function OpenPack(prop: OpenPackProp) {
             if (!openEnabled) return; // Must have permission to oepn again
 
             // Reset everything for a new opening
-            newCount = 1;
+            newCount = 0;
             setWonCards([]); // Reset cards
-            setOpenText("First tear! Click again to keep opening it...");
+            setOpenText('Press the pack or the open button to see what you get!');
             setOpenTextButton("OPEN");
-            setImageURL(prop.tearImg);
+            setImageURL(prop.packImg);
         }
         else {
             // Idk fallback smth is wrong
@@ -219,7 +221,7 @@ function OpenPack(prop: OpenPackProp) {
                         <span className="pl-3 text-xl">{prop.packCost}</span>
                     </div>
 
-                    <p>Temp show user {prop.userId} and pack {prop.packId}</p>
+                    {/*<p>Temp show user {prop.userId} and pack {prop.packId}</p>*/}
 
                     {/* Opening board space */}
                     <div className="w-150 h-auto px-6">
@@ -237,7 +239,7 @@ function OpenPack(prop: OpenPackProp) {
                                         )
                                     )) 
                                     : 
-                                    <p>Unable to buy cards</p>
+                                    <p></p>
                                 }
                                     
                                 </div>)

@@ -26,7 +26,7 @@ export type StorePacks = {
   name: string,
   closed_URL: string,
   tear_URL: string,
-  opening_URL:string, 
+  opening_URL: string,
   pack_name: string | null, // Pack data empty if no cards are present for that category
   cost: number | null, // Pack data empty if no cards are present for that category
   num_cards: number | null, // Pack data empty if no cards are present for that category
@@ -45,8 +45,6 @@ export type StoreUser = {
 async function getPacksStore() {
   // Call supabase funct
   const { data, error } = await supabase.rpc("get_packs_store");
-  // For updated prices and such
-  const [storeUser, setStoreUser] = useState<StoreUser | null>(null);
 
   // Smth died
   if (error) {
@@ -82,9 +80,10 @@ async function getPacksStore() {
   return packs;
 }
 
-// Get the user info formatted as that type
-export function getStoreUser(): StoreUser {
+// Get the user info formatted as that type : StoreUser
+export function getStoreUser() {
   const { user } = useAuth();
+
   // Declare base user, default not signed in w no money
   const [storeUser, setStoreUser] = useState<StoreUser>({
     user_id: null,
@@ -111,12 +110,14 @@ export function getStoreUser(): StoreUser {
       });
   }, [user]);
 
-  return storeUser;
+  //return storeUser;
+  return { storeUser, setStoreUser };
 }
 
 function Store() {
   const [packs, setPacks] = useState<StorePacks[]>([]); // Array w packs
-  const storeUser = getStoreUser();
+  //const storeUser = getStoreUser();
+  const { storeUser, setStoreUser } = getStoreUser();
 
   // Initial function to render
   useEffect(() => {
@@ -141,27 +142,35 @@ function Store() {
       console.log(`User ${storeUser.user_id} has ${storeUser.credits} credits`);
     }
 
-}, [storeUser]);
+  }, [storeUser]);
 
-return (
-  <div className="flex flex-col items-center justify-center">
-    <Nav current="Store" />
-    <div className="px-4 py-5 md:px-14 md:py-5 bg-zinc-100 w-full">
-      {/* Title comp */}
-      <div className="w-full px-3 py-4 md:px-5 md:py-7 bg-violet-950 rounded-2xl shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] outline outline-1 outline-offset-[-1px] outline-black/25 flex flex-col justify-left items-left overflow-hidden">
-        <h1 className="justify-start text-white title1">Lakers Store</h1>
-        <p className="justify-start text-white mt-2 text-xl text-zinc-300">The virtual home of your collection</p>
+  // To show new creds once has more money 
+  function handleCreditsUpdated(newCredits: number) {
+    setStoreUser((prev) => ({
+      ...prev,
+      credits: newCredits,
+    }));
+  }
+
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <Nav current="Store" creditsOverride={storeUser?.credits}/>
+      <div className="px-4 py-5 md:px-14 md:py-5 bg-zinc-100 w-full">
+        {/* Title comp */}
+        <div className="w-full px-3 py-4 md:px-5 md:py-7 bg-violet-950 rounded-2xl shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] outline outline-1 outline-offset-[-1px] outline-black/25 flex flex-col justify-left items-left overflow-hidden">
+          <h1 className="justify-start text-white title1">Lakers Store</h1>
+          <p className="justify-start text-white mt-2 text-xl text-zinc-300">The virtual home of your collection</p>
+        </div>
+
+        {/* Load the packs by giving id of each section */}
+        {/*<p>{storeUser.credits} and {storeUser.signedIn? "Signed in" : "Not signed in"}</p>*/}
+        <StoreRow packTypeId={1} packs={packs} storeUser={storeUser} onCreditsUpdated={handleCreditsUpdated} />
+        <StoreRow packTypeId={2} packs={packs} storeUser={storeUser} onCreditsUpdated={handleCreditsUpdated} />
+        <StoreRow packTypeId={3} packs={packs} storeUser={storeUser} onCreditsUpdated={handleCreditsUpdated} />
+        <StoreRow packTypeId={4} packs={packs} storeUser={storeUser} onCreditsUpdated={handleCreditsUpdated} />
       </div>
-
-      {/* Load the packs by giving id of each section */}
-      {/*<p>{storeUser.credits} and {storeUser.signedIn? "Signed in" : "Not signed in"}</p>*/}
-      <StoreRow packTypeId={1} packs={packs} storeUser={storeUser}/>
-      <StoreRow packTypeId={2} packs={packs} storeUser={storeUser}/>
-      <StoreRow packTypeId={3} packs={packs} storeUser={storeUser}/>
-      <StoreRow packTypeId={4} packs={packs} storeUser={storeUser}/>
     </div>
-  </div>
-)
+  )
 }
 
 export default Store
