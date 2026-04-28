@@ -1,9 +1,5 @@
-//import { useState } from 'react';
 import type { StoreUser, StorePacks } from "../../hooks/storeTypes.ts"; 
-//import OpenPack from './OpenPack.tsx';
 import IconButton from '../IconButton.tsx';
-//import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu'; // External to make side scrolling
-
 
 type PackCardProp = {
     itemId: string,
@@ -36,7 +32,6 @@ function PackCard(prop: PackCardProp) {
                         <h5 className="font-semibold mb-2">{prop.rowTitle} #{prop.pack.pack_id}</h5>
                         <p className="text-Gris-Oscuro">Win up to {prop.pack.num_cards} cards{prop.cardDesc}</p>
                     </div>
-
 
                     {/* Align to bottom, decide button to use depending if user can afford it or not */}
                     <div>

@@ -1,6 +1,5 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import type { StoreUser, StorePacks } from "../../hooks/storeTypes.ts"; 
-import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu'; // External to make side scrolling
 import 'react-horizontal-scrolling-menu/dist/styles.css'; // External to make side scrolling
 import OpenPack from './OpenPack.tsx';
 //import IconButton from '../IconButton.tsx';
@@ -13,36 +12,12 @@ type StoreRowProps = {
     onCreditsUpdated: (newCredits: number) => void; // To let update the number of credits
 };
 
-// For arrows
-const RightArrow = () => {
-  const { scrollNext } = useContext(VisibilityContext);
-  return (
-    <div
-      className="absolute right-0 top-1/2 rounded-lg -translate-y-1/2 cursor-pointer p-2 hover:bg-gray-200"
-      onClick={() => scrollNext()} // Used chat to see how to make the scroll next based on documentaiton
-    >
-      <img src="/arrow_forward_ios.svg" alt="Scroll right" className="w-26 h-16" />
-    </div>
-  );
-};
-
-const LeftArrow = () => {
-  const { scrollPrev } = useContext(VisibilityContext);
-  return (
-    <div
-      className="absolute left-0 top-1/2 rounded-lg -translate-y-1/2 cursor-pointer p-2 hover:bg-gray-200 rotate-180 z-20"
-      onClick={() => scrollPrev()} // Used chat to see how to make the scroll next based on documentaiton
-    >
-      <img src="/arrow_forward_ios.svg" alt="Scroll left" className="w-26 h-16" />
-    </div>
-  );
-};
-
 // Pass the pack type and the user info itself
 function StoreRow({ packTypeId, packs, storeUser, onCreditsUpdated }: StoreRowProps) {
     // Pop-up info
     const [openPack, setOpenPack] = useState<null | { packId: number, packImg: string, tearImg: string, openingImg: string, packName: string, packCost: number }>(null); // To open and close pop-up
     const userId = storeUser.user_id ?? ''; // Pass directly to pop-up
+    const [page, setPage] = useState(0); // The state
 
     // Open the pop-up
     function openPop(pack: StorePacks) {
@@ -80,8 +55,10 @@ function StoreRow({ packTypeId, packs, storeUser, onCreditsUpdated }: StoreRowPr
 
     const actualPacks = rowPacks.filter((pack) => pack.pack_id !== null); //  Keeps only packs where there is an id available cause it might be null if there are none of that type
 
-    // Attempting pagination
-    //const [page, setPage] = useState(0);
+    // Pagination
+    const PAGE_SIZE = 3; // Only for comp view
+    const totalPages = Math.ceil(actualPacks.length / PAGE_SIZE); // How many pages will be needed rounded up 
+    const paginated = actualPacks.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE); // Divide by pages
 
     return (
         <div className="mt-8 w-full">
@@ -100,26 +77,50 @@ function StoreRow({ packTypeId, packs, storeUser, onCreditsUpdated }: StoreRowPr
                 />
             )}
 
-            <h2 className="font-bold mb-2">{rowTitle}</h2>
+            <div className="flex flex-col md:flex-row justify-between">
+                <h2 className="font-bold mb-2">{rowTitle}</h2>
+
+                {/* Arrows de Regina */}
+                <div className="flex items-center gap-2 shrink-0 ml-4">
+                    <button
+                        onClick={() => setPage((p) => Math.max(0, p - 1))}
+                        disabled={page === 0}
+                        className="text-black disabled:opacity-30 hover:opacity-75 transition text-6xl px-4"
+                    >
+                        ‹
+                    </button>
+                    <span className="text-black text-xl">
+                        {page + 1} / {totalPages || 1}
+                    </span>
+                    <button
+                        onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                        disabled={page >= totalPages - 1}
+                        className="text-black disabled:opacity-30 hover:opacity-75 transition text-6xl px-4"
+                    >
+                        ›
+                    </button>
+                </div>
+            </div>
+
 
             {/* Ensure there are packs matching it */}
             {actualPacks.length === 0 ? (
                 <p className="w-fit p-4 mb-4 bg-white rounded-xl shadow-[0px_4px_6px_-4px_rgba(0,0,0,0.10)] shadow-lg outline outline-[0.80px] outline-offset-[-0.80px] outline-gray-100">There are currently no {rowTitle}s available, please check back later!</p>
             ) : (
                 // Need relative to make it scroll from side to side 
-                <div className="relative">
-                    <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
-                        {actualPacks.map((pack) => (
-                            <PackCard
-                                itemId={String(pack.pack_id!)} // Doesn't work without ! to ensure not null
-                                pack={pack} // Should be like the id tracking I guess?
-                                rowTitle={rowTitle}
-                                cardDesc={cardDesc ?? ""}
-                                storeUser={storeUser}
-                                openPop={openPop}
-                            />
-                        ))}
-                    </ScrollMenu>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                    {/*<ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>*/}
+                    {paginated.map((pack) => (
+                        <PackCard
+                            itemId={String(pack.pack_id!)} // Doesn't work without ! to ensure not null
+                            pack={pack} // Should be like the id tracking I guess?
+                            rowTitle={rowTitle}
+                            cardDesc={cardDesc ?? ""}
+                            storeUser={storeUser}
+                            openPop={openPop}
+                        />
+                    ))}
+                    {/*</ScrollMenu>*/}
                 </div>
             )}
         </div>
