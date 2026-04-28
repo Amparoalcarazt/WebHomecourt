@@ -23,11 +23,12 @@ type OpenPackProp = {
 type WonCards = {
     card_slot: number,
     luck: number,
-    rarity_id: number,
+    luck_rarity_id: number,
     won_card_id: string
     player_name: string,
-    updated_credits: number // Useful to check if user can try again or whether they are out
-    random_case: number // Just for debugging
+    updated_credits: number, // Useful to check if user can try again or whether they are out
+    random_case: number, // Just for debugging
+    card_rarity_id: number
 }
 
 // Now the actual API logic based on pack they're buying and their id
@@ -58,11 +59,12 @@ async function buyPack(pack_id: number, user_id: string) {
         return {
             card_slot: row.card_slot, // Pack data empty if no cards are present for that category
             luck: row.luck,
-            rarity_id: row.rarity_id,
+            luck_rarity_id: row.luck_rarity_id,
             won_card_id: row.won_card_id,
             player_name: row.player_name,
             updated_credits: row.updated_credits,
-            random_case: row.random_case
+            random_case: row.random_case,
+            card_rarity_id: row.card_rarity_id
         }
     });
 
@@ -232,9 +234,10 @@ function OpenPack(prop: OpenPackProp) {
                                 <div className="flex flex-col w-150 h-75 max-h-72 text-center items-center justify-start overflow-y-auto py-4 px-2 gap-y-4">
                                     {wonCards.length > 0 ? (
                                     wonCards.map((card) => (
-                                        <div key={card.won_card_id} className="rounded-lg bg-white px-3 py-4">
+                                        // Usando key composed de slot and then the actual id pq duplicate cards give error
+                                        <div key={`${card.card_slot}_${card.won_card_id}`} className="rounded-lg bg-white px-3 py-4">
                                             <p className="text-xs">{card.card_slot}. Card {card.won_card_id}</p>
-                                            <p>featuring {card.player_name} rarity {card.rarity_id}</p>
+                                            <p>featuring {card.player_name} type luck {card.card_rarity_id}</p>
                                         </div>
                                         )
                                     )) 
