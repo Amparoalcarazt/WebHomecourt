@@ -6,11 +6,6 @@ export interface Question {
   winner: string
 }
 
-export type Answer={
-    question_id: number,
-    anwser_text: string
-}
-
 export type Matchup = {
   matchup_id: number
   round: number

@@ -2,6 +2,7 @@ import { supabase } from "../../lib/supabase";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type {Question} from "../Brackets/Brackets"
+import { getBracketActual } from '../Brackets/getBracket'
 
 function getDaysLeft(question: Question | null): string | null {
   if (!question) return null;
@@ -15,32 +16,8 @@ function getDaysLeft(question: Question | null): string | null {
   return `${diffDays} days left`;
 };
 
-export async function getMiniBracket(): Promise<Question> {
-  const { data, error } = await supabase
-    .from('question')
-    .select('*')
-    .is('winner', null)
-    .order('start_date', { ascending: true });
-
-  if (error) {
-    console.error("Supabase error:", error.message);
-    throw new Error("Failed to get minibrackets");
-  }
-
-  const now = new Date();
-
-  // Filtra en el cliente para evitar problemas de timezone
-  const active = (data as Question[]).find(q =>
-    new Date(q.start_date) <= now && new Date(q.end_date) >= now
-  );
-
-  if (!active) throw new Error("No active bracket found");
-
-  return active;
-}
-
 function MiniBrackets(){
-    const [question, setQuestion] = useState<MiniBrack | null> (null);
+    const [question, setQuestion] = useState<Question | null> (null);
     const [daysLeft, setDaysLeft] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -48,13 +25,13 @@ function MiniBrackets(){
   const handleVoteClick = () => {
     if (!question) return;
 
-    navigate(`/brackets?question_id=${question.question_id}`);
+    navigate(`/brackets`);
   };
 
     useEffect(() => {
         const loadQuestion = async () => {
             try {
-                const data = await getMiniBracket();
+                const data = await getBracketActual();
                 setQuestion(data);
                 setDaysLeft(getDaysLeft(data));
             } catch (err) {

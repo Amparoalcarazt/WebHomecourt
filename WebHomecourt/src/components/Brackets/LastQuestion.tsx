@@ -1,27 +1,24 @@
-import { supabase } from "../../lib/supabase";
+import { supabase } from "../../lib/supabase"
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import type {Question} from "../Brackets/Brackets"
-
-
-export async function getLastQuestion(): Promise<Question> {
-  const now = new Date().toISOString();
-  const { data, error } = await supabase
-    .from('question')
-    .select('*')
-    .lt('end_date', now) 
-    .order('end_date', { ascending: false })
-    .single()
-  if (error) {
-    console.error("Supabase error:", error.message);
-    throw new Error("Failed to get previous bracket");
-  }
-  return data;
-}
+import { getLastQuestion } from './getBracket'
 
 function LastQuestion(){
+    const [loggedIn, setLoggedIn] = useState(false);  
     const [question, setQuestion] = useState<Question | null> (null);
     const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+    const checkUser = async () => {
+    const {
+      data: { session }
+    } = await supabase.auth.getSession();
+
+    setLoggedIn(!!session?.user);
+    };
+
+      checkUser();
+    }, []);
 
     useEffect(() => {
         const loadQuestion = async () => {
@@ -40,10 +37,19 @@ function LastQuestion(){
     if (isLoading) return null;
 
     return(
-    <div className="bg-white p-6 rounded-2xl shadow outline-gray-500">
-        <h1 className="self-stretch text-center justify-start text-[#3B195C] text-2xl p-2 md:text-3xl ">Last Week: {question?.question_text}</h1>
-        <h2 className="self-stretch text-center justify-start text-[#3B195C] text-2xl p-2 md:text-3xl ">Winner: {question?.winner}</h2>
-    </div>
+      <div>
+        {(!loggedIn) ? (<div></div>) : (  
+        (question && loggedIn) ? (    
+          <div className="bg-white p-6 rounded-2xl shadow outline-gray-500">
+              <h1 className="self-stretch text-center justify-start text-[#3B195C] text-2xl p-2 md:text-3xl ">Previously: {question?.question_text}</h1>
+              <h2 className="self-stretch text-center justify-start text-[#3B195C] text-2xl p-2 md:text-3xl ">Winner: {question?.winner}</h2>
+          </div>
+        ):(
+          <div className="bg-white p-6 rounded-2xl shadow outline-gray-500">
+            <h2 className="self-stretch text-center justify-start text-[#3B195C] text-2xl p-2 md:text-3xl ">There are no previous questions</h2>
+          </div>
+        ))}
+      </div>
     )
 }
 
