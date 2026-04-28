@@ -45,6 +45,8 @@ export type StoreUser = {
 async function getPacksStore() {
   // Call supabase funct
   const { data, error } = await supabase.rpc("get_packs_store");
+  // For updated prices and such
+  const [storeUser, setStoreUser] = useState<StoreUser | null>(null);
 
   // Smth died
   if (error) {

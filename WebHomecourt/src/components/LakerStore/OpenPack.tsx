@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { supabase } from "../../lib/supabase"
 import Button from '../button.tsx';
 
+// Visual pack render
 type OpenPackProp = {
     // For pop-up function
     open: boolean;
@@ -16,6 +18,55 @@ type OpenPackProp = {
     packCost: number // Show how much package costs to ensure user wants to buy
 }
 
+// Information about wins from the API
+type WonCards = {
+    card_slot: number,
+    luck: number,
+    rarity_id: number,
+    won_card_id: string
+    player_name: string,
+    updated_credits: number // Useful to check if user can try again or whether they are out
+    random_case: number // Just for debugging
+}
+
+// Now the actual API logic based on pack they're buying and their id
+async function buyPack(pack_id: number, user_id: string) {
+    // Call supabase funct
+    const { data, error } = await supabase.rpc("randomize_cards", {
+        p_pack: Number(pack_id),
+        p_user_id: user_id, // Must add month cause they're 0 based in typescript
+    });
+
+    // Smth died
+    if (error) {
+        console.error("Supabase error:", error.message)
+        throw new Error("Failed to buy the pack")
+    }
+
+    console.log("Raw rpc data:", data);
+    console.log("is array?", Array.isArray(data));
+
+    // Data is not formatted as array, entcs hace un array vacío and sends that will show no user colls
+    if (!Array.isArray(data)) return []
+
+    console.log("raw data:", JSON.stringify(data, null, 2)) // A ver como se ve lo q fue fetched
+
+    // Takes results del data and turns into the CollectedCard obj
+    const cards: WonCards[] = data.map(row => {
+        // Creates the game items 
+        return {
+            card_slot: row.card_slot, // Pack data empty if no cards are present for that category
+            luck: row.luck,
+            rarity_id: row.rarity_id,
+            won_card_id: row.won_card_id,
+            player_name: row.player_name,
+            updated_credits: row.updated_credits,
+            random_case: row.random_case
+        }
+    });
+
+    return cards;
+}
 
 function OpenPack(prop: OpenPackProp) {
     if (!prop.open) return null
@@ -23,9 +74,13 @@ function OpenPack(prop: OpenPackProp) {
     // Vars that will be updated as it opens
     const [openText, setOpenText] = useState(''); // Starting text used when the pop-up opens
     const [openClickCount, setOpenClickCount] = useState(0); // User hasn't clicked the button
-    const [oepnEnabled, setOpenEnabled] = useState(true); // Determines button enabled or not
+    const [openEnabled, setOpenEnabled] = useState(true); // Determines button enabled or not
     const [openTextButton, setOpenTextButton] = useState("OPEN"); // To let user complete multiple buys
     const [imageURL, setImageURL] = useState('');
+    const [isOpening, setIsOpening] = useState(false);
+
+    // Temporary variable to get the info from the table
+    const [wonCards, setWonCards] = useState<WonCards[]>([]);
 
     // Initial function to render the base components
     useEffect(() => {
@@ -36,63 +91,96 @@ function OpenPack(prop: OpenPackProp) {
     }, [prop.open, prop.packId]);
 
     // Function to handle inner clicking and switching images
-    function opening() {
-        // Sacado de chat pq apparently no se puede nomas usar un let y no puede nomas contar como cosa normal
-        setOpenClickCount(prev => {
-            let newCount = prev + 1;
-            console.log(newCount)
-            console.log(openTextButton)
+    async function opening() {
+        if (isOpening || !openEnabled) return; // Blocks if currently opening or if they are poor and can't open more
 
-            if (newCount === 1) {
-                setOpenText("First tear! Click again to keep opening it...");
-                setOpenTextButton("OPEN");
-                setImageURL(prop.tearImg);
-            } else if (newCount === 2) {
-                setOpenText("You can almost see the cards now...");
-                setImageURL(prop.openingImg);
-            } 
-             else if (newCount === 3) {
+        setIsOpening(true); // Blocking double calls
+
+        let newCount = openClickCount + 1;
+        console.log(newCount);
+        console.log(openTextButton);
+
+        if (newCount === 1) {
+            setImageURL(prop.tearImg);
+            setOpenText("First tear! Click again to keep opening it...");
+            setOpenTextButton("OPEN");
+        } else if (newCount === 2) {
+            setImageURL(prop.openingImg);
+            setOpenText("You can almost see the cards now...");
+        }
+        else if (newCount === 3) {
+            setOpenText("Congrats!");
+            setImageURL(""); // Hides image, here will later display the cards won as a sort of board
+
+            // Call api function and saves it
+            /*buyPack(prop.packId, prop.userId).then(cards => setWonCards(cards));
+
+            // The user did not have credits so return was empty... might also happen if connection is lost when opening the pack and supabase fails 
+            if (wonCards.length == 0) {
+                setOpenText("I'm sorry, you cannot afford this pack at the moment. Keep playing to win more credits!");
+                setOpenEnabled(false); // To block user from buying again
+                return;
+            }*/
+
+            // Esto si de chat no sabía como hacer la lectura con validación de length adentro del call
+            /*buyPack(prop.packId, prop.userId).then(cards => {
+                setWonCards(cards);
+                if (!cards || cards.length === 0) {
+                    setOpenText("I'm sorry, you cannot afford this pack at the moment. Keep playing to win more credits!");
+                    setOpenEnabled(false);
+                }
+            });*/
+            try {
+                const cards = await buyPack(prop.packId, prop.userId);
+                setWonCards(cards);
+
+                if (!cards || cards.length === 0) {
+                    setOpenText("Sorry, you cannot afford this pack at the moment. Keep playing to win more credits!");
+                    setOpenEnabled(false);
+                    setIsOpening(false);
+                    setOpenTextButton("NOT ENOUGH CREDITS");
+                    return;
+                }
+
+                setImageURL("");
                 setOpenText("Congrats!");
-                setImageURL(""); // Hides image, here will later display the cards won as a sort of board
-
-                // Call api function
-
-                // Change button based on whether still has credits left over or not, and block from front-end if they can no longer buy anything
                 setOpenTextButton("OPEN AGAIN!");
 
-            } else if (newCount > 3) {
-                // Reset everything for a new opening
-                newCount = 1;
-                setOpenText("First tear! Click again to keep opening it...");
-                setOpenTextButton("OPEN");
-                setImageURL(prop.tearImg);
-            }
-            else {
-                // Idk fallback smth is wrong
-                setOpenText("Press the pack or the open button to see what you get!");
-                setImageURL(prop.packImg);
+                const updatedCredits = cards[0]?.updated_credits ?? 0; // Checks first item if they have updated_credits field or otherwise set as 0
+                console.log(`New credits: ${updatedCredits}`);
+
+                if (updatedCredits < prop.packCost) {
+                    setOpenTextButton(`NOT ENOUGH CREDITS. You have ${updatedCredits} credits`);
+                    setOpenEnabled(false);
+                } else {
+                    setOpenEnabled(true);
+                    setOpenTextButton(`OPEN AGAIN! You have ${updatedCredits} credits remaining`);
+                }
+            } catch (e) {
+                console.error(e);
+                setOpenText("Something went wrong while opening the pack, please contact an administrator.");
+                setOpenEnabled(false);
             }
 
-            return newCount;
-        });
-        /*
-        setOpenClickCount(openClickCount + 1); // Increment counter
+            setIsOpening(false); 
+        } else if (newCount > 3) {
+            if (!openEnabled) return; // Must have permission to oepn again
 
-        if (openClickCount == 0) {
-            // Should never happen
-            setOpenText("Press the pack or the open button to see what you get!");
-        } else if (openClickCount == 1) {
-            // First crach
+            // Reset everything for a new opening
+            newCount = 1;
+            setWonCards([]); // Reset cards
             setOpenText("First tear! Click again to keep opening it...");
-        } else if (openClickCount == 2) {
-            // Second crack
-            setOpenText("Second tear, keep going!");
-        } else if (openClickCount == 3) {
-            // Third crack
-            setOpenText("I can practically see the cards now...");
-        } else if (openClickCount == 4) {
-            setOpenText("Congrats!");
-        }*/
+            setOpenTextButton("OPEN");
+            setImageURL(prop.tearImg);
+        }
+        else {
+            // Idk fallback smth is wrong
+            setOpenText("Press the pack or the open button to see what you get!");
+            setImageURL(prop.packImg);
+        }
+
+        setOpenClickCount(newCount); // New val set to use in next load
+        setIsOpening(false); // Turns off opening state
     }
 
     // Robando basic struct de pop-up de pantalla Adolfo
@@ -137,16 +225,30 @@ function OpenPack(prop: OpenPackProp) {
                     <div className="w-150 h-auto px-6">
                         <div className="flex flex-col w-full rounded-lg bg-zinc-100 items-center justify-center mb-4">
                             {imageURL ? (
-                                <img src={imageURL} className="h-75 md:h-75 w-auto" />
-                            ): (
-                                <div className="w-150 h-75" />)
+                                <img src={imageURL} className="h-75 md:h-75 w-auto" onClick={openEnabled ? () => opening() : () => {}} />
+                            ) : (
+                                <div className="flex flex-col w-150 h-75 max-h-72 text-center items-center justify-start overflow-y-auto py-4 px-2 gap-y-4">
+                                    {wonCards.length > 0 ? (
+                                    wonCards.map((card) => (
+                                        <div key={card.won_card_id} className="rounded-lg bg-white px-3 py-4">
+                                            <p className="text-xs">{card.card_slot}. Card {card.won_card_id}</p>
+                                            <p>featuring {card.player_name} rarity {card.rarity_id}</p>
+                                        </div>
+                                        )
+                                    )) 
+                                    : 
+                                    <p>Unable to buy cards</p>
+                                }
+                                    
+                                </div>)
                             }
                             {/* Open manually via button */}
                             <div className="w-full px-4 md:px-4 pb-4">
                                 <Button
                                     text={openTextButton}
-                                    type="primary"
-                                    onClick={() => opening()} // Logic to open package
+                                    type={openEnabled ? 'primary' : 'primarydisable'}
+                                    //onClick={() => opening()} // Logic to open package
+                                    onClick={openEnabled ? () => opening() : () => {}} // Only let open if they can actually afford to do so
                                     className="w-full"
                                 />
                             </div>
@@ -158,7 +260,7 @@ function OpenPack(prop: OpenPackProp) {
                     {/* Cancel button */}
                     <div className="w-full px-10 pb-4">
                         <Button
-                            text="Cancel purchase"
+                            text="Close"
                             type="reddestructive"
                             onClick={prop.onClose}
                             className="w-full"
