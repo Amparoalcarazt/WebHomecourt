@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from "../lib/supabase"
 import Nav from '../components/Nav'
 import StoreRow from '../components/LakerStore/StoreRow.tsx'
-import { useAuth } from "../context/AuthContext"; // Adjust path if needed
+import { useStoreUser } from '../hooks/useStoreUser.ts'; // Hook for store user
 
 /* 
 Page flow
@@ -80,6 +80,7 @@ async function getPacksStore() {
   return packs;
 }
 
+/*
 // Get the user info formatted as that type : StoreUser
 export function getStoreUser() {
   const { user } = useAuth();
@@ -112,12 +113,14 @@ export function getStoreUser() {
 
   //return storeUser;
   return { storeUser, setStoreUser };
-}
+}*/
 
 function Store() {
+  console.log("Store render");
   const [packs, setPacks] = useState<StorePacks[]>([]); // Array w packs
   //const storeUser = getStoreUser();
-  const { storeUser, setStoreUser } = getStoreUser();
+  //const { storeUser, setStoreUser } = getStoreUser(); // Before hook
+  const { storeUser, setStoreUser } = useStoreUser();
 
   // Initial function to render
   useEffect(() => {
