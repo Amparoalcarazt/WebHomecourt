@@ -41,7 +41,7 @@ const LeftArrow = () => {
 // Pass the pack type and the user info itself
 function StoreRow({ packTypeId, packs, storeUser }: StoreRowProps) {
     // Pop-up info
-    const [openPack, setOpenPack] = useState<null | { packId: number, packImg: string, packName: string, packCost: number }>(null); // To open and close pop-up
+    const [openPack, setOpenPack] = useState<null | { packId: number, packImg: string, tearImg: string, openingImg: string, packName: string, packCost: number }>(null); // To open and close pop-up
     const userId = storeUser.user_id ?? ''; // Pass directly to pop-up
 
     // Open the pop-up
@@ -50,6 +50,8 @@ function StoreRow({ packTypeId, packs, storeUser }: StoreRowProps) {
         setOpenPack({
             packId: pack.pack_id,
             packImg: pack.closed_URL,
+            tearImg: pack.tear_URL,
+            openingImg: pack.opening_URL,
             packName: pack.pack_name ?? '',
             packCost: pack.cost ?? 0
         });
@@ -87,6 +89,8 @@ function StoreRow({ packTypeId, packs, storeUser }: StoreRowProps) {
                     userId={userId}
                     packId={openPack.packId}
                     packImg={openPack.packImg}
+                    tearImg={openPack.tearImg} // Image w one tear
+                    openingImg={openPack.openingImg}
                     packName={openPack.packName}
                     packCost={openPack.packCost}
                 />

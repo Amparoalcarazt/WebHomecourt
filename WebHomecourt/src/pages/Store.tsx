@@ -25,6 +25,8 @@ export type StorePacks = {
   pack_type_id: number,
   name: string,
   closed_URL: string,
+  tear_URL: string,
+  opening_URL:string, 
   pack_name: string | null, // Pack data empty if no cards are present for that category
   cost: number | null, // Pack data empty if no cards are present for that category
   num_cards: number | null, // Pack data empty if no cards are present for that category
@@ -66,6 +68,8 @@ async function getPacksStore() {
       pack_type_id: row.pack_type_id,
       name: row.name,
       closed_URL: row.closed_URL,
+      tear_URL: row.tear_URL,
+      opening_URL: row.opening_URL,
       pack_name: row.pack_name,
       cost: row.cost, // Pack data empty if no cards are present for that category
       num_cards: row.num_cards, // Pack data empty if no cards are present for that category
