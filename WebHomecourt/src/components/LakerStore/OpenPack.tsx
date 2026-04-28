@@ -237,7 +237,7 @@ function OpenPack(prop: OpenPackProp) {
                                         // Usando key composed de slot and then the actual id pq duplicate cards give error
                                         <div key={`${card.card_slot}_${card.won_card_id}`} className="rounded-lg bg-white px-3 py-4">
                                             <p className="text-xs">{card.card_slot}. Card {card.won_card_id}</p>
-                                            <p>featuring {card.player_name} type luck {card.card_rarity_id}</p>
+                                            <p>featuring {card.player_name} type {card.card_rarity_id}</p>
                                         </div>
                                         )
                                     )) 
@@ -260,7 +260,6 @@ function OpenPack(prop: OpenPackProp) {
 
                         </div>
                     </div>
-
 
                     {/* Cancel button */}
                     <div className="w-full px-10 pb-4">
