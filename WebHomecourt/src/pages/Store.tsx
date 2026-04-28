@@ -3,6 +3,7 @@ import { supabase } from "../lib/supabase"
 import Nav from '../components/Nav'
 import StoreRow from '../components/LakerStore/StoreRow.tsx'
 import { useStoreUser } from '../hooks/useStoreUser.ts'; // Hook for store user
+import type { StoreUser, StorePacks } from "../hooks/storeTypes.ts"; // Types
 
 /* 
 Page flow
@@ -18,27 +19,6 @@ Page flow
   * Once the for loop is done, I'll have to update the user_laker table, search for user_id, and use pack_id cost to subtract the user credits. In short, once the cards are obtained, then I'll have to register the cost of buying that pack in the database. 
 * Now the cards are added to the user collection, they can close the pop-up and yeah that's over. Dang that was long.  
 */
-
-// Types of data 
-export type StorePacks = {
-  pack_id: number | null, // Pack data empty if no cards are present for that category
-  pack_type_id: number,
-  name: string,
-  closed_URL: string,
-  tear_URL: string,
-  opening_URL: string,
-  pack_name: string | null, // Pack data empty if no cards are present for that category
-  cost: number | null, // Pack data empty if no cards are present for that category
-  num_cards: number | null, // Pack data empty if no cards are present for that category
-  is_active: boolean | null // Pack data empty if no cards are present for that category
-};
-
-// User id and credits to interact w store 
-export type StoreUser = {
-  user_id: string | null, // UUID
-  credits: number | 0, // Has credits or is poor and shouldn't be here
-  signedIn: boolean
-}
 
 // API calls
 // Gets the listing of all packs to display on website
@@ -80,51 +60,13 @@ async function getPacksStore() {
   return packs;
 }
 
-/*
-// Get the user info formatted as that type : StoreUser
-export function getStoreUser() {
-  const { user } = useAuth();
-
-  // Declare base user, default not signed in w no money
-  const [storeUser, setStoreUser] = useState<StoreUser>({
-    user_id: null,
-    credits: 0,
-    signedIn: false
-  });
-
-  useEffect(() => {
-    if (!user) {
-      setStoreUser({ user_id: null, credits: 0, signedIn: false });
-      return;
-    }
-    supabase
-      .from("user_laker")
-      .select("credits")
-      .eq("user_id", user.id)
-      .single()
-      .then(({ data, error }) => {
-        if (error || !data) {
-          setStoreUser({ user_id: user.id, credits: 0, signedIn: true });
-        } else {
-          setStoreUser({ user_id: user.id, credits: data.credits ?? 0, signedIn: true });
-        }
-      });
-  }, [user]);
-
-  //return storeUser;
-  return { storeUser, setStoreUser };
-}*/
-
 function Store() {
   console.log("Store render");
   const [packs, setPacks] = useState<StorePacks[]>([]); // Array w packs
-  //const storeUser = getStoreUser();
-  //const { storeUser, setStoreUser } = getStoreUser(); // Before hook
-  const { storeUser, setStoreUser } = useStoreUser();
+  const { storeUser, setStoreUser } = useStoreUser(); // Use hook
 
   // Initial function to render
   useEffect(() => {
-    // Shows packs 
     async function loadPacks() {
       try {
         const result = await getPacksStore();
@@ -135,16 +77,16 @@ function Store() {
     }
 
     loadPacks();
+  }, []);
 
-    // Gets user info 
+  useEffect(() => {
     if (!storeUser.signedIn) {
       console.log("User not signed in");
     } else if (storeUser.credits === 0) {
-      console.log("No credits found for user or user has 0 credits");
+      console.log("No credits found for user or poor");
     } else {
       console.log(`User ${storeUser.user_id} has ${storeUser.credits} credits`);
     }
-
   }, [storeUser]);
 
   // To show new creds once has more money 
@@ -157,7 +99,7 @@ function Store() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <Nav current="Store" creditsOverride={storeUser?.credits}/>
+      <Nav current="Store" creditsOverride={storeUser?.credits} />
       <div className="px-4 py-5 md:px-14 md:py-5 bg-Background w-full">
         {/* Title comp */}
         <div className="w-full px-3 py-4 md:px-5 md:py-7 bg-violet-950 rounded-2xl shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] outline outline-1 outline-offset-[-1px] outline-black/25 flex flex-col justify-left items-left overflow-hidden">

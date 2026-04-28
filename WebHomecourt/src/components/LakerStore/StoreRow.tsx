@@ -1,6 +1,5 @@
 import { useState, useContext } from 'react';
-import type { StorePacks } from '../../pages/Store';
-import type { StoreUser } from '../../pages/Store';
+import type { StoreUser, StorePacks } from "../../hooks/storeTypes.ts"; 
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu'; // External to make side scrolling
 import 'react-horizontal-scrolling-menu/dist/styles.css'; // External to make side scrolling
 import OpenPack from './OpenPack.tsx';
@@ -80,6 +79,9 @@ function StoreRow({ packTypeId, packs, storeUser, onCreditsUpdated }: StoreRowPr
     }
 
     const actualPacks = rowPacks.filter((pack) => pack.pack_id !== null); //  Keeps only packs where there is an id available cause it might be null if there are none of that type
+
+    // Attempting pagination
+    //const [page, setPage] = useState(0);
 
     return (
         <div className="mt-8 w-full">

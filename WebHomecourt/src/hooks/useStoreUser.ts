@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
-import type { StoreUser } from "../pages/Store";
+import type { StoreUser } from "./storeTypes.ts";
 
 // Data that is needed to set which user it is and whether they are signed in, fetched from db
 export function useStoreUser() {
