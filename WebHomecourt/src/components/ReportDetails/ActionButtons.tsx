@@ -42,7 +42,7 @@ const ActionButtons = ({
           accentColor="#D38B43"
           user={user}
           target={target}
-          onConfirm={() => { setModal(null); onSuspend() }}
+          onConfirm={() => { setModal(null); onSuspend?.() }}
           onCancel={() => setModal(null)}
         />
       )}
