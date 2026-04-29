@@ -10,7 +10,7 @@ import { supabase } from '../lib/supabase'
 import { getUpcomingEvents, type EventItem } from '../lib/Perfil/events'
 import Achievements from '../components/Perfil/Achievements'
 import SettingsSection from '../components/Perfil/SettingsSection'
-import { useAuth } from '../hooks/Perfil/useAuth'
+import { useAuth } from '../context/AuthContext'
 
 type CurrentUser = {
     user_id: string

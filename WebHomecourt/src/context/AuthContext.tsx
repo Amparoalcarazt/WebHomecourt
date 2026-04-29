@@ -7,10 +7,11 @@ import { supabase } from "../lib/supabase";
 interface AuthContextType {
   session: Session | null; // Sesión actualizada del usuario autenticado
   user: User | null; // Información del usuario autenticado
-  userType: number | null; 
+  userId: string | null; // ID del usuario autenticado
+  userType: number | null;
   nickname: string | null;
   photoUrl: string | null;
-  loading: boolean; 
+  loading: boolean;
   gender: number | null;
   signIn: (email: string, password: string) => Promise<{ error: any } | undefined>; // Función para iniciar sesión
   signOut: () => Promise<void>; // Función para cerrar sesión
@@ -102,7 +103,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ session, user, userType, nickname, photoUrl, gender, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ session, user, userId: user?.id ?? null, userType, nickname, photoUrl, gender, loading, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );

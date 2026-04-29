@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState, useRef } from "react"
-import { getUserById, type User } from './User'
-import { useAuth } from '../context/AuthContext'
-import { getPendingRequests, type FriendRequest } from '../lib/Perfil/friends'
+import { getUserById, type User } from '../User'
+import { useAuth } from '../../context/AuthContext'
+import { getPendingRequests, type FriendRequest } from '../../lib/Perfil/friends'
 
 const DEFAULT_AVATAR = "https://ptbcoxaguvbwprxdundz.supabase.co/storage/v1/object/public/user_images/profile_picture_default.png"
 

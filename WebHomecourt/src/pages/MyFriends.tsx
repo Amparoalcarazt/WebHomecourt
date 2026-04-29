@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Nav from '../components/Nav/Nav';
 import ProfileButton from '../components/Perfil/ProfileButton';
-import { useAuth } from '../hooks/Perfil/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { getFriendsList, sendFriendRequest, getPendingRequests, acceptFriendRequest, denyFriendRequest, removeFriend, type Friend, type FriendRequest } from '../lib/Perfil/friends';
 import AddFriendTab from '../components/Perfil/MyFriends/AddFriendTab';
 import PendingRequestsTab from '../components/Perfil/MyFriends/PendingRequestsTab';
