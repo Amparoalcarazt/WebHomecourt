@@ -1,7 +1,5 @@
 // services/vote.ts
 import { supabase } from "../../lib/supabase"
-import { useAuth } from "../../hooks/Perfil/useAuth"
-
 export async function submitVote(matchupId: number, selectedId: number) {
   const {
     data: { session }
