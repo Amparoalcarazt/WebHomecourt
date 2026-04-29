@@ -35,7 +35,17 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true); // Empieza en true hasta que supabase confirme si hay sesión activa o no
   const [gender, setGender] = useState<number | null>(null);
 
+  const updateLastSeen = async (userId: string) => {
+    await supabase
+      .from('user_laker')
+      .update({ last_seen: new Date().toISOString() })
+      .eq('user_id', userId);
+  };
+
   const fetchUserData = (userId: string) => {
+    // actualizar last_seen 
+    updateLastSeen(userId); 
+
     supabase
       .from('user_laker')
       .select("user_type, nickname, photo_url, gender")
@@ -45,7 +55,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         setUserType(data?.user_type ?? null);
         setNickname(data?.nickname ?? null);
         setPhotoUrl(data?.photo_url ?? null);
-        setGender(data?.gender ?? null); 
+        setGender(data?.gender ?? null);
       });
   };
   // Obtiene sesion actual y escucha cambios de autenticacion
