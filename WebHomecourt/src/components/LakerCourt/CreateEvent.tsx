@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { getSkillLevels, type SkillLevel } from "../../services/apiEvents";
 import { getCourts, type Court } from "../../services/apiMAP";
 import StatusAlert from "../Messages/StatusAlert";
@@ -22,7 +22,7 @@ interface DatosEvento {
   female_event: boolean;
 }
 
-async function createEvent(event: DatosEvento) {
+async function createEvent(event: DatosEvento, userId: string) {
   const payload = {
     event_name: event.event_name,
     date: event.date && event.time ? `${event.date}T${event.time}:00-06:00` : event.date,
@@ -32,6 +32,7 @@ async function createEvent(event: DatosEvento) {
     max_players: event.max_players !== "" ? Number(event.max_players) : null,
     skill_level_id: (event.skill_level_id !== "" && event.skill_level_id !== null) ? Number(event.skill_level_id) : null,
     female_event: event.female_event,
+    created_user_id: userId,
   }
 
   const { error } = await supabase
@@ -50,7 +51,7 @@ export default function CrearEvento({ open, onClose }: propsPopup) {
   const [success, setSuccess] = useState(false);
   const [courts, setCourts] = useState<Court[] | null>(null);
   console.log(courts);
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const user = useAuth();
   const [formData, setFormData] = useState<DatosEvento>({
     event_name: "",
@@ -120,7 +121,11 @@ export default function CrearEvento({ open, onClose }: propsPopup) {
     }
 
     try {
-      await createEvent(formData)
+      if (!user.user?.id) {
+        setError("User not authenticated")
+        return
+      }
+      await createEvent(formData, user.user.id)
       setSuccess(true)
         window.location.reload() //Es mejor el navigate pq no recarga desde 0 la pagina, pero con vercel me da error porbare window
       // navigate(0)
