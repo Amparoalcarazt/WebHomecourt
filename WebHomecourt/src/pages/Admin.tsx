@@ -1,4 +1,4 @@
-import Nav from '../components/Nav'
+import Nav from '../components/Nav/Nav.tsx'
 import StatsCards from '../components/Admin/StatsCards'
 import UserReports from '../components/Admin/UserReports';
 import ActiveEvents from '../components/Admin/ActiveEvents.tsx'
@@ -40,8 +40,9 @@ export const getEventReports = async () => {
       created_at,
       event_id,
       reporter:user_laker!reporter_user_id(username, photo_url),
-      event:event!event_id(event_name, date, court:court!court_id(name))
+      event:event!event_id(event_name, date, created_user:user_laker!created_user_id(username, photo_url), court:court!court_id(name))
     `)
+    .neq('status', 'Resolved')
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -128,7 +129,7 @@ export const getUserHistory = async (userId: string, currentReportId: string) =>
 
 function Admin() {
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div >
       <Nav current="Admin" />
       <div className="px-4 md:px-14 py-5 pb-10 bg-zinc-100 w-full">
 
