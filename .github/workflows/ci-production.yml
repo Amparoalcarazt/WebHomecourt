@@ -26,6 +26,14 @@ jobs:
           node-version: 20
           cache: npm
           cache-dependency-path: WebHomecourt/package-lock.json
+      - name: Debug - listar archivos
+        run: |
+          echo "=== Raiz ==="
+          ls -la
+          echo "=== WebHomecourt ==="
+          ls -la WebHomecourt/
+          echo "=== package-lock raiz ==="
+          cat package-lock.json
       - run: npm ci
         working-directory: WebHomecourt
       
@@ -88,25 +96,11 @@ jobs:
       
       - run: npm install -g vercel
 
-
       - name: Pull configuración de Vercel
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      # - name: Build de producción
-      #   run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-      #   env:
-      #     VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      #     VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-      #     # NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
-      #     # NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
-      #     # NEXT_PUBLIC_ENV_NAME: production
-      #     # Path B/C — descomentar si aplica
-      #     VITE_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
-      #     VITE_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
-      #     # VITE_ENV_NAME: production
 
       - name: Deploy a producción
         run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
