@@ -2,13 +2,13 @@ import type { Matchup } from "./Brackets"
 function MatchupClosed({match}:{match: Matchup}) {
   match.winner_id
   return(
-    <div className="flex flex-col gap-2 p-4 border-gray-500 bg-white rounded-xl shadow">
+    <div className="flex flex-col gap-2 p-4 border-[#E7E6E8] border-1 bg-[#E7E6E8] rounded-xl shadow">
       <div>
         <div className="space-y-2">
-          <div className={`p-4 rounded-xl ${
-            (match.answer_a_id === null) ? "bg-gray-300 flex justify-center items-center" : 
-            (match.answer_a_id === match.winner_id) ? "bg-[#3B195C] text-white" : 
-            (match.answer_a_id === match.voted) ? "bg-[#9482A5]" : "bg-gray-300"}`}>
+          <div className={`p-4 rounded-xl text-xl ${
+            (match.answer_a_id === null) ? "bg-gris-disabled text-white flex justify-center items-center" : 
+            (match.answer_a_id === match.winner_id) ? "bg-morado-oscuro text-white" : 
+            (match.answer_a_id === match.voted) ? "bg-morado-fosfo text-white" : "bg-gris-disabled text-white "}`}>
             <div>
               {(match.answer_a_id == null) ? (
                 <div>TBD</div>
@@ -20,10 +20,10 @@ function MatchupClosed({match}:{match: Matchup}) {
               )}
             </div>
           </div>
-          <div className={`p-4 rounded-xl ${
-            (match.answer_b_id === null) ? "bg-gray-300 flex justify-center items-center" : 
-            (match.answer_b_id === match.winner_id) ? "bg-[#3B195C] text-white" : 
-            (match.answer_b_id === match.voted) ? "bg-[#9482A5]" : "bg-gray-300"}`}>
+          <div className={`p-4 rounded-xl text-xl ${
+            (match.answer_b_id === null) ? "bg-gris-disabled text-white flex justify-center items-center" : 
+            (match.answer_b_id === match.winner_id) ? "bg-morado-oscuro text-white" : 
+            (match.answer_b_id === match.voted) ? "bg-morado-fosfo text-white" : "bg-gris-disabled text-white"}`}>
             <div>
               {(match.answer_b_id == null) ? (
                 <div>TBD</div>

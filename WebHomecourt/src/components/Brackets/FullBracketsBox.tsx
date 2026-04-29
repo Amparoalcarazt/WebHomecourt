@@ -48,10 +48,10 @@ function FullBracketsBox() {
     }
 
     return(
-        <div className="bg-white p-6 rounded-2xl shadow outline-gray-500">
+        <div className="bg-white p-6 rounded-2xl shadow">
             {question && ( 
-            <h1 className="self-stretch text-center justify-start text-[#3B195C] text-2xl p-2 md:text-3xl "> {question.question_text}</h1>)}
-            {(question && matchups.length === 0) ? (<h3 className="self-stretch text-center justify-start text-[#3B195C]  p-2  ">Log in to participate </h3>):(
+            <h1 className="self-stretch text-center justify-start text-morado-oscuro text-2xl p-2 md:text-3xl "> {question.question_text}</h1>)}
+            {(question && matchups.length === 0) ? (<h3 className="self-stretch text-center justify-start text-morado-oscuro p-2  ">Log in to participate </h3>):(
             <div className={`flex flex-row gap-6 p-6 w-full overflow-x-auto transition-opacity ${refreshing ? 'opacity-60' : 'opacity-100'}`}>
                 
                 {Object.entries(rounds)
@@ -60,7 +60,7 @@ function FullBracketsBox() {
                     <div key={roundNum} className="flex flex-col gap-2 min-w-[200px] w-full">
 
                     {/* nombre de ronda */}
-                    <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1 text-center">
+                    <span className="text-xl font-semibold text-Gris-Oscuro tracking-widest mb-1 text-center">
                         {roundLabels[+roundNum] ?? `Ronda ${roundNum}`}
                     </span>
                     {/* matchups */}

@@ -40,13 +40,13 @@ function LastQuestion(){
       <div>
         {(!loggedIn) ? (<div></div>) : (  
         (question && loggedIn) ? (    
-          <div className="bg-white p-6 rounded-2xl shadow outline-gray-500">
-              <h1 className="self-stretch text-center justify-start text-[#3B195C] text-2xl p-2 md:text-3xl ">Previously: {question?.question_text}</h1>
-              <h2 className="self-stretch text-center justify-start text-[#3B195C] text-2xl p-2 md:text-3xl ">Winner: {question?.winner}</h2>
+          <div className="bg-white p-6 rounded-2xl shadow">
+              <h1 className="self-stretch text-center justify-start text-morado-oscuro text-2xl p-2 md:text-3xl ">Previously: {question?.question_text}</h1>
+              <h2 className="self-stretch text-center justify-start text-morado-oscuro text-2xl p-2 md:text-3xl ">Winner: {question?.winner}</h2>
           </div>
         ):(
-          <div className="bg-white p-6 rounded-2xl shadow outline-gray-500">
-            <h2 className="self-stretch text-center justify-start text-[#3B195C] text-2xl p-2 md:text-3xl ">There are no previous questions</h2>
+          <div className="bg-white p-6 rounded-2xl shadow">
+            <h2 className="self-stretch text-center justify-start text-morado-oscuro text-2xl p-2 md:text-3xl ">There are no previous questions</h2>
           </div>
         ))}
       </div>
