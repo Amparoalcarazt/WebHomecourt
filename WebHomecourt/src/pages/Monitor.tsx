@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
-import Nav from '../components/Nav'
+import Nav from '../components/Nav/Nav'
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import StatusAlert from '../components/Messages/StatusAlert'
