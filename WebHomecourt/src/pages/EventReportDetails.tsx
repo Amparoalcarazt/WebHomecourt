@@ -3,10 +3,11 @@ import Nav from '../components/Nav'
 import ActionButtons from '../components/ReportDetails/ActionButtons'
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import StatusAlert from '../components/Messages/StatusAlert'
 
 const formatDate = (dateStr: string) => {
   if (!dateStr) return 'N/A'
-  return new Intl.DateTimeFormat('es-MX', {
+  return new Intl.DateTimeFormat('en-US', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -19,6 +20,25 @@ const EventReportDetails = () => {
   const navigate = useNavigate()
   const { id } = useParams()
   const [report, setReport] = useState<any>(null)
+  const [alert, setAlert] = useState<{ title: string, message?: string, tone: 'success' | 'error' | 'warning' | 'info' } | null>(null)
+
+   const handleAction = async (action: 'dismiss' | 'warning' | 'suspend' | 'ban') => {
+    await supabase
+      .from('event_report')
+      .update({ status: 'Resolved' })
+      .eq('ereport_id', report.ereport_id)
+
+    const messages = {
+      dismiss: { title: 'Report dismissed', message: 'The report has been dismissed.', tone: 'success' as const },
+      warning: { title: 'Warning sent', message: 'The user has been notified.', tone: 'success' as const },
+      suspend: { title: 'User suspended', message: 'The user has been suspended for 7 days.', tone: 'success' as const },
+      ban: { title: 'User banned', message: 'The user has been permanently banned.', tone: 'success' as const },
+    }
+
+    setAlert(messages[action])
+    setTimeout(() => { setAlert(null); navigate('/admin') }, 2000)
+  }
+
 
   useEffect(() => {
     const fetchReport = async () => {
@@ -49,10 +69,28 @@ const EventReportDetails = () => {
       }
 
       setReport(data)
+
+      //change status to reviewed if the report is opened, params takes in id of report opened
+      if (data.status === 'Pending') {
+        await supabase
+          .from('event_report')
+          .update({ status: 'Reviewed' })
+          .eq('ereport_id', id)
+      }
     }
 
     fetchReport()
   }, [id])
+
+    const handleWarning = async (warnTypeId: number, customMessage: string | null) => {
+      await supabase.from('warning').insert({
+        user_id: report.event?.created_user_id,
+        report_id: report.ereport_id,
+        warn_type_id: warnTypeId,
+        custom_message: customMessage
+      })
+      handleAction('warning')
+    }
 
   if (!report) return <div>Loading...</div>
 
@@ -83,7 +121,7 @@ const EventReportDetails = () => {
             </button>
           </div>
 
-          <div className="flex flex-col gap-6 p-6">
+          <div className="flex flex-col gap-6 p-6 mx-2">
             <h2>Event: {report.event?.event_name ?? 'N/A'}</h2>
 
             <div className="flex flex-wrap gap-10">
@@ -94,7 +132,7 @@ const EventReportDetails = () => {
                 <p>Location: {report.event?.court?.name ?? 'N/A'}</p>
               </div>
 
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 mx-10">
                 <span className="material-symbols-outlined text-black text-[18px]">
                   groups
                 </span>
@@ -110,15 +148,16 @@ const EventReportDetails = () => {
                 <p>{formatDate(report.event?.date)}</p>
               </div>
 
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 mx-7">
                 <span className="material-symbols-outlined text-black text-[18px]">
                   person
                 </span>
-                <p>Host: {report.event?.created_user?.username ?? 'N/A'}</p>
+                <p>Host: @{report.event?.created_user?.username ?? 'N/A'}</p>
               </div>
             </div>
 
             <hr className="border-amarillo-lakers border-t-2 my-4 -mx-12" />
+
 
             <h2 className="font-medium text-black text-[20px]">
               Report Comment
@@ -129,16 +168,24 @@ const EventReportDetails = () => {
             </div>
 
             <ActionButtons
-                onDismiss={() => {}}
-                onWarning={() => {}}
-                onSuspend={() => {}}
-                onBan={() => {}}
-                suspendText="Suspend Event"
-                banText="Ban Event"
-                />
+              onDismiss={async () => { handleAction('dismiss') }}
+              onWarning={handleWarning}
+              onSuspend={async () => { handleAction('suspend') }}
+              onBan={async () => { handleAction('ban') }}
+              user={{
+                name: report.event?.created_user?.username ?? 'N/A',
+                photo_url: report.event?.created_user?.photo_url ?? ''
+              }}
+              target="Host"
+            />
           </div>
         </div>
       </div>
+      {alert && (
+        <div className="fixed bottom-6 right-6">
+          <StatusAlert tone={alert.tone} title={alert.title} message={alert.message} />
+        </div>
+      )}
     </div>
   )
 }
