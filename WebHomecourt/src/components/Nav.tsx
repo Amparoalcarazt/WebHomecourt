@@ -16,9 +16,10 @@ const pages = [
 
 interface NavProps {
   current: string
+  creditsOverride?: number; // To allow updating from my store
 }
 
-function Nav({ current }: NavProps) {
+function Nav({ current, creditsOverride }: NavProps) {
   const navigate = useNavigate()
   const { user: authUser, userType } = useAuth()
   const [user, setUser] = useState<User | null>(null)
@@ -72,9 +73,10 @@ function Nav({ current }: NavProps) {
 
           <div className="flex justify-start items-center gap-7">
             <div className="p-2.5 bg-white rounded-2xl outline -outline-offset-1 outline-black/25 flex justify-start items-center gap-3.5">
-              <span className="material-symbols-outlined text-amber-400 text-[200px]">payments</span>
+              <span className="material-symbols-outlined text-amarillo-lakers text-[200px]">payments</span>
                       
-              <div className="justify-start text-black text-2xl font-normal font-['Graphik']">{user?.credits ?? 0}</div>
+              <div className="justify-start text-black text-2xl font-normal font-['Graphik']">
+              {typeof creditsOverride === "number" ? creditsOverride : user?.credits ?? 0}</div>
             </div>
 
             <button

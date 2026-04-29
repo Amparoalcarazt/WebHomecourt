@@ -84,6 +84,8 @@ a {
   --color-amarillo-lakers:  #FCB136;
   --color-Background:       #F3F2F5;
   --color-Gris-Oscuro:      #6F6975;
+  --color-rojo-claro: #EF7474;
+  --color-rojo-oscuro: #BC3737; 
   --color-disabled:         #AD96C3;
   --color-texto-oscuro:     #11061A; /* lo uso en MyFriends.tsx */
   --color-texto-claro:      #F3F2F3; /* lo uso en MyFriends.tsx */
