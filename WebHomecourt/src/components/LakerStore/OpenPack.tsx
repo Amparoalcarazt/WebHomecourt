@@ -83,7 +83,7 @@ function OpenPack(prop: OpenPackProp) {
     const [isOpening, setIsOpening] = useState(false);
 
     // Temporary variable to get the info from the table
-    const [wonCards, setWonCards] = useState<WonCards[]>([]);
+    //const [wonCards, setWonCards] = useState<WonCards[]>([]);
 
     // Initial function to render the base components
     useEffect(() => {
@@ -135,7 +135,7 @@ function OpenPack(prop: OpenPackProp) {
             });*/
             try {
                 const cards = await buyPack(prop.packId, prop.userId);
-                setWonCards(cards);
+                //setWonCards(cards);
 
                 if (!cards || cards.length === 0) {
                     setOpenText("Sorry, you cannot afford this pack at the moment. Keep playing to win more credits!");
@@ -172,7 +172,7 @@ function OpenPack(prop: OpenPackProp) {
 
             // Reset everything for a new opening
             newCount = 0;
-            setWonCards([]); // Reset cards
+            //setWonCards([]); // Reset cards
             setOpenText('Press the pack or the open button to see what you get!');
             setOpenTextButton("OPEN");
             setImageURL(prop.packImg);
@@ -242,9 +242,9 @@ function OpenPack(prop: OpenPackProp) {
                                         </div>
                                         )
                                     )) 
-                                    : */}
+                                    :
                                     <p></p>
-                                    
+                                }*/}
                                 </div>
                             )
                             }
