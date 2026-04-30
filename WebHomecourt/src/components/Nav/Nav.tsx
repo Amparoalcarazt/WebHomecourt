@@ -48,8 +48,8 @@ function Nav({ current, creditsOverride }: NavProps) {
 
     loadNotifications()
 
-    // Actualizar cada 30 segundos
-    const interval = setInterval(loadNotifications, 30000)
+    // Actualizar cada 15 minutos
+    const interval = setInterval(loadNotifications, 900000)
     return () => clearInterval(interval)
   }, [authUser?.id])
 
