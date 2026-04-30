@@ -13,7 +13,7 @@ type PackCardProp = {
 function PackCard(prop: PackCardProp) {
     return (
         <div
-            //itemID={prop.itemId}
+            //itemID={prop.itemId} // hola
             key={prop.pack.pack_id}
             className="w-[18rem] md:w-[25rem] md:h-[15rem] p-4 mb-4 mr-5 bg-white rounded-xl shadow-[0px_4px_6px_-4px_rgba(0,0,0,0.10)] shadow-lg outline outline-[0.80px] outline-offset-[-0.80px] outline-gray-100"
         >
