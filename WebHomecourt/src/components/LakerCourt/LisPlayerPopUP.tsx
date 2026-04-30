@@ -49,7 +49,7 @@ export default function ListPlayerPopUp({
         setError(null);
         const { data, error } = await supabase.rpc("get_event_players", { p_event_id: eventId });
         if (error) {
-            setError("No se pudieron cargar los jugadores.");
+            setError("Could not load players.");
         } else {
             setPlayers((data ?? []) as EventPlayer[]);
         }
@@ -134,7 +134,7 @@ export default function ListPlayerPopUp({
           {/* Empty */}
           {!loading && !error && players.length === 0 && (
             <p className="text-sm text-gray-500 text-center py-6">
-              No hay jugadores inscritos aún.
+              No registered players yet.
             </p>
           )}
 

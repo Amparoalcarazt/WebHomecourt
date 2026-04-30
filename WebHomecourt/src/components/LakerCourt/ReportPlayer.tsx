@@ -47,9 +47,9 @@ export default function RportPopUp({eventId,reportedUserId,reportedUserName,onCl
     e.preventDefault(); //Es para que cuando se haga el submit, no se recarge sola, pq si no, la pagina da refresh antes de que se envie
     setError(null);
 
-    if (!user) { setError("Debes iniciar sesión para reportar."); return; }
-    if (!selectedTypeId) { setError("Selecciona un tipo de reporte."); return; }
-    if (!description.trim()) { setError("Describe lo que ocurrió."); return; }
+    if (!user) { setError("You must sign in to report."); return; }
+    if (!selectedTypeId) { setError("Select a report type."); return; }
+    if (!description.trim()) { setError("Describe what happened."); return; }
 
     setIsSubmitting(true);
     try {
@@ -65,7 +65,7 @@ export default function RportPopUp({eventId,reportedUserId,reportedUserName,onCl
       setSuccess(true);
       setTimeout(() => { onSuccess?.(); onClose(); }, 1500);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Error al enviar el reporte.");
+      setError(err instanceof Error ? err.message : "Error sending report.");
     } finally {
       setIsSubmitting(false);
     }
@@ -104,9 +104,9 @@ export default function RportPopUp({eventId,reportedUserId,reportedUserName,onCl
             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
           </svg>
           <p className="text-sm text-gray-600 leading-snug">
-            Tu reporte será revisado por nuestro{" "}
-            <span className="font-semibold text-purple-600">sistema de moderación IA</span>{" "}
-            para garantizar un juego justo y seguro para todos.
+            Your report will be reviewed by our{" "}
+            <span className="font-semibold text-purple-600">AI moderation system</span>{" "}
+            to ensure fair and safe play for everyone.
           </p>
         </div>
 
@@ -153,7 +153,7 @@ export default function RportPopUp({eventId,reportedUserId,reportedUserName,onCl
           </div>
 
           {error && ( <StatusAlert tone="error" title={error} /> )}
-          {success && ( <StatusAlert tone="success" title="¡Reporte enviado correctamente!" />)}
+          {success && ( <StatusAlert tone="success" title="Report submitted successfully!" />)}
 
           <div className="flex gap-3 pt-1">
             <button type="button" onClick={onClose} disabled={isSubmitting} className="flex-1 px-4 py-3 border border-gray-200 rounded-xl text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50">

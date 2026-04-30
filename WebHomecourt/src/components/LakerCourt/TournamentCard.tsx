@@ -99,7 +99,7 @@ export default function TournamentCard({ tournament, courtName, isJoined, isSubm
                         type="button"
                         onClick={onListPlayers}
                         className="h-11 w-11 rounded-xl bg-[#E7E6E8] text-morado-lakers flex items-center justify-center cursor-pointer"
-                        aria-label="Ver jugadores"
+                        aria-label="View players"
                     >
                         <LuUsers size={16} />
                     </button>
