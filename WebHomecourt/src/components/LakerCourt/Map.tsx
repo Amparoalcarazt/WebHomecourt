@@ -72,8 +72,8 @@ function LocationMarker({ locateRequest, onCityChange }: {
       map.flyTo(e.latlng, 15);
     },
     locationerror() {
-      setError("No se pudo obtener tu ubicacion.");
-      onCityChange("Ubicacion no disponible");
+      setError("Could not get your location.");
+      onCityChange("Location not available");
     },
   });
 
@@ -94,9 +94,9 @@ function LocationMarker({ locateRequest, onCityChange }: {
     async function loadCurrentCity() {
       try {
         const city = await getCiudad(lat, lng);
-        if (!isCancelled) onCityChange(city ?? "Ciudad no disponible");
+        if (!isCancelled) onCityChange(city ?? "City not available");
       } catch {
-        if (!isCancelled) onCityChange("Ciudad no disponible");
+        if (!isCancelled) onCityChange("City not available");
       }
     }
 
@@ -117,7 +117,7 @@ function LocationMarker({ locateRequest, onCityChange }: {
         radius={8}
         pathOptions={{ color: "#ffffff", weight: 2, fillColor: "#2b7fff", fillOpacity: 1 }}
       >
-        <Popup>Tu ubicacion actual</Popup>
+        <Popup>Your current location</Popup>
       </CircleMarker>
     </>
   );
@@ -128,7 +128,7 @@ export default function Map({ selectedCourtId: selectedCourtIdProp, onCourtSelec
   const [courts, setCourts] = useState<Court[]>([]);
   const [error, setError] = useState<string>("");
   const [locateRequest, setLocateRequest] = useState(0);
-  const [currentCity, setCurrentCity] = useState("Detectando ciudad...");
+  const [currentCity, setCurrentCity] = useState("Detecting city...");
   const [selectedCourtIdState, setSelectedCourtIdState] = useState<number | null>(null);
   const [map, setMap] = useState<LeafletMap | null>(null);
   const isControlled = selectedCourtIdProp !== undefined;
@@ -147,7 +147,7 @@ export default function Map({ selectedCourtId: selectedCourtIdProp, onCourtSelec
         const data = await getCourts();
         setCourts(data ?? []);
       } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : "No se pudo cargar.");
+        setError(loadError instanceof Error ? loadError.message : "Failed to load.");
       }
     }
     loadCourts();
@@ -250,7 +250,7 @@ export default function Map({ selectedCourtId: selectedCourtIdProp, onCourtSelec
             className="flex-none rounded-[14px] border border-[#e7e6e8] px-6 py-3 text-[1.02rem] font-bold text-[#6f6975] bg-white cursor-not-allowed opacity-60"
             disabled
           >
-            {error ? "No se pudieron cargar las canchas" : "Cargando canchas..."}
+            {error ? "Failed to load courts" : "Loading courts..."}
           </button>
         )}
       </div>

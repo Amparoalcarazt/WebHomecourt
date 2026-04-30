@@ -40,7 +40,10 @@ export default function CourtTournaments({ selectedCourtId }: CourtTournamentsPr
     let cancelled = false;
 
     async function loadTournamentData() {
-      if (!user?.id) return;
+      if (!user?.id) {
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       setLoadError(null);
       setActionError(null);
@@ -78,7 +81,7 @@ export default function CourtTournaments({ selectedCourtId }: CourtTournamentsPr
           setCourts([]);
           setSkillLevels([]);
           setJoinedEventIds(new Set());
-          setLoadError(loadError instanceof Error ? loadError.message : "No se pudieron cargar los torneos");
+          setLoadError(loadError instanceof Error ? loadError.message : "Failed to load tournaments");
         }
       } finally {
         if (!cancelled) {
@@ -128,7 +131,7 @@ export default function CourtTournaments({ selectedCourtId }: CourtTournamentsPr
 
 
     if (!isJoined && isFull) {
-      setActionError("Este evento ya esta lleno");
+      setActionError("This event is full");
       return;
     }
 
@@ -179,7 +182,7 @@ export default function CourtTournaments({ selectedCourtId }: CourtTournamentsPr
       setActionError(
         toggleError instanceof Error
           ? toggleError.message
-          : "No se pudo actualizar la inscripcion en el evento"
+          : "Failed to update event registration"
       );
     } finally {
       setSubmittingEventId(null);
@@ -300,7 +303,7 @@ export default function CourtTournaments({ selectedCourtId }: CourtTournamentsPr
 
           {selectedCourtId !== null ? (
             <div className="text-[13px] leading-[19.5px] text-Gris-Oscuro">
-              Mostrando torneos de <span className="text-morado-lakers">{selectedCourtName}</span>
+              Showing tournaments at <span className="text-morado-lakers">{selectedCourtName}</span>
             </div>
           ) : null}
 
@@ -309,7 +312,7 @@ export default function CourtTournaments({ selectedCourtId }: CourtTournamentsPr
           <div className="flex-1 min-h-0 overflow-y-auto">
             {loading ? (
               <div className="h-full min-h-62.5 rounded-[14px] border-[0.8px] border-[#E7E6E8] bg-Background flex items-center justify-center">
-                <div className="text-morado-lakers text-base font-semibold">Cargando torneos...</div>
+                <div className="text-morado-lakers text-base font-semibold">Loading tournaments...</div>
               </div>
             ) : null}
 
@@ -323,8 +326,8 @@ export default function CourtTournaments({ selectedCourtId }: CourtTournamentsPr
               <div className="h-full min-h-62.5 rounded-[14px] border-[0.8px] border-[#E7E6E8] bg-Background flex items-center justify-center">
                 <div className="text-Gris-Oscuro text-base font-semibold">
                   {selectedCourtId === null
-                    ? "Inicia sesion para ver los torneos"
-                    : `No hay torneos para ${selectedCourtName}`}
+                    ? "Sign in to view tournaments"
+                    : `No tournaments available for ${selectedCourtName}`}
                 </div>
               </div>
             ) : null}
@@ -340,7 +343,7 @@ export default function CourtTournaments({ selectedCourtId }: CourtTournamentsPr
                   getSkillLabel={filters.getSkillLabel}
                   onSignUp={handleToggleSignUp}
                   onReport={() => setReportEventTarget({ id: tournament.event_id, name: tournament.event_name })}
-                  onListPlayers={() => setListPlayersTarget({        // ← AGREGAR
+                  onListPlayers={() => setListPlayersTarget({        
                     id: tournament.event_id,
                     name: tournament.event_name,
                     location: courtNamesById.get(tournament.court_id) ?? `Cancha ${tournament.court_id}`,

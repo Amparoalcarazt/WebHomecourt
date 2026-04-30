@@ -7,7 +7,7 @@ export default function ActiveModerationCard() {
         </div>
 
         <div className="flex-1">
-          <h3 className="text-[14px] leading-5.25 text-[#11061A]">Active Moderation</h3>
+          <h3 className="text-[14px] leading-5.25 text-texto-oscuro">Active Moderation</h3>
           <p className="mt-1 text-[12px] leading-4.5 text-Gris-Oscuro">
             Every user&apos;s activity is monitored with AI to grant safe and respectful communication.
           </p>

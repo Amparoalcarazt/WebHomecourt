@@ -122,13 +122,13 @@ export default function CrearEvento({ open, onClose }: propsPopup) {
 
     try {
       if (!user.user?.id) {
-        setError("User not authenticated")
+        setError("Sign in to create an event")
         return
       }
       await createEvent(formData, user.user.id)
       setSuccess(true)
-        window.location.reload() //Es mejor el navigate pq no recarga desde 0 la pagina, pero con vercel me da error porbare window
-      // navigate(0)
+        window.location.reload() 
+     
       // onClose()
     } catch {
       setError("Failed to create event. Please try again.")
@@ -210,7 +210,13 @@ export default function CrearEvento({ open, onClose }: propsPopup) {
                 value={formData.date}
                 onChange={handleChange}
                 placeholder="DD/MM/YY"
-                min={new Date().toISOString().split('T')[0]}
+                min={(() => {
+                  const today = new Date();
+                  const yyyy = today.getFullYear();
+                  const mm = String(today.getMonth() + 1).padStart(2, '0');
+                  const dd = String(today.getDate()).padStart(2, '0');
+                  return `${yyyy}-${mm}-${dd}`;
+                })()}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent placeholder:text-disabled"
               />
             </div>
