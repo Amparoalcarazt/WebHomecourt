@@ -114,7 +114,7 @@ function PrivateChat({ selectedChat, onBack }: PrivateChatProps) {
         throw new Error(error.message)
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : "No se pudo enviar el mensaje"
+      const message = err instanceof Error ? err.message : "Failed to send message"
       setError(message)
     }
   }

@@ -21,7 +21,7 @@ function LakersCourt() {
   const [playersError, setPlayersError] = useState<string | null>(null)
   const [pendingUserEventId, setPendingUserEventId] = useState<number | null>(null)
   const [pendingEventId, setPendingEventId] = useState<number | null>(null)
-  const [pendingCourtSubtitle, setPendingCourtSubtitle] = useState('Cancha no disponible')
+  const [pendingCourtSubtitle, setPendingCourtSubtitle] = useState('Court not available')
   const [selectedRatings, setSelectedRatings] = useState<Record<string, number>>({})
   const [selectedCourtId, setSelectedCourtId] = useState<number | null>(null)
   const [userReputation, setUserReputation] = useState<number | null>(null)
@@ -53,7 +53,7 @@ function LakersCourt() {
       if (!pendingRating) {
         setPendingUserEventId(null)
         setPendingEventId(null)
-        setPendingCourtSubtitle('Cancha no disponible')
+        setPendingCourtSubtitle('Court not available')
         setPlayers([])
         setSelectedRatings({})
         return
@@ -65,7 +65,7 @@ function LakersCourt() {
         (value): value is string => Boolean(value && value.trim().length > 0)
       )
       setPendingCourtSubtitle(
-        subtitleParts.length > 0 ? subtitleParts.join(', ') : 'Cancha no disponible'
+        subtitleParts.length > 0 ? subtitleParts.join(', ') : 'Court not available'
       )
       setPlayers(pendingRating.players)
       setSelectedRatings((prevRatings) => {
@@ -83,10 +83,10 @@ function LakersCourt() {
     } catch (error) {
       setPendingUserEventId(null)
       setPendingEventId(null) 
-      setPendingCourtSubtitle('Cancha no disponible')
+      setPendingCourtSubtitle('Court not available')
       setPlayers([])
       setSelectedRatings({})
-      setPlayersError(error instanceof Error ? error.message : 'Error al cargar jugadores')
+      setPlayersError(error instanceof Error ? error.message : 'Error loading players')
     } finally {
       setLoadingPlayers(false)
     }
@@ -101,7 +101,7 @@ function LakersCourt() {
       setUserActivity(activity)
     } catch (error) {
       setUserActivity(null)
-      setActivityError(error instanceof Error ? error.message : 'Error al cargar tu actividad')
+      setActivityError(error instanceof Error ? error.message : 'Error loading your activity')
     } finally {
       setLoadingActivity(false)
     }
@@ -120,7 +120,7 @@ function LakersCourt() {
 
     const unratedPlayers = players.filter((player) => !selectedRatings[player.id])
     if (unratedPlayers.length > 0) {
-      setPlayersError('Debes calificar a todos los jugadores antes de enviar')
+      setPlayersError('You must rate all players before submitting')
       return
     }
 
@@ -134,7 +134,7 @@ function LakersCourt() {
       await markUserEventAsRated(pendingUserEventId)
       await loadPendingRatings()
     } catch (error) {
-      setPlayersError(error instanceof Error ? error.message : 'Error al guardar calificacion')
+      setPlayersError(error instanceof Error ? error.message : 'Error saving rating')
     } finally {
       setSubmittingRatings(false)
     }
@@ -176,7 +176,7 @@ function LakersCourt() {
             </div>
           </div>
         </div>
-        {loadingPlayers && <div className="p-5"><p>Cargando jugadores...</p></div>}
+        {loadingPlayers && <div className="p-5"><p>Loading players...</p></div>}
         {!loadingPlayers && playersError && <div className="p-5"><p>{playersError}</p></div>}
         {!loadingPlayers && players.length > 0 && <div className="p-5">
           <RatePlayersPanel
