@@ -112,7 +112,6 @@ function StoreRow({ packTypeId, packs, storeUser, onCreditsUpdated }: StoreRowPr
                     {/*<ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>*/}
                     {paginated.map((pack) => (
                         <PackCard
-                            itemId={String(pack.pack_id!)} // Doesn't work without ! to ensure not null
                             pack={pack} // Should be like the id tracking I guess?
                             rowTitle={rowTitle}
                             cardDesc={cardDesc ?? ""}
