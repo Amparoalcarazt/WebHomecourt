@@ -123,7 +123,7 @@ export default function MyFriends() {
 
   return (
     <div className="min-h-screen bg-Background">
-      <div className="flex flex-col items-center justify-center">
+      <div>
         <Nav current="Perfil" />
       </div>
 
