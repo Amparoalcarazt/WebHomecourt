@@ -50,7 +50,7 @@ export default function RatePlayersPanel({
           </p>
         </header>
 
-        <div className="bg-[#FDFDFD] border border-black/8 rounded-b-[15px] px-12.5 py-5 flex flex-col gap-12.5">
+        <div className="bg-Background border border-black/8 rounded-b-[15px] px-12.5 py-5 flex flex-col gap-12.5">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12.5 items-center justify-center">
             {players.map((player) => (
               <RateCard
