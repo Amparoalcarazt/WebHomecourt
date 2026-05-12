@@ -38,10 +38,6 @@ export default function RportPopUp({eventId,reportedUserId,reportedUserName,onCl
       });
   }, []);
 
-  // useEffect(() => {
-  //   document.body.style.overflow = "hidden";
-  //   return () => { document.body.style.overflow = ""; };
-  // }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); //Es para que cuando se haga el submit, no se recarge sola, pq si no, la pagina da refresh antes de que se envie

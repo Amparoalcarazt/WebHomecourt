@@ -13,7 +13,7 @@ interface RatePlayersPanelProps {
   title?: string;
   subtitle?: string;
   submitText?: string;
-  eventId: number; // necesario para el reporte
+  eventId: number; 
 }
 
 export default function RatePlayersPanel({
@@ -42,10 +42,10 @@ export default function RatePlayersPanel({
     <>
       <section className="w-full max-w-313.75 mx-auto flex flex-col">
         <header className="bg-morado-oscuro rounded-t-[15px] p-4 flex flex-col gap-2.5">
-          <h2 className="text-[#F3F2F3] text-[28px] leading-7.75 font-normal m-0">
+          <h2 className="text-texto-claro text-[28px] leading-7.75 font-normal m-0">
             {title}
           </h2>
-          <p className="text-[#F3F2F3] text-[20px] leading-5.5 font-normal m-0">
+          <p className="text-texto-claro text-[20px] leading-5.5 font-normal m-0">
             {subtitle}
           </p>
         </header>
@@ -73,14 +73,13 @@ export default function RatePlayersPanel({
             className={[
               "w-full h-12.5 rounded-[15px] px-0 py-0 text-[24px] leading-6.5 font-normal inline-flex items-center justify-center",
               submitDisabled
-                ? "bg-morado-lakers/50 outline-3 outline-morado-lakers/50 text-[#A09CA4] cursor-not-allowed pointer-events-none"
-                : "text-[#F3F2F3]",
+                ? "bg-morado-lakers/50 outline-3 outline-morado-lakers/50 text-gris-disabled cursor-not-allowed pointer-events-none"
+                : "text-texto-claro",
             ].join(" ")}
           />
         </div>
       </section>
 
-      {/* Modal de reporte — se monta solo cuando hay un target */}
       {reportTarget && (
         <RportPopUp
           eventId={eventId}

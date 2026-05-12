@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import StatusAlert from "../Messages/StatusAlert";
 
-// ─── Tipos ────────────────────────────────────────────────────────────────────
 
 interface EventPlayer {
   user_id: string;
@@ -27,7 +26,6 @@ interface ListPlayerPopUpProps {
 
 
 
-// ─── Componente ───────────────────────────────────────────────────────────────
 
 export default function ListPlayerPopUp({
   eventId,
@@ -108,7 +106,6 @@ export default function ListPlayerPopUp({
           </div>
         </div>
 
-        {/* Content */}
         <div className="px-6 py-6 space-y-4 max-h-[60vh] overflow-y-auto">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900">Registered Players</h3>
@@ -126,7 +123,6 @@ export default function ListPlayerPopUp({
             </div>
           )} */}
 
-          {/* Error */}
           {!loading && error && (
             <StatusAlert tone="error" title={error} />
           )}
@@ -138,7 +134,6 @@ export default function ListPlayerPopUp({
             </p>
           )}
 
-          {/* Players list */}
           {!loading && !error && players.length > 0 && (
             <div className="space-y-3">
               {players.map((player) => {
@@ -152,7 +147,6 @@ export default function ListPlayerPopUp({
                     onClick={() => navigate(`/perfil/${player.user_id}`)}
                     className="flex items-center gap-4 p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer"
                   >
-                    {/* Avatar */}
                     <div className="shrink-0">
                       {player.photo_url ? (
                         <img
@@ -167,7 +161,6 @@ export default function ListPlayerPopUp({
                       )}
                     </div>
 
-                    {/* Info */}
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-gray-900 truncate">{displayName}</h4>
                       <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
@@ -196,7 +189,6 @@ export default function ListPlayerPopUp({
           )}
         </div>
 
-        {/* Footer — solo Close */}
         <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
           <button
             type="button"

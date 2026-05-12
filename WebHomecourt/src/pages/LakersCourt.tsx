@@ -17,7 +17,7 @@ import type { UserActivityStats } from '../services/apiUser'
 function LakersCourt() {
   const [players, setPlayers] = useState<RatePlayer[]>([])
   const [loadingPlayers, setLoadingPlayers] = useState(true)
-  const [submittingRatings, setSubmittingRatings] = useState(false)
+  const [submittingRatings, setSubmittingRatings] = useState(false) // Para bloquear el boton mientras se envia
   const [playersError, setPlayersError] = useState<string | null>(null)
   const [pendingUserEventId, setPendingUserEventId] = useState<number | null>(null)
   const [pendingEventId, setPendingEventId] = useState<number | null>(null)
@@ -29,8 +29,7 @@ function LakersCourt() {
   const [userActivity, setUserActivity] = useState<UserActivityStats | null>(null)
   const [loadingActivity, setLoadingActivity] = useState(true)
   const [activityError, setActivityError] = useState<string | null>(null)
-  const allPlayersRated =
-    players.length > 0 && players.every((player) => Boolean(selectedRatings[player.id]))
+  const allPlayersRated = players.length > 0 && players.every((player) => Boolean(selectedRatings[player.id])) //Habilita y desahbilkita el boton. Si no hay jugadores, no lo acticva y si faltan por calificar algunos. Tamapoco
 
   const loadUserReputation = async () => {
     setLoadingReputation(true)
