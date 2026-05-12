@@ -167,7 +167,7 @@ export default function ListPlayerPopUp({
                           />
                         ))}
                         <span className="ml-1 text-gray-700 font-medium text-sm">
-                          {reputation > 0 ? reputation.toFixed(1) : "—"}
+                          {reputation > 0 ? reputation.toFixed(1) : ""}
                         </span>
                       </div>
                     </div>
