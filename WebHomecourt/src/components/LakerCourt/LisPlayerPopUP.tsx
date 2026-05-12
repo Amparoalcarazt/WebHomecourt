@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import StatusAlert from "../Messages/StatusAlert";
+import { FaStar } from "react-icons/fa"
 
 
 interface EventPlayer {
@@ -9,7 +10,7 @@ interface EventPlayer {
   username: string | null;
   nickname: string | null;
   photo_url: string | null;
-  gender_label: string  | null;
+  gender_label: string | null;
   age: number | null;
   reputation: number | null;
 }
@@ -40,21 +41,21 @@ export default function ListPlayerPopUp({
   const [players, setPlayers] = useState<EventPlayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   useEffect(() => {
     const fetchPlayers = async () => {
-        setLoading(true);
-        setError(null);
-        const { data, error } = await supabase.rpc("get_event_players", { p_event_id: eventId });
-        if (error) {
-            setError("Could not load players.");
-        } else {
-            setPlayers((data ?? []) as EventPlayer[]);
-        }
-        setLoading(false);
+      setLoading(true);
+      setError(null);
+      const { data, error } = await supabase.rpc("get_event_players", { p_event_id: eventId });
+      if (error) {
+        setError("Could not load players.");
+      } else {
+        setPlayers((data ?? []) as EventPlayer[]);
+      }
+      setLoading(false);
     };
     fetchPlayers();
-}, [eventId]);
+  }, [eventId]);
 
   // Bloquear scroll
   useEffect(() => {
@@ -160,13 +161,10 @@ export default function ListPlayerPopUp({
                       </div>
                       <div className="flex items-center gap-1 mt-1.5">
                         {[...Array(5)].map((_, i) => (
-                          <svg
+                          <FaStar 
                             key={i}
-                            className={`w-4 h-4 ${i < fullStars ? "text-yellow-400 fill-current" : "text-gray-300 fill-current"}`}
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                          </svg>
+                            className={`w-4 h-4 ${i < fullStars ? "text-yellow-400" : "text-gray-300"}`}
+                          />
                         ))}
                         <span className="ml-1 text-gray-700 font-medium text-sm">
                           {reputation > 0 ? reputation.toFixed(1) : "—"}
