@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../context/AuthContext";
 import StatusAlert from "../Messages/StatusAlert";
-
+import { FaExclamationCircle } from "react-icons/fa"
 interface ReportType {
   report_id: number;
   report_type: string;
@@ -15,7 +15,7 @@ interface ReportEventPopUpProps {
   onSuccess?: () => void;
 }
 
-export default function ReportEventPopUp({eventId,eventName,onClose,onSuccess,}: ReportEventPopUpProps) {
+export default function ReportEventPopUp({ eventId, eventName, onClose, onSuccess, }: ReportEventPopUpProps) {
   const { user } = useAuth();
 
   const [reportTypes, setReportTypes] = useState<ReportType[]>([]);
@@ -65,7 +65,7 @@ export default function ReportEventPopUp({eventId,eventName,onClose,onSuccess,}:
   };
 
   return (
-    
+
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
       <div className="relative z-10 w-full max-w-md rounded-[20px] bg-white shadow-2xl overflow-hidden">
@@ -75,9 +75,7 @@ export default function ReportEventPopUp({eventId,eventName,onClose,onSuccess,}:
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-500/30">
-                <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-                </svg>
+                <FaExclamationCircle className="h-5 w-5 text-red-400" />
               </div>
               <div>
                 <h2 className="text-lg font-bold text-white leading-tight">Report Event</h2>
@@ -108,23 +106,22 @@ export default function ReportEventPopUp({eventId,eventName,onClose,onSuccess,}:
           {/* Report Type */}
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2.5">Report Type</label>
-              <div className="grid grid-cols-2 gap-2">
-                {reportTypes.map((type) => (
-                  <button
-                    key={type.report_id}
-                    type="button"
-                    onClick={() => setSelectedTypeId(type.report_id)}
-                    className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-left ${
-                      selectedTypeId === type.report_id
-                        ? "bg-morado-lakers text-white ring-2 ring-purple-300 shadow-sm"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            <div className="grid grid-cols-2 gap-2">
+              {reportTypes.map((type) => (
+                <button
+                  key={type.report_id}
+                  type="button"
+                  onClick={() => setSelectedTypeId(type.report_id)}
+                  className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-left ${selectedTypeId === type.report_id
+                      ? "bg-morado-lakers text-white ring-2 ring-purple-300 shadow-sm"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }`}
-                  >
-                    {type.report_type}
-                  </button>
-                ))}
-              </div>
-            
+                >
+                  {type.report_type}
+                </button>
+              ))}
+            </div>
+
           </div>
 
           <div>
@@ -140,7 +137,7 @@ export default function ReportEventPopUp({eventId,eventName,onClose,onSuccess,}:
             />
           </div>
 
-          {error && ( <StatusAlert tone="error" title={error} />)}
+          {error && (<StatusAlert tone="error" title={error} />)}
           {success && (<StatusAlert tone="success" title="Report submitted successfully!" />)}
 
           <div className="flex gap-3 pt-1">
