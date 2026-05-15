@@ -1,10 +1,77 @@
 import Nav from '../components/Nav/Nav'
+import { useEffect, useState } from "react";
+import { getLakersPlayers } from "../components/Comparison/getPlayers";
+import { getPlayerSeasons } from "../components/Comparison/getPlayers";
+import PlayerCard from "../components/Comparison/PlayerCard";
+import type { Player } from "../components/Comparison/Player";
+import type { PlayerSeasonAverage } from "../components/Comparison/Player";
+
+function useLakersPlayers() {
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setTimeout(() => { getLakersPlayers().then(setPlayers); setLoading(false); }, 300);
+  }, []);
+  return { players, loading };
+}
+
+function usePlayerSeasons(teamPlayerId: number | null) {
+  const [seasons, setSeasons] = useState<PlayerSeasonAverage[]>([]);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (!teamPlayerId) { setSeasons([]); return; }
+    setLoading(true);
+    getPlayerSeasons(teamPlayerId).then(setSeasons)
+  }, [teamPlayerId]);
+  return { seasons, loading };
+}
 
 function Comparison() {
+  const { players} = useLakersPlayers();
+  const [p1Id, setP1Id] = useState<number | null>(null);
+  const [p1Season, setP1Season] = useState<number | null>(null);
+  const [p2Id, setP2Id] = useState<number | null>(null);
+  const [p2Season, setP2Season] = useState<number | null>(null);
+
+  const { seasons: s1} = usePlayerSeasons(p1Id);
+  const { seasons: s2} = usePlayerSeasons(p2Id);
+  const seasons1   = s1.map(r => r.season_start);
+  const seasons2   = s2.map(r => r.season_start);
+  const p1 = players.find(p => p.team_player_id === p1Id) ?? null;
+  const p2 = players.find(p => p.team_player_id === p2Id) ?? null;
+
+  //mas reciente como default
+  useEffect(() => { if (s1.length) setP1Season(s1[s1.length - 1].season_start); }, [s1]);
+  useEffect(() => { if (s2.length) setP2Season(s2[s2.length - 1].season_start); }, [s2]);
+
   return (
     <div >
       <Nav current="Comparison"/>
       
+      <div className='px-4 md:px-14 py-5 bg-zinc-100 w-full min-h-screen flex flex-col gap-6'>
+        <div className="w-full p-6 bg-[#3B195C] rounded-2xl shadow outline-black/25 inline-flex flex-col gap-3">
+          <h1 className="text-zinc-100">Player Comparison</h1>
+          <h5 className="text-white">
+            Compare Lakers members and their past seasons
+          </h5>
+        </div>
+          <div className="grid grid-cols-2 gap-4">
+            <PlayerCard
+              player={p1} season={p1Season}
+              players={players} seasons={seasons1}
+              onPlayerChange={id => { setP1Id(id); setP1Season(null); }}
+              onSeasonChange={setP1Season}
+              color={'morado-lakers'}
+            />
+            <PlayerCard
+              player={p2} season={p2Season}
+              players={players} seasons={seasons2}
+              onPlayerChange={id => { setP2Id(id); setP2Season(null); }}
+              onSeasonChange={setP2Season}
+              color={'amarillo-lakers'}
+            />
+          </div>
+      </div>
     </div>
   )
 }
