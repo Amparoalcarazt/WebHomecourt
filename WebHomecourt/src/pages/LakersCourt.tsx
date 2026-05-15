@@ -4,6 +4,7 @@ import CourtTournaments from '../components/LakerCourt/CourtTournaments'
 import RatePlayersPanel from '../components/LakerCourt/RatePlayersPanel'
 import YourActivityCard from '../components/YourActivityCard'
 import ActiveModerationCard from '../components/LakerCourt/ActiveModerationCard'
+import BannerReput from '../components/LakerCourt/BannerReput'
 import { useEffect, useState } from 'react'
 import {
   getPendingRatingPlayers,
@@ -17,7 +18,7 @@ import type { UserActivityStats } from '../services/apiUser'
 function LakersCourt() {
   const [players, setPlayers] = useState<RatePlayer[]>([])
   const [loadingPlayers, setLoadingPlayers] = useState(true)
-  const [submittingRatings, setSubmittingRatings] = useState(false)
+  const [submittingRatings, setSubmittingRatings] = useState(false) // Para bloquear el boton mientras se envia
   const [playersError, setPlayersError] = useState<string | null>(null)
   const [pendingUserEventId, setPendingUserEventId] = useState<number | null>(null)
   const [pendingEventId, setPendingEventId] = useState<number | null>(null)
@@ -29,8 +30,7 @@ function LakersCourt() {
   const [userActivity, setUserActivity] = useState<UserActivityStats | null>(null)
   const [loadingActivity, setLoadingActivity] = useState(true)
   const [activityError, setActivityError] = useState<string | null>(null)
-  const allPlayersRated =
-    players.length > 0 && players.every((player) => Boolean(selectedRatings[player.id]))
+  const allPlayersRated = players.length > 0 && players.every((player) => Boolean(selectedRatings[player.id])) //Habilita y desahbilkita el boton. Si no hay jugadores, no lo acticva y si faltan por calificar algunos. Tamapoco
 
   const loadUserReputation = async () => {
     setLoadingReputation(true)
@@ -152,30 +152,22 @@ function LakersCourt() {
         <Nav current="LakersCourt" />
       </div>
       <div className='px-14 py-5 bg-zinc-100 w-full '>
-        <div className="w-full max-w-315 mx-auto min-h-[169.588px] shrink-0 self-stretch px-5 py-7 bg-morado-oscuro rounded-2xl shadow-[0_20px_25px_-5px_rgba(0,0,0,0.10),0_8px_10px_-6px_rgba(0,0,0,0.10)] flex flex-col gap-6 overflow-hidden md:flex-row md:items-center md:justify-between">
-          <div className="inline-flex items-center gap-4">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1YSBBAgbPAWr0ku6NAqV0yojAo5q9RrpLww&s"
-              alt="Lakers logo"
-              className="h-20 w-24 rounded-md bg-zinc-100 p-1 object-contain"
-            />
-            <div className="text-zinc-100">
-              <h1 className="justify-start text-zinc-100">LAKERS COURT</h1>
-              <p className="mt-2 text-xl text-zinc-300">Find courts and basketball events near you</p>
-            </div>
-          </div>
-          <div className="self-end text-right md:self-auto">
-            <p className="uppercase tracking-[0.15em] text-zinc-300 text-sm">YOUR REPUTATION</p>
-            <div className="mt-2 inline-flex items-center gap-2 text-amarillo-laker">
-              <span className="text-6xl leading-none text-amarillo-lakers">
-                {loadingReputation ? '...' : userReputation !== null ? userReputation.toFixed(1) : '--'}
-              </span>
-              <span className="material-symbols-outlined leading-none text-amarillo-lakers" style={{ fontSize: '100px' }}>
-                star
-              </span>
-            </div>
-          </div>
-        </div>
+        <BannerReput
+          title="LAKERS COURT"
+          subtitle="Find courts and basketball events near you"
+          logoSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1YSBBAgbPAWr0ku6NAqV0yojAo5q9RrpLww&s"
+          logoAlt="Lakers logo"
+          reputationValue={userReputation}
+          loadingReputation={loadingReputation}
+          icon={
+            <span
+              className="material-symbols-outlined leading-none text-amarillo-lakers"
+              style={{ fontSize: '100px' }}
+            >
+              star
+            </span>
+          }
+        />
         {loadingPlayers && <div className="p-5"><p>Loading players...</p></div>}
         {!loadingPlayers && playersError && <div className="p-5"><p>{playersError}</p></div>}
         {!loadingPlayers && players.length > 0 && <div className="p-5">

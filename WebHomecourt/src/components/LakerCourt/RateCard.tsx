@@ -48,7 +48,7 @@ export default function RateCard({
           <button
             key={starValue}
             className={`w-6 h-6 text-2xl leading-none flex items-center justify-center transition-all duration-200 ${
-              starValue <= rating ? "text-amarillo-lakers" : "text-[#A09CA4]"
+              starValue <= rating ? "text-amarillo-lakers" : "text-gris-disabled"
             } cursor-pointer bg-transparent border-none p-0`}
             onClick={() => handleRatingChange(starValue)}
             aria-label={`Calificar ${starValue} de 5 estrellas`}
