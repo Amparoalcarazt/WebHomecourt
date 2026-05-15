@@ -40,11 +40,13 @@ function FullBracketsBox() {
     acc[m.round] = [...(acc[m.round] ?? []), m]
     return acc
     }, {})
-    const roundLabels: Record<number, string> = {
-    1: 'Round of 16',
-    2: 'Quarter finals',
-    3: 'Semifinals',
-    4: 'Final',
+    const totalRounds = Object.keys(rounds).length
+
+    const getRoundLabel = (round: number) => {
+        if (round === totalRounds) return 'Final'
+        if (round === totalRounds - 1) return 'Semifinals'
+        if (round === totalRounds - 2) return 'Quarter finals'
+        return `Round ${round}`
     }
 
     return(
@@ -61,7 +63,7 @@ function FullBracketsBox() {
 
                     {/* nombre de ronda */}
                     <span className="text-xl font-semibold text-Gris-Oscuro tracking-widest mb-1 text-center">
-                        {roundLabels[+roundNum] ?? `Ronda ${roundNum}`}
+                        {getRoundLabel(+roundNum)}
                     </span>
                     {/* matchups */}
                     <div className="flex flex-col justify-around flex-1" style={{

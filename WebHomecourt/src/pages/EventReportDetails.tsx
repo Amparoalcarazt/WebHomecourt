@@ -175,7 +175,7 @@ const EventReportDetails = () => {
                   <h4 style={{ fontWeight: '600' }}>Host</h4>
                 </div>
                 <div className="flex flex-row items-start gap-2">
-                  <div className="w-18 h-18 rounded-full bg-gray-200 overflow-hidden flex-shrink-0 -mt-1">
+                  <div className="w-18 h-18 rounded-full bg-gray-200 overflow-hidden shrink-0 -mt-1">
                     {report.event?.created_user?.photo_url && (
                       <img src={report.event.created_user.photo_url} className="w-full h-full object-cover" />
                     )}
@@ -207,7 +207,7 @@ const EventReportDetails = () => {
                 <div className="grid gap-10" style={{ gridTemplateColumns: '2fr 1fr' }}>
                   <div className="flex flex-col gap-3">
                     <h2 className="font-medium text-black" style={{ fontSize: '20px' }}>Report Comment</h2>
-                    <div className="bg-[#9382A5]/50 border border-gray-200 rounded-xl p-4 min-h-[150px]">
+                    <div className="bg-[#9382A5]/50 border border-gray-200 rounded-xl p-4 min-h-37.5">
                       <p className="text-black">{report.comment ?? 'No comment'}</p>
                     </div>
                   </div>
