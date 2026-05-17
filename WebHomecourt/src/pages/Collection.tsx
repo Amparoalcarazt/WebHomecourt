@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useStoreUser } from '../hooks/useStoreUser.ts'; // Hook for store user, just to get sesh info
 import Nav from '../components/Nav/Nav.tsx';
 import Button from '../components/button.tsx';
+// Specific to this screen
+import CategorySummary from '../components/Collection/CategorySummary.tsx';
 import type { CardSummary } from '../hooks/Collection/collectionTypes.tsx';
 
 // Handle API call
@@ -26,13 +28,30 @@ async function getCollectionSummary(userId: string | null) {
 
     console.log("raw data:", JSON.stringify(data, null, 2)) // A ver como se ve lo q fue fetched
 
+    // Takes results del data and turns into the CollectedCard obj
+    /*const summary: CardSummary[] = data.map(row => {
+        // Creates the game items 
+        return {
+            unlocked_common: row.unlocked_common,
+            total_common: row.total_common,
+            unlocked_rare: row.unlocked_rare,
+            total_rare: row.total_rare,
+            unlocked_legendary: row.unlocked_legendary,
+            total_legendary: row.total_legendary,
+            unlocked_limited: row.unlocked_limited,
+            total_limited: row.total_limited
+        }
+    });
+
+    return summary;
+    */
     return data;
 }
 
 function Collection() {
     const navigate = useNavigate(); // Switch to diff screen
     const { storeUser } = useStoreUser(); // Use hook to get basic session and login info
-    const [summary, setSummary] = useState<CardSummary[]>([]); // Will only be one obj but whatever
+    const [summary, setSummary] = useState<CardSummary | null>(null); // Says how many the user has unlocked
 
     // Get user session info 
     useEffect(() => {
@@ -48,9 +67,10 @@ function Collection() {
         async function loadSummary() {
             try {
                 const result = await getCollectionSummary(storeUser.user_id);
-                setSummary(result);
+                setSummary(result?.[0] || null);
             } catch (err) {
                 console.error(err);
+                setSummary(null);
             }
         }
 
@@ -68,7 +88,7 @@ function Collection() {
                 </div>
 
                 {/* View store vs colection */}
-                <div className="flex flex-row justify-left mt-10">
+                <div className="flex flex-row justify-left mt-10 mb-8">
                     <Button
                         text="STORE"
                         type="primarydisable"
@@ -84,8 +104,32 @@ function Collection() {
                     />
                 </div>
 
-                {/* Card summary */}
-                
+                {/* How many cards the user has unlocked per category*/}
+                <div className="grid grid-cols-2 justify-between items-center md:flex md:flex-row gap-4 md:justify-left">
+                    <CategorySummary
+                        category='Common'
+                        unlocked={summary?.unlocked_common ?? 0}
+                        total={summary?.total_common ?? 0} outline='outline-2 outline-royal-blue'>
+                    </CategorySummary>
+
+                    <CategorySummary
+                        category='Rare'
+                        unlocked={summary?.unlocked_rare ?? 0}
+                        total={summary?.total_rare ?? 0} outline='outline-2 outline-morado-lakers'>
+                    </CategorySummary>
+
+                    <CategorySummary
+                        category='Legendary'
+                        unlocked={summary?.unlocked_legendary ?? 0}
+                        total={summary?.total_legendary ?? 0} outline='outline-2 outline-amarillo-lakers'>
+                    </CategorySummary>
+
+                    <CategorySummary
+                        category='Limited'
+                        unlocked={summary?.unlocked_limited ?? 0}
+                        total={summary?.total_limited ?? 0} outline='outline-2 outline-light-blue'>
+                    </CategorySummary>
+                </div>
 
                 {/* Card filters */}
 
