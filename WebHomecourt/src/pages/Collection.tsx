@@ -91,7 +91,7 @@ function Collection() {
                 <div className="flex flex-row justify-left mt-10 mb-8">
                     <Button
                         text="STORE"
-                        type="primarydisable"
+                        type="secondary"
                         onClick={() => navigate('/store')}
                         className="text-2xl font-semibold px-10 mr-8"
                     />
