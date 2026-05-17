@@ -83,8 +83,8 @@ function Collection() {
             <div className="px-4 py-5 md:px-14 md:py-5 bg-Background w-full">
                 {/* Title comp */}
                 <div className="w-full px-3 py-4 md:px-5 md:py-7 bg-violet-950 rounded-2xl shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] outline outline-1 outline-offset-[-1px] outline-black/25 flex flex-col justify-left items-left overflow-hidden">
-                    <h1 className="justify-start text-white title1">Laker Card Store</h1>
-                    <p className="justify-start text-white mt-2 text-xl text-zinc-300">Unlock more cards featuring your favorite players and improve your Dunk Royale game deck</p>
+                    <h1 className="justify-start text-white title1">Laker Card Collection</h1>
+                    <p className="justify-start text-white mt-2 text-xl text-zinc-300">Collect virtual cards to show off your favorite team and power up your Dunk Royale gameplay</p>
                 </div>
 
                 {/* View store vs colection */}
