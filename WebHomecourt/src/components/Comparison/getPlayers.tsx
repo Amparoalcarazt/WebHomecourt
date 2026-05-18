@@ -18,7 +18,7 @@ export async function getPlayerSeasons(teamPlayerId: number) {
     .schema('simulacion_juego')
     .from('view_player_season_average')
     .select('*')
-    .eq('team_player_id', 1)
+    .eq('team_player_id', teamPlayerId)
     .order('season_start', { ascending: true });
 
   if (error) throw error;

@@ -5,6 +5,7 @@ import { getPlayerSeasons } from "../components/Comparison/getPlayers";
 import PlayerCard from "../components/Comparison/PlayerCard";
 import type { Player } from "../components/Comparison/Player";
 import type { PlayerSeasonAverage } from "../components/Comparison/Player";
+import CircleStats from "../components/Comparison/CircleStats";
 
 function useLakersPlayers() {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -39,6 +40,8 @@ function Comparison() {
   const seasons2   = s2.map(r => r.season_start);
   const p1 = players.find(p => p.team_player_id === p1Id) ?? null;
   const p2 = players.find(p => p.team_player_id === p2Id) ?? null;
+  const stats1 = s1.find(r => r.season_start === p1Season) ?? null;
+  const stats2 = s2.find(r => r.season_start === p2Season) ?? null;
 
   //mas reciente como default
   useEffect(() => { if (s1.length) setP1Season(s1[s1.length - 1].season_start); }, [s1]);
@@ -70,6 +73,23 @@ function Comparison() {
               onSeasonChange={setP2Season}
               color={'amarillo-lakers'}
             />
+          </div>
+          {/* circulos*/}
+          <div>
+            {(stats1 || stats2) && (
+              <div>
+                <h1>Season Stats</h1>
+                <div className="rounded-2xl py-2">
+                  <div className="grid grid-cols-5 gap-3">
+                    <CircleStats label="Points" p1={p1} p2={p2} v1={stats1?.points_per_game ?? null}  v2={stats2?.points_per_game ?? null} max={90} />
+                    <CircleStats label="Rebounds" p1={p1} p2={p2} v1={stats1?.rebounds_per_game ?? null} v2={stats2?.rebounds_per_game ?? null} max={35} />
+                    <CircleStats label="Assists" p1={p1} p2={p2} v1={stats1?.assists_per_game ?? null} v2={stats2?.assists_per_game ?? null} max={30} />
+                    <CircleStats label="Steals" p1={p1} p2={p2} v1={stats1?.steals_per_game ?? null} v2={stats2?.steals_per_game ?? null} max={10} />
+                    <CircleStats label="Accuracy %" p1={p1} p2={p2} v1={stats1?.fg_pct ?? null} v2={stats2?.fg_pct ?? null} max={100} />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
       </div>
     </div>
