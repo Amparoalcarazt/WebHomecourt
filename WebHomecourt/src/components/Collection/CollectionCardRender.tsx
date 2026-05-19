@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import type { CollectionCard } from '../../hooks/Collection/collectionTypes.tsx';
 import LockedCardFront from './LockedCardFront.tsx';
+import CardFront from './CardFront.tsx';
 
 type CardProp = {
     card: CollectionCard;
+    userId?: string | null; // To update whether card is added to deck; might be null if is not signed in
 }
 
 function CollectionCardRender({ card }: CardProp) {
@@ -13,10 +15,7 @@ function CollectionCardRender({ card }: CardProp) {
         return (
             <div onClick={() => setCardFront((prev) => !prev)}>
                 {cardFront ? (
-                    <div>
-                        <h3>{card.player_name}</h3>
-                        <p>Unlocked: {card.times_unlocked} times</p>
-                    </div>
+                    <CardFront card={card} />
                 ) : (
                     <div>
                         <h3>Back stats</h3>

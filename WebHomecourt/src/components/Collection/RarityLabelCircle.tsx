@@ -1,17 +1,20 @@
 // Prop for rarity circle
 interface RarityProp {
-    type: 'common' | 'rare' | 'legendary' | 'limited' | 'locked' ; 
+    type: 'Common' | 'Rare' | 'Legendary' | 'Limited' | 'locked' ; 
     labelText: string; // What is shown in frontend
 }
 
 // Record sirve para poder alt el style and kinda "inject it" depending on the var recieved
 const typeStyles: Record<string, string> = {
-    common: "bg-royal-blue", 
+    Common: "bg-royal-blue", 
+    Rare: "bg-morado-lakers",
+    Legendary: "bg-amarillo-lakers",
+    Limited: "bg-light-blue",
     locked: "bg-Gris-Oscuro"
 };
 
 function RarityLabelCircle({
-    type = 'common',
+    type = 'Common',
     labelText,
 }: RarityProp) {
     return (

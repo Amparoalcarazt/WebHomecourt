@@ -230,7 +230,7 @@ function Collection() {
                 ) : (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {paginated.map((card) => (
-                            <CollectionCardRender key={card.card_id} card={card}/>
+                            <CollectionCardRender key={card.card_id} card={card} userId={storeUser.user_id}/>
                         ))}
                     </div>
                 )}
