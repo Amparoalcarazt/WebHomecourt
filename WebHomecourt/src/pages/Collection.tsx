@@ -176,25 +176,25 @@ function Collection() {
                     <CategorySummary
                         category='Common'
                         unlocked={summary?.unlocked_common ?? 0}
-                        total={summary?.total_common ?? 0} outline='outline-4 outline-royal-blue'>
+                        total={summary?.total_common ?? 1} outline='outline-4 outline-royal-blue'>
                     </CategorySummary>
 
                     <CategorySummary
                         category='Rare'
                         unlocked={summary?.unlocked_rare ?? 0}
-                        total={summary?.total_rare ?? 0} outline='outline-4 outline-morado-lakers'>
+                        total={summary?.total_rare ?? 1} outline='outline-4 outline-morado-lakers'>
                     </CategorySummary>
 
                     <CategorySummary
                         category='Legendary'
                         unlocked={summary?.unlocked_legendary ?? 0}
-                        total={summary?.total_legendary ?? 0} outline='outline-4 outline-amarillo-lakers'>
+                        total={summary?.total_legendary ?? 1} outline='outline-4 outline-amarillo-lakers'>
                     </CategorySummary>
 
                     <CategorySummary
                         category='Limited'
                         unlocked={summary?.unlocked_limited ?? 0}
-                        total={summary?.total_limited ?? 0} outline='outline-4 outline-light-blue'>
+                        total={summary?.total_limited ?? 1} outline='outline-4 outline-light-blue'>
                     </CategorySummary>
                 </div>
 
@@ -202,7 +202,7 @@ function Collection() {
 
                 {/* Card collection */}
                 {/* Arrows for different collection pages */}
-                <div className="flex flex-row justify-end mt-5">
+                <div className="flex flex-row justify-end mt-5 mr-15 mb-2">
                     <div className="flex items-center gap-2 shrink-0 ml-4">
                         <button
                             onClick={() => setPage((p) => Math.max(0, p - 1))}
@@ -226,7 +226,7 @@ function Collection() {
                 {/* Collectioin itself */}
 
                 {cardCollection.length === 0 ? (
-                    <p className="w-fit p-4 mb-4 bg-white rounded-xl shadow-[0px_4px_6px_-4px_rgba(0,0,0,0.10)] shadow-lg outline outline-[0.80px] outline-offset-[-0.80px] outline-gray-100">Loading collection...</p>
+                    <p>Loading collection...</p>
                 ) : (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {paginated.map((card) => (
