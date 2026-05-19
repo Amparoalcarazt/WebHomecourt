@@ -6,6 +6,7 @@ import Nav from '../components/Nav/Nav.tsx';
 import Button from '../components/button.tsx';
 // Specific to this screen
 import CategorySummary from '../components/Collection/CategorySummary.tsx';
+import CollectionCardRender from '../components/Collection/CollectionCardRender.tsx';
 import type { CardSummary, CollectionCard } from '../hooks/Collection/collectionTypes.tsx';
 
 // Handle API call
@@ -74,19 +75,19 @@ async function getCollectionCards(userId: string | null) {
         // Creates the game items 
         return {
             card_id: row.card_id,
-            player_name: row.player_name, 
-            web_url: row.web_url, 
-            attack: row.attack, 
-            defense: row.defense, 
+            player_name: row.player_name,
+            web_url: row.web_url,
+            attack: row.attack,
+            defense: row.defense,
             velocity: row.velocity,
             rarity_id: row.rarity_id,
-            rarity_label: row.rarity_label, 
+            rarity_label: row.rarity_label,
             // These can all be emtpy or 0 btw
-            times_unlocked: row.times_unlocked, 
+            times_unlocked: row.times_unlocked,
             first_unlock: row.first_unlock,
-            pack_name: row.pack_name, 
-            user_owned: row.user_owned, 
-            added_deck: row.added_deck 
+            pack_name: row.pack_name,
+            user_owned: row.user_owned,
+            added_deck: row.added_deck
         }
     });
 
@@ -98,6 +99,7 @@ function Collection() {
     const { storeUser } = useStoreUser(); // Use hook to get basic session and login info
     const [summary, setSummary] = useState<CardSummary | null>(null); // Says how many the user has unlocked
     const [cardCollection, setCardCollection] = useState<CollectionCard[]>([]); // List of cards in the collection
+    const [page, setPage] = useState(0); // The state for pages
 
     // Get user session info 
     useEffect(() => {
@@ -126,16 +128,21 @@ function Collection() {
     // Obtain card collection itself
     useEffect(() => {
         async function loadCards() {
-          try {
-            const result = await getCollectionCards(storeUser.user_id);
-            setCardCollection(result);
-          } catch (err) {
-            console.error(err);
-          }
+            try {
+                const result = await getCollectionCards(storeUser.user_id);
+                setCardCollection(result);
+            } catch (err) {
+                console.error(err);
+            }
         }
-    
+
         loadCards();
-      }, [storeUser.user_id]);
+    }, [storeUser.user_id]);
+
+    // Logic to paginate the colllection itself
+    const PAGE_SIZE = 16; // Will be using 4x4 grid
+    const totalPages = Math.ceil(cardCollection.length / PAGE_SIZE); // How many pages will be needed rounded up 
+    const paginated = cardCollection.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE); // Divide by pages
 
     return (
         <div>
@@ -194,6 +201,40 @@ function Collection() {
                 {/* Card filters */}
 
                 {/* Card collection */}
+                {/* Arrows for different collection pages */}
+                <div className="flex flex-row justify-end mt-5">
+                    <div className="flex items-center gap-2 shrink-0 ml-4">
+                        <button
+                            onClick={() => setPage((p) => Math.max(0, p - 1))}
+                            disabled={page === 0}
+                            className="text-black disabled:opacity-30 hover:opacity-75 transition text-6xl px-4"
+                        >
+                            ‹
+                        </button>
+                        <span className="text-black text-xl">
+                            {page + 1} / {totalPages || 1}
+                        </span>
+                        <button
+                            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                            disabled={page >= totalPages - 1}
+                            className="text-black disabled:opacity-30 hover:opacity-75 transition text-6xl px-4"
+                        >
+                            ›
+                        </button>
+                    </div>
+                </div>
+                {/* Collectioin itself */}
+
+                {cardCollection.length === 0 ? (
+                    <p className="w-fit p-4 mb-4 bg-white rounded-xl shadow-[0px_4px_6px_-4px_rgba(0,0,0,0.10)] shadow-lg outline outline-[0.80px] outline-offset-[-0.80px] outline-gray-100">Loading collection...</p>
+                ) : (
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 mx-2">
+                        {paginated.map((card) => (
+                            <CollectionCardRender key={card.card_id} card={card}/>
+                        ))}
+                    </div>
+                )}
+
             </div>
         </div>
     )
