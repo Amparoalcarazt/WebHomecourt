@@ -18,7 +18,7 @@ function RarityLabelCircle({
     labelText,
 }: RarityProp) {
     return (
-        <div className={`w-32 py-1.5 text-center rounded-full ${typeStyles[type]} text-lg text-white`}>
+        <div className={`w-32 py-1 text-center rounded-full ${typeStyles[type]} text-base text-white`}>
             {labelText}
         </div>
     )

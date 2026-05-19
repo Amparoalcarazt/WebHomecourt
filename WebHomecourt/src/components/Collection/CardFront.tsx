@@ -24,9 +24,9 @@ function CardFront({ card }: CardProp) {
     return (
         <div className="w-60 h-96 px-4 py-3 bg-white rounded-2xl shadow-[0px_4px_6px_-4px_rgba(0,0,0,0.10)] shadow-lg outline outline-[0.80px] outline-offset-[-0.80px] outline-gray-100 inline-flex flex-col justify-between items-center animate-[pulse_0.75s_ease-in-out_2]">
             {/* Image w player and counter */}
-            <div className="h-52 w-48 flex flex-col relative mt-2.5 justify-center items-center">
+            <div className="h-52 w-48 flex flex-col relative mt-1.5 justify-center items-center">
                 {/* Circle with repeated ownership count */}
-                <div className="absolute top-0 right-0 z-10 translate-x-1/4 -translate-y-1/5 w-16 h-7 bg-morado-fosfo rounded-full text-xl text-center text-white">{card.times_unlocked}x</div>
+                {card.times_unlocked > 1 && <div className="absolute top-0 right-0 z-10 translate-x-1/4 -translate-y-1/5 w-16 h-7 bg-morado-fosfo rounded-full text-xl text-center text-white">{card.times_unlocked}x</div>}
 
                 {/* Image and triangle framing it */}
                 <div className="h-48 w-44 flex flex-col justify-center items-center gap-2.5 overflow-hidden mt-1 text-white text-8xl font-bold relative">
@@ -49,7 +49,7 @@ function CardFront({ card }: CardProp) {
                     type={card.rarity_label as 'Common' | 'Rare' | 'Legendary' | 'Limited' | 'locked'}
                     labelText={card.rarity_label}
                 />
-                <p className="mt-1.5">Pack: {card.player_name}</p>
+                <p className="mt-1.5">Pack: {card.pack_name}</p>
                 <div className="text-sm mt-0.5">Unlocked: {format(parseISO(card.first_unlock), "MMM dd, yyyy")}</div>
             </div>
         </div>
