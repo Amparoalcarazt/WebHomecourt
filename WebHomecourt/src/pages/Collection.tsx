@@ -140,7 +140,7 @@ function Collection() {
     }, [storeUser.user_id]);
 
     // Logic to paginate the colllection itself
-    const PAGE_SIZE = 16; // Will be using 4x4 grid
+    const PAGE_SIZE = 12; // Will be using 3x4 grid
     const totalPages = Math.ceil(cardCollection.length / PAGE_SIZE); // How many pages will be needed rounded up 
     const paginated = cardCollection.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE); // Divide by pages
 
@@ -228,7 +228,7 @@ function Collection() {
                 {cardCollection.length === 0 ? (
                     <p className="w-fit p-4 mb-4 bg-white rounded-xl shadow-[0px_4px_6px_-4px_rgba(0,0,0,0.10)] shadow-lg outline outline-[0.80px] outline-offset-[-0.80px] outline-gray-100">Loading collection...</p>
                 ) : (
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 mx-2">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {paginated.map((card) => (
                             <CollectionCardRender key={card.card_id} card={card}/>
                         ))}
