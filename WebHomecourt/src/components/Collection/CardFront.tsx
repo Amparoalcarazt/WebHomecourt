@@ -1,15 +1,9 @@
-import { useState } from 'react';
 import { format, parseISO } from 'date-fns'; // For date formattings 
 import type { CollectionCard } from '../../hooks/Collection/collectionTypes.tsx';
 import RarityLabelCircle from './RarityLabelCircle.tsx';
 
 type CardProp = {
     card: CollectionCard;
-}
-
-interface TriangleColor {
-    type: 'Common' | 'Rare' | 'Legendary' | 'Limited' | 'locked';
-    labelText: string; // What is shown in frontend
 }
 
 // Record sirve para poder alt el style and kinda "inject it" depending on the var recieved
@@ -37,7 +31,6 @@ function CardFront({ card }: CardProp) {
                     ></div>
                 </div>
             </div>
-
 
             {/* Card info */}
             <div className="font-semibold text-xl text-center mt-1.5 mb-1">{card.player_name}</div>
