@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { CollectionCard } from '../../hooks/Collection/collectionTypes.tsx';
 import LockedCardFront from './LockedCardFront.tsx';
 import CardFront from './CardFront.tsx';
+import CardBack from './CardBack.tsx';
 
 type CardProp = {
     card: CollectionCard;
@@ -17,9 +18,7 @@ function CollectionCardRender({ card }: CardProp) {
                 {cardFront ? (
                     <CardFront card={card} />
                 ) : (
-                    <div>
-                        <h3>Back stats</h3>
-                    </div>
+                    <CardBack card={card} />
                 )}
             </div>
         )
