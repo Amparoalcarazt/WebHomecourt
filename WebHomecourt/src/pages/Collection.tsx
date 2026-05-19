@@ -6,7 +6,7 @@ import Nav from '../components/Nav/Nav.tsx';
 import Button from '../components/button.tsx';
 // Specific to this screen
 import CategorySummary from '../components/Collection/CategorySummary.tsx';
-import type { CardSummary } from '../hooks/Collection/collectionTypes.tsx';
+import type { CardSummary, CollectionCard } from '../hooks/Collection/collectionTypes.tsx';
 
 // Handle API call
 async function getCollectionSummary(userId: string | null) {
@@ -48,10 +48,56 @@ async function getCollectionSummary(userId: string | null) {
     return data;
 }
 
+// Get list of all cards and which ones the user owns 
+async function getCollectionCards(userId: string | null) {
+    // Call supabase funct
+    const { data, error } = await supabase.rpc("card_collection", {
+        p_user_id: userId,
+    });
+
+    // Smth died
+    if (error) {
+        console.error("Supabase error:", error.message)
+        throw new Error("Failed to get collection cards")
+    }
+
+    console.log("raw rpc data:", data);
+    console.log("is array?", Array.isArray(data));
+
+    // Data is not formatted as array, entcs hace un array vacío and sends that will show no user colls
+    if (!Array.isArray(data)) return []
+
+    console.log("raw data:", JSON.stringify(data, null, 2)) // A ver como se ve lo q fue fetched
+
+    // Takes results del data and turns into the CollectedCard obj
+    const cards: CollectionCard[] = data.map(row => {
+        // Creates the game items 
+        return {
+            card_id: row.card_id,
+            player_name: row.player_name, 
+            web_url: row.web_url, 
+            attack: row.attack, 
+            defense: row.defense, 
+            velocity: row.velocity,
+            rarity_id: row.rarity_id,
+            rarity_label: row.rarity_label, 
+            // These can all be emtpy or 0 btw
+            times_unlocked: row.times_unlocked, 
+            first_unlock: row.first_unlock,
+            pack_name: row.pack_name, 
+            user_owned: row.user_owned, 
+            added_deck: row.added_deck 
+        }
+    });
+
+    return cards;
+}
+
 function Collection() {
     const navigate = useNavigate(); // Switch to diff screen
     const { storeUser } = useStoreUser(); // Use hook to get basic session and login info
     const [summary, setSummary] = useState<CardSummary | null>(null); // Says how many the user has unlocked
+    const [cardCollection, setCardCollection] = useState<CollectionCard[]>([]); // List of cards in the collection
 
     // Get user session info 
     useEffect(() => {
@@ -76,6 +122,20 @@ function Collection() {
 
         loadSummary();
     }, [storeUser.user_id]);
+
+    // Obtain card collection itself
+    useEffect(() => {
+        async function loadCards() {
+          try {
+            const result = await getCollectionCards(storeUser.user_id);
+            setCardCollection(result);
+          } catch (err) {
+            console.error(err);
+          }
+        }
+    
+        loadCards();
+      }, [storeUser.user_id]);
 
     return (
         <div>
