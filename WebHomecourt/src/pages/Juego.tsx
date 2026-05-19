@@ -132,19 +132,21 @@ return (
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-        <div className="flex justify-center">
-          <div className="w-full max-w-[420px] aspect-[9/16]">
-            <Unity
-              unityProvider={unityProvider}
-              style={{ width: "100%", height: "100%" }}
-            />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+          <div className="flex justify-center">
+            <div className="w-full max-w-[420px] aspect-[9/16]">
+              <Unity
+                unityProvider={unityProvider}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            </div>
           </div>
-        </div>
-        <div className="flex flex-col gap-6">
-          <h1>Probando 1, 2, 3</h1>
+          <div className=" flex flex-col gap-6">
+            <h1>Probando 1, 2, 3</h1>
+          </div>
         </div>
       </div>
 
