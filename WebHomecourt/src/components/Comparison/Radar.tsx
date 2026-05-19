@@ -1,4 +1,4 @@
-import {RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, Legend} from "recharts";
+import {RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer} from "recharts";
 import type { PlayerSeasonAverage } from "./Player";
 
 export default function SkillStar({ s1, s2}: { s1: PlayerSeasonAverage|null, s2: PlayerSeasonAverage|null }) {

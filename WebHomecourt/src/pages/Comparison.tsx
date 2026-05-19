@@ -7,6 +7,7 @@ import type { Player } from "../components/Comparison/Player";
 import type { PlayerSeasonAverage } from "../components/Comparison/Player";
 import CircleStats from "../components/Comparison/CircleStats";
 import SkillStar from '../components/Comparison/Radar';
+import Timeline from '../components/Comparison/Timeline';
 
 function useLakersPlayers() {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -30,18 +31,18 @@ function usePlayerSeasons(teamPlayerId: number | null) {
 
 function Comparison() {
   const { players} = useLakersPlayers();
-  const [p1Id, setP1Id] = useState<number | null>(null);
-  const [p1Season, setP1Season] = useState<number | null>(null);
+  const [p1Id, setP1Id] = useState<number | null>(null); //id player 
+  const [p1Season, setP1Season] = useState<number | null>(null); //id season
   const [p2Id, setP2Id] = useState<number | null>(null);
   const [p2Season, setP2Season] = useState<number | null>(null);
 
-  const { seasons: s1} = usePlayerSeasons(p1Id);
+  const { seasons: s1} = usePlayerSeasons(p1Id);//lista de seasons 
   const { seasons: s2} = usePlayerSeasons(p2Id);
-  const seasons1   = s1.map(r => r.season_start);
-  const seasons2   = s2.map(r => r.season_start);
-  const p1 = players.find(p => p.team_player_id === p1Id) ?? null;
+  const seasons1= s1.map(r => r.season_start); //años de las temporadas
+  const seasons2= s2.map(r => r.season_start);
+  const p1 = players.find(p => p.team_player_id === p1Id) ?? null; //datos player seleccionado
   const p2 = players.find(p => p.team_player_id === p2Id) ?? null;
-  const stats1 = s1.find(r => r.season_start === p1Season) ?? null;
+  const stats1 = s1.find(r => r.season_start === p1Season) ?? null; //datos temporada seleccionada
   const stats2 = s2.find(r => r.season_start === p2Season) ?? null;
 
   //mas reciente como default
@@ -75,7 +76,7 @@ function Comparison() {
               color={'amarillo-lakers'}
             />
           </div>
-          
+
           {/* circulos*/}
           <div>
             {(stats1 || stats2) && (
@@ -92,15 +93,15 @@ function Comparison() {
                 </div>
                 <h1 className="pt-4">Advanced Stats</h1>
                 <div className="py-2">
-                  <div className="grid grid-cols-2 gap-3s">
+                  <div className="grid grid-cols-2 gap-3">
                     {/* estrella de stats*/}
-                    <SkillStar s1={stats1} s2={stats2} ></SkillStar>
+                    <SkillStar s1={stats1} s2={stats2}></SkillStar>
+                    <Timeline p1={p1} p2={p2} s1={s1} s2={s2}></Timeline>
                   </div> 
                 </div> 
               </div>
             )}
           </div>
-                 
         </div>
     </div>
   )
