@@ -6,6 +6,7 @@ import PlayerCard from "../components/Comparison/PlayerCard";
 import type { Player } from "../components/Comparison/Player";
 import type { PlayerSeasonAverage } from "../components/Comparison/Player";
 import CircleStats from "../components/Comparison/CircleStats";
+import SkillStar from '../components/Comparison/Radar';
 
 function useLakersPlayers() {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -58,7 +59,7 @@ function Comparison() {
             Compare Lakers members and their past seasons
           </h5>
         </div>
-          <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 pt-4">
             <PlayerCard
               player={p1} season={p1Season}
               players={players} seasons={seasons1}
@@ -74,12 +75,13 @@ function Comparison() {
               color={'amarillo-lakers'}
             />
           </div>
+          
           {/* circulos*/}
           <div>
             {(stats1 || stats2) && (
               <div>
-                <h1>Season Stats</h1>
-                <div className="rounded-2xl py-2">
+                <h1 className="pt-4">Season Stats</h1>
+                <div className=" py-2">
                   <div className="grid grid-cols-5 gap-3">
                     <CircleStats label="Points" p1={p1} p2={p2} v1={stats1?.points_per_game ?? null}  v2={stats2?.points_per_game ?? null} max={90} />
                     <CircleStats label="Rebounds" p1={p1} p2={p2} v1={stats1?.rebounds_per_game ?? null} v2={stats2?.rebounds_per_game ?? null} max={35} />
@@ -88,10 +90,18 @@ function Comparison() {
                     <CircleStats label="Accuracy %" p1={p1} p2={p2} v1={stats1?.fg_pct ?? null} v2={stats2?.fg_pct ?? null} max={100} />
                   </div>
                 </div>
+                <h1 className="pt-4">Advanced Stats</h1>
+                <div className="py-2">
+                  <div className="grid grid-cols-2 gap-3s">
+                    {/* estrella de stats*/}
+                    <SkillStar s1={stats1} s2={stats2} ></SkillStar>
+                  </div> 
+                </div> 
               </div>
             )}
           </div>
-      </div>
+                 
+        </div>
     </div>
   )
 }

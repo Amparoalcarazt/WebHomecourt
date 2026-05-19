@@ -5,18 +5,18 @@ export default function CircleStats({ label, p1, p2, v1,  v2, max }: { label: st
     const r = 30, c = 35, circ = 2 * Math.PI * r;
 
     return (
-        <div className="flex flex-col items-center rounded-2xl border-3 border-gris-disabled">
+        <div className="flex flex-col items-center rounded-2xl bg-white border border-gray-300 rounded-2xl shadow">
             <span className="text-s">{label}</span>
             <div className="relative">
-                <svg width="72" height="72" viewBox="0 0 72 72">
+                <svg width="100" height="100" viewBox="0 0 72 72">
                 <circle cx={c} cy={c} r={r} className="fill-none stroke-morado-lakers stroke-[5]"
-                    strokeDasharray={`${(pct2) * circ} ${circ}`}
+                    strokeDasharray={`${(pct1) * circ} ${circ}`}
                     strokeLinecap="round"
                     transform={`rotate(-90 ${c} ${c})`}
                     style={{ transition: "stroke-dasharray 0.6s ease" }}
                 />
                 <circle cx={c} cy={c} r={r*0.80} className="fill-none stroke-amarillo-lakers stroke-[5]"
-                    strokeDasharray={`${(pct1) * circ} ${circ}`}
+                    strokeDasharray={`${(pct2) * circ} ${circ}`}
                     strokeLinecap="round"
                     transform={`rotate(-90 ${c} ${c})`}
                     style={{ transition: "stroke-dasharray 0.6s ease" }}
