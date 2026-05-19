@@ -10,17 +10,17 @@ export type CardSummary = {
 }
 
 export type CollectionCard = {
-    card_id: string,
-    player_name: string, 
-    web_url: string, 
-    attack: number, 
-    defense: number, 
-    velocity: number,
-    rarity_id: number,
-    rarity_label: string, 
-    times_unlocked: number, 
-    first_unlock: string,
-    pack_name: string, 
-    user_owned: boolean, 
-    added_deck: boolean
+    card_id: string;
+    player_name: string;
+    web_url: string;
+    attack: number;
+    defense: number;
+    velocity: number; 
+    rarity_id: number;
+    rarity_label: string;
+    times_unlocked: number;
+    first_unlock: string;
+    pack_name: string;
+    user_owned: boolean;
+    added_deck: boolean;
 }
