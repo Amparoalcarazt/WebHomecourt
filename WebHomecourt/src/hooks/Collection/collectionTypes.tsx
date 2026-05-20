@@ -26,6 +26,7 @@ export type CollectionCard = {
     pack_name: string;
     user_owned: boolean;
     added_deck: boolean;
+    in_deck: boolean;
 }
 
 // For messages 

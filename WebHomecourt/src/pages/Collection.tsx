@@ -87,7 +87,8 @@ async function getCollectionCards(userId: string | null) {
             first_unlock: row.first_unlock,
             pack_name: row.pack_name,
             user_owned: row.user_owned,
-            added_deck: row.added_deck
+            added_deck: row.added_deck,
+            in_deck: row.in_deck
         }
     });
 
@@ -154,12 +155,14 @@ function Collection() {
         displayCards = displayCards.filter((card) => card.user_owned);
     } else if (statusFilter === "Locked") {
         displayCards = displayCards.filter((card) => !card.user_owned);
-    } else if (statusFilter === "Deck") {
+    } else if (statusFilter === "Wishlist") {
         displayCards = displayCards.filter((card) => card.added_deck);
+    } else if (statusFilter === "Active deck") {
+        displayCards = displayCards.filter((card) => card.in_deck);
     }
 
     // Logic to paginate the colllection itself
-    const PAGE_SIZE = 12; // Will be using 3x4 grid
+    const PAGE_SIZE = 8; // Will be using 3x4 grid
     const totalPages = Math.ceil(displayCards.length / PAGE_SIZE); // How many pages will be needed rounded up 
     const paginated = displayCards.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE); // Divide by pages
 
@@ -170,7 +173,7 @@ function Collection() {
                 {/* Title comp */}
                 <div className="w-full px-3 py-4 md:px-5 md:py-7 bg-violet-950 rounded-2xl shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] outline outline-1 outline-offset-[-1px] outline-black/25 flex flex-col justify-left items-left overflow-hidden">
                     <h1 className="justify-start text-white title1">Laker Card Collection</h1>
-                    <p className="justify-start text-white mt-2 text-xl text-zinc-300">Collect virtual cards to show off your favorite team and power up your Dunk Royale gameplay</p>
+                    <p className="justify-start text-white mt-2 text-xl text-zinc-300">Collect virtual cards to show off your favorite team and power up your Dunk Royale gameplay!</p>
                 </div>
 
                 {/* View store vs colection */}
@@ -222,16 +225,16 @@ function Collection() {
                     <h4 className="mt-1 mb-3 ml-1">Filter Collection</h4>
                     <div className="self-stretch inline-flex justify-start items-center gap-12 overflow-hidden">
                         {/* Custom filter box q toma el nombre del rectangle, las options, pasa currently selected one y cuando se pica otro, se cambia la option */}
-                        <FilterBox 
-                            filterTitle='Card Rarity Category' 
-                            filterOptions={["All cards", "Common", "Rare", "Legendary", "Limited"]} 
+                        <FilterBox
+                            filterTitle='Card Rarity Category'
+                            filterOptions={["All cards", "Common", "Rare", "Legendary", "Limited"]}
                             selectedOption={rarityFilter}
                             onSelect={setRarityFilter}
                         />
-                        
-                        <FilterBox 
-                            filterTitle='Card Status' 
-                            filterOptions={["All cards", "Unlocked", "Locked", "Deck"]} 
+
+                        <FilterBox
+                            filterTitle='Card Status'
+                            filterOptions={["All cards", "Unlocked", "Locked", "Wishlist", "Active deck"]}
                             selectedOption={statusFilter}
                             onSelect={setStatusFilter}
                         />
@@ -240,27 +243,39 @@ function Collection() {
 
                 {/* Card collection */}
                 {/* Arrows for different collection pages */}
-                <div className="flex flex-row justify-end mt-5 mr-15 mb-2">
-                    <div className="flex items-center gap-2 shrink-0 ml-4">
-                        <button
-                            onClick={() => setPage((p) => Math.max(0, p - 1))}
-                            disabled={page === 0}
-                            className="text-black disabled:opacity-30 hover:opacity-75 transition text-6xl px-4"
-                        >
-                            ‹
-                        </button>
-                        <span className="text-black text-xl">
-                            {page + 1} / {totalPages || 1}
-                        </span>
-                        <button
-                            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-                            disabled={page >= totalPages - 1}
-                            className="text-black disabled:opacity-30 hover:opacity-75 transition text-6xl px-4"
-                        >
-                            ›
-                        </button>
+                <div className="flex flex-row mt-5 w-full justify-end mb-4">
+                    {/*
+                    <div className="flex flex-col">
+                        <h2>Collection</h2>
+                        <p>Click on any card to view its stats</p> 
+                        <p>Add or remove cards from your Wishlist to build your ideal Dunk Royale game deck</p>
+                    </div>
+                    */}
+
+                    <div className="mr-10 mb-2">
+                        <div className="flex items-center gap-2 shrink-0 ml-4">
+                            <button
+                                onClick={() => setPage((p) => Math.max(0, p - 1))}
+                                disabled={page === 0}
+                                className="text-black disabled:opacity-30 hover:opacity-75 transition text-6xl px-4"
+                            >
+                                ‹
+                            </button>
+                            <span className="text-black text-xl">
+                                {page + 1} / {totalPages || 1}
+                            </span>
+                            <button
+                                onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                                disabled={page >= totalPages - 1}
+                                className="text-black disabled:opacity-30 hover:opacity-75 transition text-6xl px-4"
+                            >
+                                ›
+                            </button>
+                        </div>
                     </div>
                 </div>
+
+
 
                 {/* Collectioin itself */}
                 {cardCollection.length === 0 ? (
