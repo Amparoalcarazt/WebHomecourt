@@ -5,6 +5,7 @@ import Agenda from './pages/Agenda'
 import Brackets from './pages/Brackets'
 import Estadisticas from './pages/Estadisticas'
 import LakersCourt from './pages/LakersCourt'
+import HistorialLakers from './pages/HistorialLakers';
 import Juego from './pages/Juego'
 import Store from './pages/Store'
 import Perfil from './pages/Perfil'
@@ -21,6 +22,8 @@ import Monitor from './pages/Monitor';
 import EditAvatar from './pages/EditAvatar';
 import MyFriends from './pages/MyFriends';
 import { WrappedPage } from './pages/Wrapped';
+import Comparison from './pages/Comparison';
+import Collection from './pages/Collection';
 
 import { useAuth } from './context/AuthContext'
 import { Navigate } from 'react-router-dom'
@@ -61,6 +64,9 @@ function App() {
         <Route path="/admin/monitor" element={<AdminRoute><Monitor /></AdminRoute>} />
         <Route path='/edit-avatar' element={<EditAvatar/>}></Route>
         <Route path='/wrapped' element={<WrappedPage />} />
+        <Route path='/comparison' element={<Comparison/>}></Route>
+        <Route path='/historial-lakers' element={<HistorialLakers/>}></Route>
+        <Route path='/collection' element={<Collection/>}></Route>
       </Routes>
     </BrowserRouter>
   )

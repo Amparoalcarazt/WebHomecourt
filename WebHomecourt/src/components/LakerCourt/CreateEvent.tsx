@@ -23,6 +23,7 @@ interface DatosEvento {
 }
 
 async function createEvent(event: DatosEvento, userId: string) {
+  //Tuve que usar payload para que coincidiera a como esta en la BD sin ahcer mnuhco rollo
   const payload = {
     event_name: event.event_name,
     date: event.date && event.time ? `${event.date}T${event.time}:00-06:00` : event.date,
@@ -159,9 +160,7 @@ export default function CrearEvento({ open, onClose }: propsPopup) {
           <p className="text-sm text-Background">Choose event details</p>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="px-6 py-6 space-y-6">
-          {/* Event Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Event Name <span className="text-red-500">*</span>
@@ -198,7 +197,6 @@ export default function CrearEvento({ open, onClose }: propsPopup) {
             </select>
           </div>
 
-          {/* Date and Time */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -235,7 +233,6 @@ export default function CrearEvento({ open, onClose }: propsPopup) {
             </div>
           </div>
 
-          {/* Max Players */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Max Players <span className="text-red-500">*</span>
@@ -251,7 +248,6 @@ export default function CrearEvento({ open, onClose }: propsPopup) {
             />
           </div>
 
-          {/* Age Range and Skill Level */}
           <div className="grid grid-cols-2 gap-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -298,7 +294,6 @@ export default function CrearEvento({ open, onClose }: propsPopup) {
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent appearance-none bg-white"
               >
-                {/* <option value="">Any</option> */}
                 {skillLevels.map((level) => (
                   <option key={level.skill_level_id} value={level.skill_level_id}>
                     {level.description}

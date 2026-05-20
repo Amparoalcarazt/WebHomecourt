@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import StatusAlert from "../Messages/StatusAlert";
+import { FaStar } from "react-icons/fa"
 
-// ─── Tipos ────────────────────────────────────────────────────────────────────
 
 interface EventPlayer {
   user_id: string;
   username: string | null;
   nickname: string | null;
   photo_url: string | null;
-  gender_label: string  | null;
+  gender_label: string | null;
   age: number | null;
   reputation: number | null;
 }
@@ -27,7 +27,6 @@ interface ListPlayerPopUpProps {
 
 
 
-// ─── Componente ───────────────────────────────────────────────────────────────
 
 export default function ListPlayerPopUp({
   eventId,
@@ -42,21 +41,21 @@ export default function ListPlayerPopUp({
   const [players, setPlayers] = useState<EventPlayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   useEffect(() => {
     const fetchPlayers = async () => {
-        setLoading(true);
-        setError(null);
-        const { data, error } = await supabase.rpc("get_event_players", { p_event_id: eventId });
-        if (error) {
-            setError("Could not load players.");
-        } else {
-            setPlayers((data ?? []) as EventPlayer[]);
-        }
-        setLoading(false);
+      setLoading(true);
+      setError(null);
+      const { data, error } = await supabase.rpc("get_event_players", { p_event_id: eventId });
+      if (error) {
+        setError("Could not load players.");
+      } else {
+        setPlayers((data ?? []) as EventPlayer[]);
+      }
+      setLoading(false);
     };
     fetchPlayers();
-}, [eventId]);
+  }, [eventId]);
 
   // Bloquear scroll
   useEffect(() => {
@@ -108,7 +107,6 @@ export default function ListPlayerPopUp({
           </div>
         </div>
 
-        {/* Content */}
         <div className="px-6 py-6 space-y-4 max-h-[60vh] overflow-y-auto">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900">Registered Players</h3>
@@ -117,16 +115,6 @@ export default function ListPlayerPopUp({
             </span>
           </div>
 
-          {/* {loading && (
-            <div className="flex items-center justify-center py-8">
-              <svg className="w-6 h-6 animate-spin text-morado-lakers" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
-            </div>
-          )} */}
-
-          {/* Error */}
           {!loading && error && (
             <StatusAlert tone="error" title={error} />
           )}
@@ -138,7 +126,6 @@ export default function ListPlayerPopUp({
             </p>
           )}
 
-          {/* Players list */}
           {!loading && !error && players.length > 0 && (
             <div className="space-y-3">
               {players.map((player) => {
@@ -152,7 +139,6 @@ export default function ListPlayerPopUp({
                     onClick={() => navigate(`/perfil/${player.user_id}`)}
                     className="flex items-center gap-4 p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer"
                   >
-                    {/* Avatar */}
                     <div className="shrink-0">
                       {player.photo_url ? (
                         <img
@@ -167,7 +153,6 @@ export default function ListPlayerPopUp({
                       )}
                     </div>
 
-                    {/* Info */}
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-gray-900 truncate">{displayName}</h4>
                       <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
@@ -176,16 +161,13 @@ export default function ListPlayerPopUp({
                       </div>
                       <div className="flex items-center gap-1 mt-1.5">
                         {[...Array(5)].map((_, i) => (
-                          <svg
+                          <FaStar 
                             key={i}
-                            className={`w-4 h-4 ${i < fullStars ? "text-yellow-400 fill-current" : "text-gray-300 fill-current"}`}
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                          </svg>
+                            className={`w-4 h-4 ${i < fullStars ? "text-yellow-400" : "text-gray-300"}`}
+                          />
                         ))}
                         <span className="ml-1 text-gray-700 font-medium text-sm">
-                          {reputation > 0 ? reputation.toFixed(1) : "—"}
+                          {reputation > 0 ? reputation.toFixed(1) : ""}
                         </span>
                       </div>
                     </div>
@@ -196,7 +178,6 @@ export default function ListPlayerPopUp({
           )}
         </div>
 
-        {/* Footer — solo Close */}
         <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
           <button
             type="button"
