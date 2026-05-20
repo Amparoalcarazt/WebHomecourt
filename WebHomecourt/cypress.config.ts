@@ -1,6 +1,7 @@
 import { defineConfig } from "cypress";
 
 export default defineConfig({
+  projectId: "tq75d7",
   allowCypressEnv: false,
 
   component: {
@@ -18,6 +19,8 @@ export default defineConfig({
   },
 
   e2e: {
+    viewportWidth: 1920,
+    viewportHeight: 1020,
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
