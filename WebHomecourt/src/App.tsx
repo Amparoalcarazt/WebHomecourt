@@ -20,6 +20,7 @@ import CompleteRegister from './pages/CompleteRegister';
 import Monitor from './pages/Monitor';
 import EditAvatar from './pages/EditAvatar';
 import MyFriends from './pages/MyFriends';
+import { WrappedPage } from './pages/Wrapped';
 
 import { useAuth } from './context/AuthContext'
 import { Navigate } from 'react-router-dom'
@@ -59,6 +60,7 @@ function App() {
         <Route path="/complete-register" element={<CompleteRegister />} />
         <Route path="/admin/monitor" element={<AdminRoute><Monitor /></AdminRoute>} />
         <Route path='/edit-avatar' element={<EditAvatar/>}></Route>
+        <Route path='/wrapped' element={<WrappedPage />} />
       </Routes>
     </BrowserRouter>
   )
