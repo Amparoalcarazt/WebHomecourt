@@ -177,12 +177,12 @@ function Collection() {
                 </div>
 
                 {/* View store vs colection */}
-                <div className="flex flex-row justify-left mt-10 mb-8">
+                <div className="flex flex-col mx-2 gap-6 md:gap-0 md:mx-0 md:flex-row justify-left mt-10 mb-6">
                     <Button
                         text="STORE"
                         type="secondary"
                         onClick={() => navigate('/store')}
-                        className="text-2xl font-semibold px-10 mr-8"
+                        className="text-2xl font-semibold px-10 md:mr-8"
                     />
 
                     <Button

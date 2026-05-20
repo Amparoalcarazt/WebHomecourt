@@ -11,9 +11,10 @@ const DEFAULT_AVATAR =
 const pages = [
   { label: 'Home', path: '/' },
   { label: 'Agenda', path: '/agenda' },
-  { label: 'Statistics', path: '/estadisticas' },
+  { label: 'Comparison', path: '/comparison' },
   { label: 'LakersCourt', path: '/lakerscourt' },
   { label: 'Dunk Royale', path: '/juego' },
+  { label: 'Wrapped', path: '/wrapped' },
   { label: 'Lakers Cards', path: '/store' },
 ]
 
