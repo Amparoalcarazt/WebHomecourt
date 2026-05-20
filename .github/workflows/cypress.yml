@@ -34,8 +34,8 @@ jobs:
           install: false
           # Starts web server for E2E tests - replace with your own server invocation
           # https://docs.cypress.io/app/continuous-integration/overview#Boot-your-server
-          start: npm start
-          wait-on: 'http://localhost:3000' # Waits for above
+          start: npm run dev -- --host 0.0.0.0 --port 3000
+          wait-on: 'http://127.0.0.1:3000' # Waits for above
           # Records to Cypress Cloud 
           # https://docs.cypress.io/cloud/get-started/setup
           record: true
