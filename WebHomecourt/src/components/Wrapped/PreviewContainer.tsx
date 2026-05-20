@@ -85,7 +85,7 @@ export function PreviewContainer({
         <div className="pt-4 pb-4 flex items-center justify-center">
           <div
             ref={wrapRef}
-            className="relative overflow-hidden flex flex-col rounded-[20px] transition-all duration-300 w-[588px] mx-auto"
+            className="relative overflow-hidden flex flex-col rounded-[20px] transition-all duration-300 w-[590px] mx-auto"
             style={{
               aspectRatio: '9/16',
               ...getBackgroundStyle(),

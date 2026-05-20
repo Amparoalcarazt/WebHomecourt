@@ -61,27 +61,6 @@ export function LastGameWrap({
 
           <div className="relative flex items-center justify-center">
 
-            {/* BACK TEXT */}
-            <span
-              className="absolute"
-              style={{
-                fontFamily: 'Graphik, sans-serif',
-                fontSize: '104px',
-                fontWeight: 900,
-                fontStyle: 'italic',
-                color: 'transparent',
-                WebkitTextStroke: won
-                  ? '1px rgba(255,255,255,0.05)'
-                  : '1px rgba(255,120,120,0.08)',
-                transform: 'translate(18px, 12px)',
-                letterSpacing: '-0.05em',
-                userSelect: 'none',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {won ? 'WIN' : 'LOSS'}
-            </span>
-
             {/* TITULO */}
             <span
               style={{
