@@ -9,10 +9,12 @@ export function OnboardingSteps() {
         onClick={() => setIsCollapsed(false)}>
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-to-br from-morado-oscuro to-morado-lakers rounded-full flex items-center justify-center">
-            <span className="text-white text-[18px] font-bold" style={{ fontFamily: 'Graphik, sans-serif' }}>?</span>
+            <span className="material-symbols-outlined text-white" style={{ fontSize: '20px' }}>
+              question_mark
+            </span>
           </div>
           <span style={{ fontFamily: 'Graphik, sans-serif', color: 'var(--color-morado-oscuro)', fontSize: '14px', fontWeight: 500 }}>
-            How to create your Lakers Wrap
+            How to create your Lakers Wrapped
           </span>
         </div>
         <svg className="w-5 h-5 text-morado-oscuro" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -37,7 +39,7 @@ export function OnboardingSteps() {
         className="text-center mb-6"
         style={{ fontFamily: 'Graphik, sans-serif', color: 'var(--color-texto-oscuro)', fontSize: '24px', fontWeight: 400 }}
       >
-        Create Your Lakers Wrap
+        Create Your Lakers Wrapped
         <br />
         <span style={{ fontSize: '18px', color: 'var(--color-Gris-Oscuro)' }}>in 3 simple steps</span>
       </h2>
