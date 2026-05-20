@@ -57,7 +57,7 @@ function Comparison() {
         <div className="w-full p-6 bg-[#3B195C] rounded-2xl shadow outline-black/25 inline-flex flex-col gap-3">
           <h1 className="text-zinc-100">Player Comparison</h1>
           <h5 className="text-white">
-            Compare Lakers members and their past seasons
+            Compare Lakers members and their past season averages
           </h5>
         </div>
         <div className="grid grid-cols-2 gap-4 pt-4">
@@ -81,15 +81,13 @@ function Comparison() {
           <div>
             {(stats1 || stats2) && (
               <div>
-                <h1 className="pt-4">Season Stats</h1>
-                <div className=" py-2">
-                  <div className="grid grid-cols-5 gap-3">
+                <h1 className="pt-4">Season Averages</h1>
+                  <div className="py-2 grid grid-cols-2 md:grid-cols-5 gap-3">
                     <CircleStats label="Points" p1={p1} p2={p2} v1={stats1?.points_per_game ?? null}  v2={stats2?.points_per_game ?? null} max={90} />
                     <CircleStats label="Rebounds" p1={p1} p2={p2} v1={stats1?.rebounds_per_game ?? null} v2={stats2?.rebounds_per_game ?? null} max={35} />
                     <CircleStats label="Assists" p1={p1} p2={p2} v1={stats1?.assists_per_game ?? null} v2={stats2?.assists_per_game ?? null} max={30} />
                     <CircleStats label="Steals" p1={p1} p2={p2} v1={stats1?.steals_per_game ?? null} v2={stats2?.steals_per_game ?? null} max={10} />
                     <CircleStats label="Accuracy %" p1={p1} p2={p2} v1={stats1?.fg_pct ?? null} v2={stats2?.fg_pct ?? null} max={100} />
-                  </div>
                 </div>
                 <h1 className="pt-4">Advanced Stats</h1>
                   <div className='flex flex-col md:flex-row gap-6 pt-6'>

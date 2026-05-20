@@ -3,16 +3,18 @@ import type { PlayerSeasonAverage } from "./Player";
 
 export default function SkillStar({ s1, s2}: { s1: PlayerSeasonAverage|null, s2: PlayerSeasonAverage|null }) {
     const radarData = [
-    { stat: "PTS", p1: s1?.points_per_game ?? 0, p2: s2?.points_per_game ?? 0 },
-    { stat: "REB", p1: s1?.rebounds_per_game ?? 0, p2: s2?.rebounds_per_game ?? 0 },
-    { stat: "AST", p1: s1?.assists_per_game ?? 0, p2: s2?.assists_per_game ?? 0 },
-    { stat: "STL", p1: s1?.steals_per_game ?? 0, p2: s2?.steals_per_game ?? 0 },
+        //las divisiones son para que eo max de todos sea 20 y se vea un poquito mas parejo los picos del radar
+    { stat: "PTS", p1: (s1?.points_per_game ?? 0)/4.5, p2: (s2?.points_per_game ?? 0)/4.5},
+    { stat: "REB", p1: (s1?.rebounds_per_game ?? 0)/1.75, p2: (s2?.rebounds_per_game ?? 0)/1.75},
+    { stat: "AST", p1: (s1?.assists_per_game ?? 0)/1.5, p2: (s2?.assists_per_game ?? 0)/1.5},
+    { stat: "STL", p1: (s1?.steals_per_game ?? 0)*2, p2: (s2?.steals_per_game ?? 0)*2},
     { stat: "FG%", p1: (s1?.fg_pct ?? 0)/5, p2: (s2?.fg_pct ?? 0)/5},
   ];
     return(
         <div >
             {(s1 != null || s2 != null) ? 
-                <div className="p-8 w-full h-[350px] flex flex-col justify-center bg-white border border-gray-300 rounded-2xl shadow">
+                <div className="p-8 w-full h-[350px] flex flex-col justify-center items-center bg-white border border-gray-300 rounded-2xl shadow">
+                    <h3>Performance Radar</h3>
                     <ResponsiveContainer width="100%" height="100%">
                         <RadarChart data={radarData}>
                             <PolarGrid/>

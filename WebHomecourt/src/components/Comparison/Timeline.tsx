@@ -14,7 +14,8 @@ export default function Timeline({p1, p2, s1, s2}: {p1: Player|null, p2: Player|
 
     return(
         <div>
-            <div className="rounded-2xl p-4 h-[350px] flex justify-center bg-white border border-gray-300 rounded-2xl shadow">
+            <div className="p-4 w-full h-[350px] flex flex-col justify-center items-center bg-white border border-gray-300 rounded-2xl shadow">
+                    <h3>Points Per Game Average by Season</h3>
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={timelineData} margin={{ top: 20, right: 20, bottom: -10, left: -30 }}>
                 <CartesianGrid stroke="var(--color-gris-disabled)" />
