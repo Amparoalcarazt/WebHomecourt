@@ -27,6 +27,8 @@ dist-ssr
 .env
 
 dist
-cypress
+cypress/videos
+cypress/screenshots
+
 .vercel
 .env*.local
