@@ -19,6 +19,7 @@ export default defineConfig({
   },
 
   e2e: {
+    baseUrl:"https://sharkinovhomecourt.vercel.app/"
     viewportWidth: 1920,
     viewportHeight: 1020,
     setupNodeEvents(on, config) {
