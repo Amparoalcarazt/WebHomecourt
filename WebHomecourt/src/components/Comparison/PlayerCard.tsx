@@ -1,5 +1,6 @@
 import type { Player } from "./Player";
-import SearchDropdown from "./SearchDropdown";
+import SearchDropdown from "./Dropdowns";
+import { SeasonDropdown } from "./Dropdowns";
 
 export type PlayerCardProps = {
     player: Player | null;
@@ -44,17 +45,12 @@ export default function PlayerCard({
         />
     
             {/* dropdown temporadas */}
-            <select
-                className={`w-full rounded-xl p-2 text-xs shadow border-2 border-${color}`}
-                value={season ?? ""}
-                onChange={e => onSeasonChange(e.target.value ? Number(e.target.value) : null)}
-                disabled={seasons.length === 0}
-            >
-                <option value="">Season</option>
-                {seasons.map(s => (
-                    <option key={s} value={s}>{s}-{s + 1}</option>
-                ))}
-            </select>
+        <SeasonDropdown
+            seasons={seasons}
+            season={season}
+            color={color}
+            onSeasonChange={onSeasonChange}
+        />
         </div>
     )
 }
