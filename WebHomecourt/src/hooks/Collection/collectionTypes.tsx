@@ -18,6 +18,7 @@ export type CollectionCard = {
     velocity: number; 
     rarity_id: number;
     rarity_label: string;
+    user_card_id: number; 
     times_unlocked: number;
     first_unlock: string;
     pack_name: string;

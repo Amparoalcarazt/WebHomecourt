@@ -83,6 +83,7 @@ async function getCollectionCards(userId: string | null) {
             rarity_id: row.rarity_id,
             rarity_label: row.rarity_label,
             // These can all be emtpy or 0 btw
+            user_card_id: row.user_card_id,
             times_unlocked: row.times_unlocked,
             first_unlock: row.first_unlock,
             pack_name: row.pack_name,
