@@ -14,7 +14,7 @@ const pages = [
   { label: 'Statistics', path: '/estadisticas' },
   { label: 'LakersCourt', path: '/lakerscourt' },
   { label: 'Dunk Royale', path: '/juego' },
-  { label: 'Store', path: '/store' },
+  { label: 'Lakers Cards', path: '/store' },
 ]
 
 interface NavProps {

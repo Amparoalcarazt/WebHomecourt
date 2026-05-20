@@ -168,7 +168,7 @@ function Collection() {
 
     return (
         <div>
-            <Nav current="Store" />
+            <Nav current="Lakers Cards" />
             <div className="px-4 py-5 md:px-14 md:py-5 bg-Background w-full">
                 {/* Title comp */}
                 <div className="w-full px-3 py-4 md:px-5 md:py-7 bg-violet-950 rounded-2xl shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] outline outline-1 outline-offset-[-1px] outline-black/25 flex flex-col justify-left items-left overflow-hidden">
@@ -280,6 +280,8 @@ function Collection() {
                 {/* Collectioin itself */}
                 {cardCollection.length === 0 ? (
                     <p>Loading collection...</p>
+                ) : paginated.length === 0 ? (
+                    <p className="text-center">No cards matching specified filters.</p>
                 ) : (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {paginated.map((card) => (
