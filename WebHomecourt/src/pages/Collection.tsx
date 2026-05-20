@@ -101,8 +101,8 @@ function Collection() {
     const [summary, setSummary] = useState<CardSummary | null>(null); // Says how many the user has unlocked
     const [cardCollection, setCardCollection] = useState<CollectionCard[]>([]); // List of cards in the collection
     const [page, setPage] = useState(0); // The state for pages
-    const [rarityFilter, setRarityFilter] = useState("All cards");
-    const [statusFilter, setStatusFilter] = useState("All cards");
+    const [rarityFilter, setRarityFilter] = useState("All");
+    const [statusFilter, setStatusFilter] = useState("All");
 
     // Get user session info 
     useEffect(() => {
@@ -146,7 +146,7 @@ function Collection() {
     let displayCards = cardCollection;
 
     // Rarity categories 
-    if (rarityFilter !== "All cards") {
+    if (rarityFilter !== "All") {
         displayCards = displayCards.filter((card) => card.rarity_label === rarityFilter);
     }
 
@@ -157,7 +157,7 @@ function Collection() {
         displayCards = displayCards.filter((card) => !card.user_owned);
     } else if (statusFilter === "Wishlist") {
         displayCards = displayCards.filter((card) => card.added_deck);
-    } else if (statusFilter === "Active deck") {
+    } else if (statusFilter === "Deck") {
         displayCards = displayCards.filter((card) => card.in_deck);
     }
 
@@ -221,20 +221,20 @@ function Collection() {
                 </div>
 
                 {/* Card filters */}
-                <div className="w-full px-5 py-2.5 mt-8 bg-white rounded-2xl flex flex-row md:flex-col justify-start items-start">
+                <div className="w-full px-5 py-2.5 mt-8 bg-white rounded-2xl">
                     <h4 className="mt-1 mb-3 ml-1">Filter Collection</h4>
-                    <div className="self-stretch inline-flex justify-start items-center gap-12 overflow-hidden">
+                    <div className="flex flex-col md:flex-row gap-4 md:gap-2">
                         {/* Custom filter box q toma el nombre del rectangle, las options, pasa currently selected one y cuando se pica otro, se cambia la option */}
                         <FilterBox
                             filterTitle='Card Rarity Category'
-                            filterOptions={["All cards", "Common", "Rare", "Legendary", "Limited"]}
+                            filterOptions={["All", "Common", "Rare", "Legendary", "Limited"]}
                             selectedOption={rarityFilter}
                             onSelect={setRarityFilter}
                         />
 
                         <FilterBox
                             filterTitle='Card Status'
-                            filterOptions={["All cards", "Unlocked", "Locked", "Wishlist", "Active deck"]}
+                            filterOptions={["All", "Unlocked", "Locked", "Wishlist", "Deck"]}
                             selectedOption={statusFilter}
                             onSelect={setStatusFilter}
                         />
