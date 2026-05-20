@@ -242,3 +242,24 @@ function Collection() {
 }
 
 export default Collection
+
+/*
+Map de rows para force unlock all cards and check pictures
+return {
+            card_id: row.card_id,
+            player_name: row.player_name,
+            web_url: row.web_url,
+            attack: row.attack,
+            defense: row.defense,
+            velocity: row.velocity,
+            rarity_id: row.rarity_id,
+            rarity_label: row.rarity_label,
+            // These can all be emtpy or 0 btw
+            user_card_id: row.user_card_id,
+            times_unlocked: 2,
+            first_unlock: "2026-05-19T22:18:04.286235+00:00",
+            pack_name: "tested",
+            user_owned: true,
+            added_deck: row.added_deck
+        }
+*/
