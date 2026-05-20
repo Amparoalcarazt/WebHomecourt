@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import html2canvas from 'html2canvas';
 import Nav from '../components/Nav/Nav.tsx';
+import BannerGeneral from '../components/BannerGeneral.tsx';
 import { OnboardingSteps } from '../components/Wrapped/OnboardingStepsContainer.tsx';
 import { PreviewContainer } from '../components/Wrapped/PreviewContainer.tsx';
 import { PickWrapContainer } from '../components/Wrapped/PickWrapContainer.tsx';
@@ -12,9 +13,9 @@ import { useTopStats } from '../hooks/Wrapped/useTopStats';
 
 export function WrappedPage() {
   const { backgrounds, loading: backgroundsLoading } = useWrapBackgrounds()
-  const { lastGame, loading: lastGameLoading } = useLastGame()
-  const { mvp, loading: mvpLoading } = useMVPMoment()
-  const { topStats, loading: topStatsLoading } = useTopStats()
+  const { lastGame, loading: lastGameLoading, error: lastGameError } = useLastGame()
+  const { mvp, loading: mvpLoading, error: mvpError } = useMVPMoment()
+  const { topStats, loading: topStatsLoading, error: topStatsError } = useTopStats()
 
   const wrapRef = useRef<HTMLDivElement>(null!)
   const [isDownloading, setIsDownloading] = useState(false)
@@ -199,35 +200,40 @@ export function WrappedPage() {
   const textStyle = textShadow ? { textShadow: '2px 2px 8px rgba(0,0,0,0.8)' } : {};
 
   const isLoading = lastGameLoading || mvpLoading || topStatsLoading
-
-  if (isLoading) return (
-    <div className="min-h-screen bg-Background flex items-center justify-center">
-      <p style={{ fontFamily: 'Graphik, sans-serif', color: 'var(--color-morado-oscuro)', fontSize: '18px' }}>
-        Loading...
-      </p>
-    </div>
-  )
+  const hasError = lastGameError || mvpError || topStatsError
 
   return (
     <div className="min-h-screen bg-Background">
       <Nav current="Wrapped" />
-      <div className="max-w-[1440px] w-full mx-auto p-4 md:p-8">
+      <div className="px-4 md:px-14 py-5 bg-Background w-full">
 
         {/* HEADER */}
-        <div className="bg-gradient-to-r from-morado-oscuro via-morado-lakers to-morado-oscuro w-full h-[138px] flex flex-col justify-center px-8 rounded-[15px] mb-8 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 left-0 w-40 h-40 bg-[#FDB927] rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-0 w-40 h-40 bg-[#FDB927] rounded-full blur-3xl"></div>
-          </div>
-          <div className="relative z-10">
-            <h1 className="text-white text-[36px] leading-[1.1] mb-0.5" style={{ fontFamily: 'Graphik, sans-serif' }}>
-              Wrapped
-            </h1>
-            <p className="text-gris-claro text-[24px] leading-[1.2]" style={{ fontFamily: 'Graphik, sans-serif' }}>
-              The game happened. Make it legendary.
+        <div className="mb-8">
+          <BannerGeneral
+            title="Wrapped"
+            subtitle="The game happened. Make it legendary."
+          />
+        </div>
+
+        {isLoading ? (
+          <div className="flex items-center justify-center py-32">
+            <p style={{ fontFamily: 'Graphik, sans-serif', color: 'var(--color-morado-oscuro)', fontSize: '18px' }}>
+              Loading...
             </p>
           </div>
-        </div>
+        ) : hasError ? (
+          <div className="flex flex-col items-center justify-center py-32 gap-4">
+            <p style={{ fontFamily: 'Graphik, sans-serif', color: '#EF5350', fontSize: '18px', fontWeight: 600 }}>
+              Error loading data
+            </p>
+            <div style={{ fontFamily: 'Graphik, sans-serif', color: 'var(--color-morado-oscuro)', fontSize: '14px', maxWidth: '600px', textAlign: 'center' }}>
+              {lastGameError && <p>Last Game: {lastGameError}</p>}
+              {mvpError && <p>MVP Moment: {mvpError}</p>}
+              {topStatsError && <p>Top Stats: {topStatsError}</p>}
+            </div>
+          </div>
+        ) : (
+          <>
 
         {/* ONBOARDING */}
         <OnboardingSteps />
@@ -286,6 +292,8 @@ export function WrappedPage() {
             />
           </div>
         </div>
+        </>
+        )}
 
       </div>
     </div>
