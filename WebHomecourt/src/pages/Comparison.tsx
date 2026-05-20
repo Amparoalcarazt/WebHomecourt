@@ -92,12 +92,14 @@ function Comparison() {
                   </div>
                 </div>
                 <h1 className="pt-4">Advanced Stats</h1>
-                <div className="py-2">
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className='flex flex-col md:flex-row gap-6 pt-6'>
                     {/* estrella de stats*/}
-                    <SkillStar s1={stats1} s2={stats2}></SkillStar>
-                    <Timeline p1={p1} p2={p2} s1={s1} s2={s2}></Timeline>
-                  </div> 
+                    <div className ='w-full md:w-1/3'>
+                      <SkillStar s1={stats1} s2={stats2}></SkillStar>
+                    </div>
+                    <div className ='w-full md:w-2/3'>
+                      <Timeline p1={p1} p2={p2} s1={s1} s2={s2}></Timeline>
+                    </div> 
                 </div> 
               </div>
             )}

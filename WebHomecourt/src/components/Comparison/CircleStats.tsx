@@ -5,7 +5,7 @@ export default function CircleStats({ label, p1, p2, v1,  v2, max }: { label: st
     const r = 30, c = 35, circ = 2 * Math.PI * r;
 
     return (
-        <div className="flex flex-col items-center rounded-2xl bg-white border border-gray-300 rounded-2xl shadow">
+        <div className="py-2 flex flex-col items-center rounded-2xl bg-white border border-gray-300 rounded-2xl shadow">
             <span className="text-s">{label}</span>
             <div className="relative">
                 <svg width="100" height="100" viewBox="0 0 72 72">
@@ -22,6 +22,11 @@ export default function CircleStats({ label, p1, p2, v1,  v2, max }: { label: st
                     style={{ transition: "stroke-dasharray 0.6s ease" }}
                 />
                 </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <span className="text-xs text-gris-disabled">MAX</span>
+                    <span className="text-sm font-bold text-gris-disabled"> {max} </span>
+                </div>
+
             </div>
             <div className="flex flex-col px-5 py-1">
                 <div> {p1 != null ? 
