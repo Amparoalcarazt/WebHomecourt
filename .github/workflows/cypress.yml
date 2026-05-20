@@ -17,11 +17,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: WebHomecourt/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+        working-directory: WebHomecourt
       - name: Cypress run
         # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
         uses: cypress-io/github-action@v7
         with:
           working-directory: WebHomecourt
+          install: false
           # Starts web server for E2E tests - replace with your own server invocation
           # https://docs.cypress.io/app/continuous-integration/overview#Boot-your-server
           start: npm start
