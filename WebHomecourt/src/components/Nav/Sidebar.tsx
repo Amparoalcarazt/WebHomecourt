@@ -1,16 +1,17 @@
 import { useNavigate } from 'react-router-dom'
 
 // const DEFAULT_AVATAR = "https://ptbcoxaguvbwprxdundz.supabase.co/storage/v1/object/public/user_images/profile_picture_default.png"
- 
+
 interface SidebarProps {
   isOpen: boolean
   onClose: () => void
   navPages: { label: string; path: string }[]
   current: string
   navHeight?: number
+  isLoggedIn: boolean
 }
  
-function Sidebar({ isOpen, onClose, navPages, current, navHeight = 72 }: SidebarProps) {
+function Sidebar({ isOpen, onClose, navPages, current, navHeight = 72, isLoggedIn }: SidebarProps) {
   const navigate = useNavigate()
  
   const handleNavigate = (path: string) => {
@@ -60,7 +61,7 @@ function Sidebar({ isOpen, onClose, navPages, current, navHeight = 72 }: Sidebar
         </nav>
         <div className="border-t border-neutral-200 p-4 bg-white">
           <button
-            onClick={() => handleNavigate('/perfil')}
+            onClick={() => handleNavigate(isLoggedIn ? '/perfil' : '/login')}
             className="w-full px-4 py-3 rounded-xl bg-purple-900 text-white text-base font-['Graphik'] font-medium hover:opacity-90 transition-opacity"
           >
             My Profile
