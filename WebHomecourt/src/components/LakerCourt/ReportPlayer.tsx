@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../context/AuthContext";
 import StatusAlert from "../Messages/StatusAlert";
+import { FaExclamationCircle } from "react-icons/fa"
 
 interface ReportType {
   report_id: number;
@@ -16,7 +17,7 @@ interface ReportPlayerPopUpProps {
   onSuccess?: () => void;
 }
 
-export default function RportPopUp({eventId,reportedUserId,reportedUserName,onClose,onSuccess,}: ReportPlayerPopUpProps) {
+export default function RportPopUp({ eventId, reportedUserId, reportedUserName, onClose, onSuccess, }: ReportPlayerPopUpProps) {
   const { user } = useAuth();
 
   const [reportTypes, setReportTypes] = useState<ReportType[]>([]);
@@ -33,15 +34,11 @@ export default function RportPopUp({eventId,reportedUserId,reportedUserName,onCl
       .select("report_id, report_type")
       .order("report_id")
       .then(({ data, error }) => { //En vez de hacer una funciona asincronica, con el then ua es el callback y ps como su npombre lo indica, lo hace despues ajja
-        if (!error && data) setReportTypes(data as ReportType[]); 
+        if (!error && data) setReportTypes(data as ReportType[]);
         setLoadingTypes(false);
       });
   }, []);
 
-  // useEffect(() => {
-  //   document.body.style.overflow = "hidden";
-  //   return () => { document.body.style.overflow = ""; };
-  // }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); //Es para que cuando se haga el submit, no se recarge sola, pq si no, la pagina da refresh antes de que se envie
@@ -81,9 +78,7 @@ export default function RportPopUp({eventId,reportedUserId,reportedUserName,onCl
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-500/30">
-                <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-                </svg>
+                <FaExclamationCircle className="h-5 w-5 text-red-400" />
               </div>
               <div>
                 <h2 className="text-lg font-bold text-white leading-tight">Report Player</h2>
@@ -125,11 +120,10 @@ export default function RportPopUp({eventId,reportedUserId,reportedUserName,onCl
                     key={type.report_id}
                     type="button"
                     onClick={() => setSelectedTypeId(type.report_id)}
-                    className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-left ${
-                      selectedTypeId === type.report_id
+                    className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-left ${selectedTypeId === type.report_id
                         ? "bg-morado-lakers text-white ring-2 ring-purple-300 shadow-sm"
                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
+                      }`}
                   >
                     {type.report_type}
                   </button>
@@ -152,8 +146,8 @@ export default function RportPopUp({eventId,reportedUserId,reportedUserName,onCl
             />
           </div>
 
-          {error && ( <StatusAlert tone="error" title={error} /> )}
-          {success && ( <StatusAlert tone="success" title="Report submitted successfully!" />)}
+          {error && (<StatusAlert tone="error" title={error} />)}
+          {success && (<StatusAlert tone="success" title="Report submitted successfully!" />)}
 
           <div className="flex gap-3 pt-1">
             <button type="button" onClick={onClose} disabled={isSubmitting} className="flex-1 px-4 py-3 border border-gray-200 rounded-xl text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50">
