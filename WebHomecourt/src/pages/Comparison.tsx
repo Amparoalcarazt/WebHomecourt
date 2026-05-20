@@ -8,6 +8,7 @@ import type { PlayerSeasonAverage } from "../components/Comparison/Player";
 import CircleStats from "../components/Comparison/CircleStats";
 import SkillStar from '../components/Comparison/Radar';
 import Timeline from '../components/Comparison/Timeline';
+import BannerReput from '../components/LakerCourt/BannerReput';
 
 function useLakersPlayers() {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -60,7 +61,7 @@ function Comparison() {
             Compare Lakers members and their past season averages
           </h5>
         </div>
-        <div className="grid grid-cols-2 gap-4 pt-4">
+        <div className="grid grid-cols-2 gap-4">
             <PlayerCard
               player={p1} season={p1Season}
               players={players} seasons={seasons1}
