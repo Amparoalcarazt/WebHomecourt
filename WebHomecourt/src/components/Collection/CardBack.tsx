@@ -1,4 +1,3 @@
-import { format, parseISO } from 'date-fns'; // For date formattings 
 import type { CollectionCard } from '../../hooks/Collection/collectionTypes.tsx';
 import RarityLabelCircle from './RarityLabelCircle.tsx';
 import CardGameStats from './CardGameStats.tsx';
@@ -21,7 +20,7 @@ function CardBack({ card }: CardProp) {
             <div className="mt-6"></div>
             <CardGameStats icon="swords" category="Attack" cardStat={card.attack} maxStat={100} />
             <CardGameStats icon="favorite" category="Defense" cardStat={card.defense} maxStat={100} />
-            <CardGameStats icon="bolt_boost" category="Velocity" cardStat={card.velocity} maxStat={10} />
+            <CardGameStats icon="bolt_boost" category="Velocity" cardStat={card.velocity} maxStat={5} />
         </div>
     )
 }

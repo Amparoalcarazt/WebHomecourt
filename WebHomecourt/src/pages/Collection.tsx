@@ -224,8 +224,8 @@ function Collection() {
                         </button>
                     </div>
                 </div>
+                
                 {/* Collectioin itself */}
-
                 {cardCollection.length === 0 ? (
                     <p>Loading collection...</p>
                 ) : (
