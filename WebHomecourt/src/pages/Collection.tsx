@@ -7,6 +7,7 @@ import Button from '../components/button.tsx';
 // Specific to this screen
 import CategorySummary from '../components/Collection/CategorySummary.tsx';
 import CollectionCardRender from '../components/Collection/CollectionCardRender.tsx';
+import FilterBox from '../components/Collection/FilterBox.tsx';
 import type { CardSummary, CollectionCard } from '../hooks/Collection/collectionTypes.tsx';
 
 // Handle API call
@@ -30,7 +31,7 @@ async function getCollectionSummary(userId: string | null) {
     console.log("raw data:", JSON.stringify(data, null, 2)) // A ver como se ve lo q fue fetched
 
     // Takes results del data and turns into the CollectedCard obj
-    /*const summary: CardSummary[] = data.map(row => {
+    const summary: CardSummary[] = data.map(row => {
         // Creates the game items 
         return {
             unlocked_common: row.unlocked_common,
@@ -45,8 +46,6 @@ async function getCollectionSummary(userId: string | null) {
     });
 
     return summary;
-    */
-    return data;
 }
 
 // Get list of all cards and which ones the user owns 
@@ -101,6 +100,8 @@ function Collection() {
     const [summary, setSummary] = useState<CardSummary | null>(null); // Says how many the user has unlocked
     const [cardCollection, setCardCollection] = useState<CollectionCard[]>([]); // List of cards in the collection
     const [page, setPage] = useState(0); // The state for pages
+    const [rarityFilter, setRarityFilter] = useState("All cards");
+    const [statusFilter, setStatusFilter] = useState("All cards");
 
     // Get user session info 
     useEffect(() => {
@@ -140,10 +141,27 @@ function Collection() {
         loadCards();
     }, [storeUser.user_id]);
 
+    // Filter logic 
+    let displayCards = cardCollection;
+
+    // Rarity categories 
+    if (rarityFilter !== "All cards") {
+        displayCards = displayCards.filter((card) => card.rarity_label === rarityFilter);
+    }
+
+    // By type unlocked, locked, or which ones are added to the deck 
+    if (statusFilter === "Unlocked") {
+        displayCards = displayCards.filter((card) => card.user_owned);
+    } else if (statusFilter === "Locked") {
+        displayCards = displayCards.filter((card) => !card.user_owned);
+    } else if (statusFilter === "Deck") {
+        displayCards = displayCards.filter((card) => card.added_deck);
+    }
+
     // Logic to paginate the colllection itself
     const PAGE_SIZE = 12; // Will be using 3x4 grid
-    const totalPages = Math.ceil(cardCollection.length / PAGE_SIZE); // How many pages will be needed rounded up 
-    const paginated = cardCollection.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE); // Divide by pages
+    const totalPages = Math.ceil(displayCards.length / PAGE_SIZE); // How many pages will be needed rounded up 
+    const paginated = displayCards.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE); // Divide by pages
 
     return (
         <div>
@@ -200,6 +218,25 @@ function Collection() {
                 </div>
 
                 {/* Card filters */}
+                <div className="w-full px-5 py-2.5 mt-8 bg-white rounded-2xl flex flex-row md:flex-col justify-start items-start">
+                    <h4 className="mt-1 mb-3 ml-1">Filter Collection</h4>
+                    <div className="self-stretch inline-flex justify-start items-center gap-12 overflow-hidden">
+                        {/* Custom filter box q toma el nombre del rectangle, las options, pasa currently selected one y cuando se pica otro, se cambia la option */}
+                        <FilterBox 
+                            filterTitle='Card Rarity Category' 
+                            filterOptions={["All cards", "Common", "Rare", "Legendary", "Limited"]} 
+                            selectedOption={rarityFilter}
+                            onSelect={setRarityFilter}
+                        />
+                        
+                        <FilterBox 
+                            filterTitle='Card Status' 
+                            filterOptions={["All cards", "Unlocked", "Locked", "Deck"]} 
+                            selectedOption={statusFilter}
+                            onSelect={setStatusFilter}
+                        />
+                    </div>
+                </div>
 
                 {/* Card collection */}
                 {/* Arrows for different collection pages */}
@@ -224,14 +261,14 @@ function Collection() {
                         </button>
                     </div>
                 </div>
-                
+
                 {/* Collectioin itself */}
                 {cardCollection.length === 0 ? (
                     <p>Loading collection...</p>
                 ) : (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {paginated.map((card) => (
-                            <CollectionCardRender key={card.card_id} card={card} userId={storeUser.user_id}/>
+                            <CollectionCardRender key={card.card_id} card={card} userId={storeUser.user_id} />
                         ))}
                     </div>
                 )}
