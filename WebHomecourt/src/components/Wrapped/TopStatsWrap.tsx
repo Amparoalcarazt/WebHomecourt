@@ -69,24 +69,6 @@ export function TopStatsWrap({
 
           <div className="relative">
 
-            {/* BACK TEXT */}
-            <span
-              className="absolute inset-0"
-              style={{
-                fontFamily: 'Graphik, sans-serif',
-                fontSize: '104px',
-                fontWeight: 900,
-                fontStyle: 'italic',
-                color: 'transparent',
-                WebkitTextStroke: '1px rgba(255,255,255,0.05)',
-                transform: 'translate(18px, 12px)',
-                letterSpacing: '-0.04em',
-                userSelect: 'none',
-              }}
-            >
-              LAKERS
-            </span>
-
             {/* MAIN TITLE */}
             <span
               style={{

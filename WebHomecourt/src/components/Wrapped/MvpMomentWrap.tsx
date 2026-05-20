@@ -61,25 +61,6 @@ export function MvpMomentWrap({
 
           <div className="relative flex items-center justify-center">
 
-            {/* BACK TEXT */}
-            <span
-              className="absolute"
-              style={{
-                fontFamily: 'Graphik, sans-serif',
-                fontSize: '104px',
-                fontWeight: 900,
-                fontStyle: 'italic',
-                color: 'transparent',
-                WebkitTextStroke: '1px rgba(255,255,255,0.05)',
-                transform: 'translate(14px, 10px)',
-                letterSpacing: '-0.04em',
-                userSelect: 'none',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              MVP
-            </span>
-
             {/* MAIN TITLE */}
             <span
               style={{
@@ -167,27 +148,6 @@ export function MvpMomentWrap({
               `,
             }}
           >
-
-            {/* BG TEXT */}
-            <span
-              style={{
-                position: 'absolute',
-                top: '48%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                fontFamily: 'Graphik, sans-serif',
-                fontSize: '72px',
-                fontWeight: 900,
-                fontStyle: 'italic',
-                color: 'transparent',
-                WebkitTextStroke: '1px rgba(253,185,39,0.08)',
-                letterSpacing: '-0.05em',
-                opacity: 0.8,
-                whiteSpace: 'nowrap',
-              }}
-            >
-              LAKERS
-            </span>
 
             {/* PLAYER */}
             {wrapData.mvp.photoUrl ? (
