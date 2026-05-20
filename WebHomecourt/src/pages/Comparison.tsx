@@ -8,7 +8,7 @@ import type { PlayerSeasonAverage } from "../components/Comparison/Player";
 import CircleStats from "../components/Comparison/CircleStats";
 import SkillStar from '../components/Comparison/Radar';
 import Timeline from '../components/Comparison/Timeline';
-
+import BannerGeneral from '../components/BannerGeneral';
 function useLakersPlayers() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
@@ -52,15 +52,12 @@ function Comparison() {
   return (
     <div >
       <Nav current="Comparison"/>
-      
       <div className='px-4 md:px-14 py-5 bg-zinc-100 w-full min-h-screen flex flex-col gap-6'>
-        <div className="w-full p-6 bg-[#3B195C] rounded-2xl shadow outline-black/25 inline-flex flex-col gap-3">
-          <h1 className="text-zinc-100">Player Comparison</h1>
-          <h5 className="text-white">
-            Compare Lakers members and their past season averages
-          </h5>
-        </div>
-        <div className="grid grid-cols-2 gap-4 pt-4">
+        <BannerGeneral
+          title="Player Comparison"
+          subtitle="Compare Lakers members and their past season averages"
+        />
+        <div className="grid grid-cols-2 gap-4">
             <PlayerCard
               player={p1} season={p1Season}
               players={players} seasons={seasons1}
