@@ -72,14 +72,16 @@ function Comparison() {
               players={players} seasons={seasons1}
               onPlayerChange={id => { setP1Id(id); setP1Season(null); }}
               onSeasonChange={setP1Season}
-              color={'morado-lakers'}
+              color1={'morado-lakers'}
+              color2={'amarillo-lakers'}
             />
             <PlayerCard
               player={p2} season={p2Season}
               players={players} seasons={seasons2}
               onPlayerChange={id => { setP2Id(id); setP2Season(null); }}
               onSeasonChange={setP2Season}
-              color={'amarillo-lakers'}
+              color1={'amarillo-lakers'}
+              color2={'morado-lakers'}
             />
           </div>
 
