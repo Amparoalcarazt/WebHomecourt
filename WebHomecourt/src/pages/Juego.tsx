@@ -120,7 +120,7 @@ return (
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {instructions?.map((section, index) => (
+      {instructions?.map((section) => (
         <div
           key={section.id}
           className="flex flex-col border-b md:border-b-0 md:border-r border-gray-200 last:border-none pb-4 md:pb-0 pr-0 md:pr-4"
