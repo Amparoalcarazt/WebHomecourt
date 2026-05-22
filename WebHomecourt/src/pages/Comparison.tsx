@@ -35,7 +35,16 @@ function Comparison() {
   const [p1Season, setP1Season] = useState<number | null>(null); //id season
   const [p2Id, setP2Id] = useState<number | null>(null);
   const [p2Season, setP2Season] = useState<number | null>(null);
-
+  useEffect(() => {
+    if (players.length > 0 && p1Id === null) {
+      setP1Id(7);
+    }
+  }, [players]);
+  useEffect(() => {
+    if (players.length > 0 && p2Id === null) {
+      setP2Id(22);
+    }
+  }, [players]);
   const { seasons: s1} = usePlayerSeasons(p1Id);//lista de seasons 
   const { seasons: s2} = usePlayerSeasons(p2Id);
   const seasons1= s1.map(r => r.season_start); //años de las temporadas
