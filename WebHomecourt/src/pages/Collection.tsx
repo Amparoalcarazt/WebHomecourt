@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { supabase } from "../lib/supabase";
 import { useNavigate } from 'react-router-dom';
 import { useStoreUser } from '../hooks/useStoreUser.ts'; // Hook for store user, just to get sesh info
-import Nav from '../components/Nav/Nav.tsx';
 import Button from '../components/button.tsx';
 // Specific to this screen
 import CategorySummary from '../components/Collection/CategorySummary.tsx';
@@ -168,7 +167,6 @@ function Collection() {
 
     return (
         <div>
-            <Nav current="Lakers Cards" />
             <div className="px-4 py-5 md:px-14 md:py-5 bg-Background w-full">
                 {/* Title comp */}
                 <div className="w-full px-3 py-4 md:px-5 md:py-7 bg-violet-950 rounded-2xl shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] outline outline-1 outline-offset-[-1px] outline-black/25 flex flex-col justify-left items-left overflow-hidden">

@@ -1,4 +1,3 @@
-import Nav from '../components/Nav/Nav'
 import { useEffect, useState } from "react";
 import { getLakersPlayers } from "../components/Comparison/getPlayers";
 import { getPlayerSeasons } from "../components/Comparison/getPlayers";
@@ -51,7 +50,6 @@ function Comparison() {
 
   return (
     <div >
-      <Nav current="Comparison"/>
       <div className='px-4 md:px-14 py-5 bg-zinc-100 w-full min-h-screen flex flex-col gap-6'>
         <BannerGeneral
           title="Player Comparison"
