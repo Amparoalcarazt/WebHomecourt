@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import html2canvas from 'html2canvas';
 import Nav from '../components/Nav/Nav.tsx';
+import BannerGeneral from '../components/BannerGeneral.tsx';
 import { OnboardingSteps } from '../components/Wrapped/OnboardingStepsContainer.tsx';
 import { PreviewContainer } from '../components/Wrapped/PreviewContainer.tsx';
 import { PickWrapContainer } from '../components/Wrapped/PickWrapContainer.tsx';
@@ -12,9 +13,9 @@ import { useTopStats } from '../hooks/Wrapped/useTopStats';
 
 export function WrappedPage() {
   const { backgrounds, loading: backgroundsLoading } = useWrapBackgrounds()
-  const { lastGame, loading: lastGameLoading } = useLastGame()
-  const { mvp, loading: mvpLoading } = useMVPMoment()
-  const { topStats, loading: topStatsLoading } = useTopStats()
+  const { lastGame, loading: lastGameLoading, error: lastGameError } = useLastGame()
+  const { mvp, loading: mvpLoading, error: mvpError } = useMVPMoment()
+  const { topStats, loading: topStatsLoading, error: topStatsError } = useTopStats()
 
   const wrapRef = useRef<HTMLDivElement>(null!)
   const [isDownloading, setIsDownloading] = useState(false)
@@ -25,7 +26,6 @@ export function WrappedPage() {
   const [fontStyle, setFontStyle] = useState('bold');
   const [backgroundPattern, setBackgroundPattern] = useState('solid');
   const [textShadow, setTextShadow] = useState(false);
-  const [frameStyle, setFrameStyle] = useState('none');
   const [selectedStickers, setSelectedStickers] = useState<string[]>([]);
   const [droppedStickers, setDroppedStickers] = useState<Array<{id: string, src: string, x: number, y: number}>>([]);
   const [customCaption, setCustomCaption] = useState('');
@@ -73,14 +73,7 @@ export function WrappedPage() {
   const fonts = [
     { id: 'bold', label: 'Bold', style: { fontWeight: 'bold', fontFamily: 'Graphik, sans-serif' } },
     { id: 'script', label: 'Script', style: { fontFamily: 'cursive', fontStyle: 'italic' } },
-    { id: 'retro', label: 'Retro', style: { fontFamily: 'monospace', letterSpacing: '0.1em' } },
-  ];
-
-  const frames = [
-    { id: 'none', label: 'None' },
-    { id: 'classic', label: 'Classic' },
-    { id: 'modern', label: 'Modern' },
-    { id: 'neon', label: 'Neon' },
+    { id: 'retro', label: 'Retro', style: { fontFamily: 'monospace', letterSpacing: '0.02em' } },
   ];
 
   const currentScheme = colorSchemes.find(s => s.id === colorScheme) || colorSchemes[0];
@@ -103,22 +96,14 @@ export function WrappedPage() {
   };
 
   const randomizeStyles = () => {
-    // randomize color scheme
     const randomScheme = colorSchemes[Math.floor(Math.random() * colorSchemes.length)];
     setColorScheme(randomScheme.id);
 
-    // randomize font
     const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
     setFontStyle(randomFont.id);
 
-    // randomize frame
-    const randomFrame = frames[Math.floor(Math.random() * frames.length)];
-    setFrameStyle(randomFrame.id);
-
-    // randomize text shadow
     setTextShadow(Math.random() > 0.5);
 
-    // randomize background solo si hay disponibles
     if (backgrounds.length > 0) {
       const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
       setSelectedBackground(randomBg.wrap_backgrounds_id);
@@ -131,47 +116,52 @@ export function WrappedPage() {
     setFontStyle('bold');
     setBackgroundPattern('solid');
     setTextShadow(false);
-    setFrameStyle('none');
     setSelectedStickers([]);
     setDroppedStickers([]);
     setCustomCaption('');
   };
 
   const downloadWrap = async () => {
-    if (!wrapRef.current) return;
-
-    setIsDownloading(true);
-    document.body.style.cursor = 'wait';
+    if (!wrapRef.current) return
+    setIsDownloading(true)
+    document.body.style.cursor = 'wait'
 
     try {
-      // wrap con dimensiones exactas de una instagram story
-      const canvas = await html2canvas(wrapRef.current, {
-        width: 1080,
-        height: 1920,
-        scale: 2,
+      const element = wrapRef.current
+      const rect = element.getBoundingClientRect()
+      const scaleToUse = 1080 / rect.width
+
+      const canvas = await html2canvas(element, {
+        scale: scaleToUse,
         useCORS: true,
         allowTaint: true,
         backgroundColor: null,
-      });
+        logging: false,
+        width: rect.width,
+        height: rect.height,
+      })
 
-      // download directo
-      const dataUrl = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.href = dataUrl;
-      link.download = `lakers-wrap-${selectedWrap}-${Date.now()}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob)
+          const link = document.createElement('a')
+          link.href = url
+          link.download = `lakers-wrap-${selectedWrap}-${Date.now()}.png`
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+          URL.revokeObjectURL(url)
+        }
+        setIsDownloading(false)
+        document.body.style.cursor = 'default'
+      }, 'image/png')
 
-      setIsDownloading(false);
-      document.body.style.cursor = 'default';
     } catch (error) {
-      console.error('Error downloading wrap:', error);
-      alert('Error downloading wrap. Please try again.');
-      setIsDownloading(false);
-      document.body.style.cursor = 'default';
+      console.error('Error downloading wrap:', error)
+      setIsDownloading(false)
+      document.body.style.cursor = 'default'
     }
-  };
+  }
 
   const getBackgroundStyle = () => {
     const selected = backgrounds.find(b => b.wrap_backgrounds_id === selectedBackground)
@@ -199,46 +189,46 @@ export function WrappedPage() {
   const textStyle = textShadow ? { textShadow: '2px 2px 8px rgba(0,0,0,0.8)' } : {};
 
   const isLoading = lastGameLoading || mvpLoading || topStatsLoading
-
-  if (isLoading) return (
-    <div className="min-h-screen bg-Background flex items-center justify-center">
-      <p style={{ fontFamily: 'Graphik, sans-serif', color: 'var(--color-morado-oscuro)', fontSize: '18px' }}>
-        Loading...
-      </p>
-    </div>
-  )
+  const hasError = lastGameError || mvpError || topStatsError
 
   return (
     <div className="min-h-screen bg-Background">
       <Nav current="Wrapped" />
-      <div className="max-w-[1440px] w-full mx-auto p-4 md:p-8">
-
-        {/* HEADER */}
-        <div className="bg-gradient-to-r from-morado-oscuro via-morado-lakers to-morado-oscuro w-full h-[138px] flex flex-col justify-center px-8 rounded-[15px] mb-8 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 left-0 w-40 h-40 bg-[#FDB927] rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-0 w-40 h-40 bg-[#FDB927] rounded-full blur-3xl"></div>
-          </div>
-          <div className="relative z-10">
-            <h1 className="text-white text-[36px] leading-[1.1] mb-0.5" style={{ fontFamily: 'Graphik, sans-serif' }}>
-              Wrapped
-            </h1>
-            <p className="text-gris-claro text-[24px] leading-[1.2]" style={{ fontFamily: 'Graphik, sans-serif' }}>
-              The game happened. Make it legendary.
-            </p>
-          </div>
+      <div className="px-4 md:px-6 xl:px-14 py-5 bg-Background w-full">
+        <div className="mb-8">
+          <BannerGeneral
+            title="Wrapped"
+            subtitle="The game happened. Make it legendary."
+          />
         </div>
 
-        {/* ONBOARDING */}
+        {isLoading ? (
+          <div className="flex items-center justify-center py-32">
+            <p style={{ fontFamily: 'Graphik, sans-serif', color: 'var(--color-morado-oscuro)', fontSize: '18px' }}>
+              Loading...
+            </p>
+          </div>
+        ) : hasError ? (
+          <div className="flex flex-col items-center justify-center py-32 gap-4">
+            <p style={{ fontFamily: 'Graphik, sans-serif', color: '#EF5350', fontSize: '18px', fontWeight: 600 }}>
+              Error loading data
+            </p>
+            <div style={{ fontFamily: 'Graphik, sans-serif', color: 'var(--color-morado-oscuro)', fontSize: '14px', maxWidth: '600px', textAlign: 'center' }}>
+              {lastGameError && <p>Last Game: {lastGameError}</p>}
+              {mvpError && <p>MVP Moment: {mvpError}</p>}
+              {topStatsError && <p>Top Stats: {topStatsError}</p>}
+            </div>
+          </div>
+        ) : (
+          <>
         <OnboardingSteps />
 
-        <div className="flex gap-8 items-start">
-          {/* PREVIEW */}
-          <PreviewContainer
+        <div className="flex flex-col xl:flex-row gap-6 items-start">
+          <div className="w-full xl:w-[788px] flex-shrink-0">
+           <PreviewContainer
             selectedWrap={selectedWrap}
             selectedStickers={selectedStickers}
             customCaption={customCaption}
-            frameStyle={frameStyle}
             currentFont={currentFont}
             currentScheme={currentScheme}
             wrapData={wrapData}
@@ -253,9 +243,9 @@ export function WrappedPage() {
             droppedStickers={droppedStickers}
             setDroppedStickers={setDroppedStickers}
           />
+          </div>
 
-          {/* SIDEBAR DE LOS CONTROLES */}
-          <div className="w-[500px] flex-shrink-0 flex flex-col gap-8">
+          <div className="w-full xl:flex-1 xl:min-w-0 flex flex-col gap-6">
             <PickWrapContainer
               selectedWrap={selectedWrap}
               setSelectedWrap={setSelectedWrap}
@@ -277,15 +267,14 @@ export function WrappedPage() {
               colorSchemes={colorSchemes}
               colorScheme={colorScheme}
               setColorScheme={setColorScheme}
-              frames={frames}
-              frameStyle={frameStyle}
-              setFrameStyle={setFrameStyle}
               elements={elements}
               toggleElement={toggleElement}
               selectedWrap={selectedWrap}
             />
           </div>
         </div>
+        </>
+        )}
 
       </div>
     </div>
