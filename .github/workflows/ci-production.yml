@@ -18,28 +18,8 @@ jobs:
   # ── 1. Tests + Lint (en paralelo) ───────────────────────────────────────────
   test:
     name: Tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-          cache-dependency-path: WebHomecourt/package-lock.json
-      - name: Debug - listar archivos
-        run: |
-          echo "=== Raiz ==="
-          ls -la
-          echo "=== WebHomecourt ==="
-          ls -la WebHomecourt/
-          echo "=== package-lock raiz ==="
-          cat package-lock.json
-      - run: npm ci
-        working-directory: WebHomecourt
-      
-      # - run: npm test
-      - run: echo "Aqui van los test"
-        working-directory: WebHomecourt
+    uses: ./.github/workflows/cypress.yml
+    secrets: inherit
 
   lint:
     name: Lint

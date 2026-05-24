@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../context/AuthContext";
 import StatusAlert from "../Messages/StatusAlert";
-
+import { FaExclamationCircle } from "react-icons/fa"
 interface ReportType {
   report_id: number;
   report_type: string;
@@ -15,7 +15,7 @@ interface ReportEventPopUpProps {
   onSuccess?: () => void;
 }
 
-export default function ReportEventPopUp({eventId,eventName,onClose,onSuccess,}: ReportEventPopUpProps) {
+export default function ReportEventPopUp({ eventId, eventName, onClose, onSuccess, }: ReportEventPopUpProps) {
   const { user } = useAuth();
 
   const [reportTypes, setReportTypes] = useState<ReportType[]>([]);
@@ -35,18 +35,15 @@ export default function ReportEventPopUp({eventId,eventName,onClose,onSuccess,}:
       });
   }, []);
 
-//   useEffect(() => {
-//     document.body.style.overflow = "hidden";
-//     return () => { document.body.style.overflow = ""; };
-//   }, []);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); //Es para que cuando se haga el submit, no se recarge sola, pq si no, la pagina da refresh antes de que se envie
     setError(null);
 
-    if (!user) { setError("Debes iniciar sesión para reportar."); return; }
-    if (!selectedTypeId) { setError("Selecciona un tipo de reporte."); return; }
-    if (!description.trim()) { setError("Describe lo que ocurrió."); return; }
+    if (!user) { setError("You must sign in to report."); return; }
+    if (!selectedTypeId) { setError("Select a report type."); return; }
+    if (!description.trim()) { setError("Describe what happened."); return; }
 
     setIsSubmitting(true);
     try {
@@ -61,14 +58,14 @@ export default function ReportEventPopUp({eventId,eventName,onClose,onSuccess,}:
       setSuccess(true);
       setTimeout(() => { onSuccess?.(); onClose(); }, 1500);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Error al enviar el reporte.");
+      setError(err instanceof Error ? err.message : "Error sending report.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    
+
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
       <div className="relative z-10 w-full max-w-md rounded-[20px] bg-white shadow-2xl overflow-hidden">
@@ -78,9 +75,7 @@ export default function ReportEventPopUp({eventId,eventName,onClose,onSuccess,}:
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-500/30">
-                <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-                </svg>
+                <FaExclamationCircle className="h-5 w-5 text-red-400" />
               </div>
               <div>
                 <h2 className="text-lg font-bold text-white leading-tight">Report Event</h2>
@@ -101,9 +96,9 @@ export default function ReportEventPopUp({eventId,eventName,onClose,onSuccess,}:
             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
           </svg>
           <p className="text-sm text-gray-600 leading-snug">
-            Tu reporte será revisado por nuestro{" "}
-            <span className="font-semibold text-purple-600">sistema de moderación IA</span>{" "}
-            para garantizar listados de eventos precisos y seguros.
+            Your report will be reviewed by our{" "}
+            <span className="font-semibold text-purple-600">AI moderation system</span>{" "}
+            to ensure accurate and safe event listings.
           </p>
         </div>
 
@@ -111,23 +106,22 @@ export default function ReportEventPopUp({eventId,eventName,onClose,onSuccess,}:
           {/* Report Type */}
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2.5">Report Type</label>
-              <div className="grid grid-cols-2 gap-2">
-                {reportTypes.map((type) => (
-                  <button
-                    key={type.report_id}
-                    type="button"
-                    onClick={() => setSelectedTypeId(type.report_id)}
-                    className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-left ${
-                      selectedTypeId === type.report_id
-                        ? "bg-morado-lakers text-white ring-2 ring-purple-300 shadow-sm"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            <div className="grid grid-cols-2 gap-2">
+              {reportTypes.map((type) => (
+                <button
+                  key={type.report_id}
+                  type="button"
+                  onClick={() => setSelectedTypeId(type.report_id)}
+                  className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-left ${selectedTypeId === type.report_id
+                      ? "bg-morado-lakers text-white ring-2 ring-purple-300 shadow-sm"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }`}
-                  >
-                    {type.report_type}
-                  </button>
-                ))}
-              </div>
-            
+                >
+                  {type.report_type}
+                </button>
+              ))}
+            </div>
+
           </div>
 
           <div>
@@ -143,8 +137,8 @@ export default function ReportEventPopUp({eventId,eventName,onClose,onSuccess,}:
             />
           </div>
 
-          {error && ( <StatusAlert tone="error" title={error} />)}
-          {success && (<StatusAlert tone="success" title="¡Reporte enviado correctamente!" />)}
+          {error && (<StatusAlert tone="error" title={error} />)}
+          {success && (<StatusAlert tone="success" title="Report submitted successfully!" />)}
 
           <div className="flex gap-3 pt-1">
             <button type="button" onClick={onClose} disabled={isSubmitting} className="flex-1 px-4 py-3 border border-gray-200 rounded-xl text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50">

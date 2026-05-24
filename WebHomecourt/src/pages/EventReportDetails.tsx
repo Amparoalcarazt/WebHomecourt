@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
-import Nav from '../components/Nav/Nav'
 import ActionButtons from '../components/ReportDetails/ActionButtons'
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
@@ -117,8 +116,6 @@ const EventReportDetails = () => {
 
   return (
     <div >
-      <Nav current="Admin" />
-
       <div className="px-4 md:px-14 py-5 mb-10 w-full">
         <div className="w-full px-5 py-7 bg-violet-950 rounded-2xl flex items-center gap-3 mb-6">
           <span className="material-symbols-outlined text-white" style={{ fontSize: '36px' }}>
@@ -175,7 +172,7 @@ const EventReportDetails = () => {
                   <h4 style={{ fontWeight: '600' }}>Host</h4>
                 </div>
                 <div className="flex flex-row items-start gap-2">
-                  <div className="w-18 h-18 rounded-full bg-gray-200 overflow-hidden flex-shrink-0 -mt-1">
+                  <div className="w-18 h-18 rounded-full bg-gray-200 overflow-hidden shrink-0 -mt-1">
                     {report.event?.created_user?.photo_url && (
                       <img src={report.event.created_user.photo_url} className="w-full h-full object-cover" />
                     )}
@@ -207,7 +204,7 @@ const EventReportDetails = () => {
                 <div className="grid gap-10" style={{ gridTemplateColumns: '2fr 1fr' }}>
                   <div className="flex flex-col gap-3">
                     <h2 className="font-medium text-black" style={{ fontSize: '20px' }}>Report Comment</h2>
-                    <div className="bg-[#9382A5]/50 border border-gray-200 rounded-xl p-4 min-h-[150px]">
+                    <div className="bg-[#9382A5]/50 border border-gray-200 rounded-xl p-4 min-h-37.5">
                       <p className="text-black">{report.comment ?? 'No comment'}</p>
                     </div>
                   </div>

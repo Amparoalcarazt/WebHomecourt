@@ -1,4 +1,3 @@
-import Nav from '../components/Nav/Nav.tsx'
 import StatsCards from '../components/Admin/StatsCards'
 import UserReports from '../components/Admin/UserReports';
 import ActiveEvents from '../components/Admin/ActiveEvents.tsx'
@@ -67,10 +66,12 @@ export const getActiveEvents = async () => {
       max_players,
       allow_event,
       date,
+      event_status_id,
       created_user:user_laker!created_user_id(username, photo_url),
       court:court!court_id(name)
     `)
     .eq('allow_event', true)
+    .eq('event_status_id', 1)
     .order('date', { ascending: true })
 
   if (error) {
@@ -130,7 +131,6 @@ export const getUserHistory = async (userId: string, currentReportId: string) =>
 function Admin() {
   return (
     <div >
-      <Nav current="Admin" />
       <div className="px-4 md:px-14 py-5 pb-10 bg-zinc-100 w-full">
 
         {/* Header */}

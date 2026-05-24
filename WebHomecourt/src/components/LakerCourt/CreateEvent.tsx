@@ -23,6 +23,7 @@ interface DatosEvento {
 }
 
 async function createEvent(event: DatosEvento, userId: string) {
+  //Tuve que usar payload para que coincidiera a como esta en la BD sin ahcer mnuhco rollo
   const payload = {
     event_name: event.event_name,
     date: event.date && event.time ? `${event.date}T${event.time}:00-06:00` : event.date,
@@ -122,13 +123,13 @@ export default function CrearEvento({ open, onClose }: propsPopup) {
 
     try {
       if (!user.user?.id) {
-        setError("User not authenticated")
+        setError("Sign in to create an event")
         return
       }
       await createEvent(formData, user.user.id)
       setSuccess(true)
-        window.location.reload() //Es mejor el navigate pq no recarga desde 0 la pagina, pero con vercel me da error porbare window
-      // navigate(0)
+        window.location.reload() 
+     
       // onClose()
     } catch {
       setError("Failed to create event. Please try again.")
@@ -159,9 +160,7 @@ export default function CrearEvento({ open, onClose }: propsPopup) {
           <p className="text-sm text-Background">Choose event details</p>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="px-6 py-6 space-y-6">
-          {/* Event Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Event Name <span className="text-red-500">*</span>
@@ -198,7 +197,6 @@ export default function CrearEvento({ open, onClose }: propsPopup) {
             </select>
           </div>
 
-          {/* Date and Time */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -210,7 +208,13 @@ export default function CrearEvento({ open, onClose }: propsPopup) {
                 value={formData.date}
                 onChange={handleChange}
                 placeholder="DD/MM/YY"
-                min={new Date().toISOString().split('T')[0]}
+                min={(() => {
+                  const today = new Date();
+                  const yyyy = today.getFullYear();
+                  const mm = String(today.getMonth() + 1).padStart(2, '0');
+                  const dd = String(today.getDate()).padStart(2, '0');
+                  return `${yyyy}-${mm}-${dd}`;
+                })()}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent placeholder:text-disabled"
               />
             </div>
@@ -229,7 +233,6 @@ export default function CrearEvento({ open, onClose }: propsPopup) {
             </div>
           </div>
 
-          {/* Max Players */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Max Players <span className="text-red-500">*</span>
@@ -245,7 +248,6 @@ export default function CrearEvento({ open, onClose }: propsPopup) {
             />
           </div>
 
-          {/* Age Range and Skill Level */}
           <div className="grid grid-cols-2 gap-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -292,7 +294,6 @@ export default function CrearEvento({ open, onClose }: propsPopup) {
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent appearance-none bg-white"
               >
-                {/* <option value="">Any</option> */}
                 {skillLevels.map((level) => (
                   <option key={level.skill_level_id} value={level.skill_level_id}>
                     {level.description}

@@ -9,7 +9,7 @@ import { getCiudad, getCourts } from "../../services/apiMAP";
 
 interface MapProps {
   selectedCourtId?: number | null;
-  onCourtSelect?: (courtId: number) => void;
+  onCourtSelect?: (courtId: number | null) => void;
 }
 
 function getCourtIcon(label: number | string, isSelected = false) {
@@ -72,8 +72,8 @@ function LocationMarker({ locateRequest, onCityChange }: {
       map.flyTo(e.latlng, 15);
     },
     locationerror() {
-      setError("No se pudo obtener tu ubicacion.");
-      onCityChange("Ubicacion no disponible");
+      setError("Could not get your location.");
+      onCityChange("Location not available");
     },
   });
 
@@ -94,9 +94,9 @@ function LocationMarker({ locateRequest, onCityChange }: {
     async function loadCurrentCity() {
       try {
         const city = await getCiudad(lat, lng);
-        if (!isCancelled) onCityChange(city ?? "Ciudad no disponible");
+        if (!isCancelled) onCityChange(city ?? "City not available");
       } catch {
-        if (!isCancelled) onCityChange("Ciudad no disponible");
+        if (!isCancelled) onCityChange("City not available");
       }
     }
 
@@ -117,7 +117,7 @@ function LocationMarker({ locateRequest, onCityChange }: {
         radius={8}
         pathOptions={{ color: "#ffffff", weight: 2, fillColor: "#2b7fff", fillOpacity: 1 }}
       >
-        <Popup>Tu ubicacion actual</Popup>
+        <Popup>Your current location</Popup>
       </CircleMarker>
     </>
   );
@@ -128,7 +128,7 @@ export default function Map({ selectedCourtId: selectedCourtIdProp, onCourtSelec
   const [courts, setCourts] = useState<Court[]>([]);
   const [error, setError] = useState<string>("");
   const [locateRequest, setLocateRequest] = useState(0);
-  const [currentCity, setCurrentCity] = useState("Detectando ciudad...");
+  const [currentCity, setCurrentCity] = useState("Detecting city...");
   const [selectedCourtIdState, setSelectedCourtIdState] = useState<number | null>(null);
   const [map, setMap] = useState<LeafletMap | null>(null);
   const isControlled = selectedCourtIdProp !== undefined;
@@ -141,13 +141,20 @@ export default function Map({ selectedCourtId: selectedCourtIdProp, onCourtSelec
     onCourtSelect?.(court.court_id);
   };
 
+  const handleShowAllCourts = () => {
+    if (!isControlled) {
+      setSelectedCourtIdState(null);
+    }
+    onCourtSelect?.(null);
+  };
+
   useEffect(() => {
     async function loadCourts() {
       try {
         const data = await getCourts();
         setCourts(data ?? []);
       } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : "No se pudo cargar.");
+        setError(loadError instanceof Error ? loadError.message : "Failed to load.");
       }
     }
     loadCourts();
@@ -226,6 +233,20 @@ export default function Map({ selectedCourtId: selectedCourtIdProp, onCourtSelec
 
       {/* Courts strip */}
       <div className="flex items-center gap-3 overflow-x-auto px-5 py-4 border-t border-[#e7e6e8] bg-[#f3f2f5] [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.75 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[rgba(82,47,134,0.35)]">
+        <button
+          type="button"
+          onClick={handleShowAllCourts}
+          className={[
+            "flex-none rounded-[14px] border px-6 py-3 text-[1.02rem] font-bold bg-white cursor-pointer transition-[transform,box-shadow,border-color,background-color,color] duration-180 ease-in-out",
+            "hover:-translate-y-px hover:shadow-[0_8px_16px_rgba(45,23,72,0.16)]",
+            "sm:text-[0.94rem] sm:px-4 sm:py-2.5",
+            selectedCourtId === null
+              ? "border-[#7e57d7] text-[#3b195c] bg-[#eee6ff] shadow-[0_10px_20px_rgba(47,20,79,0.25)]"
+              : "border-[#e7e6e8] text-[#6f6975]",
+          ].join(" ")}
+        >
+          All
+        </button>
         {courts.length > 0 ? (
           courts.map((court) => (
             <button
@@ -250,7 +271,7 @@ export default function Map({ selectedCourtId: selectedCourtIdProp, onCourtSelec
             className="flex-none rounded-[14px] border border-[#e7e6e8] px-6 py-3 text-[1.02rem] font-bold text-[#6f6975] bg-white cursor-not-allowed opacity-60"
             disabled
           >
-            {error ? "No se pudieron cargar las canchas" : "Cargando canchas..."}
+            {error ? "Failed to load courts" : "Loading courts..."}
           </button>
         )}
       </div>
