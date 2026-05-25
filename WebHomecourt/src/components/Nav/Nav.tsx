@@ -11,10 +11,11 @@ const DEFAULT_AVATAR =
 const pages = [
   { label: 'Home', path: '/' },
   { label: 'Agenda', path: '/agenda' },
-  { label: 'Statistics', path: '/estadisticas' },
+  { label: 'Comparison', path: '/comparison' },
   { label: 'LakersCourt', path: '/lakerscourt' },
   { label: 'Dunk Royale', path: '/juego' },
-  { label: 'Store', path: '/store' },
+  { label: 'Lakers Cards', path: '/store' },
+  { label: 'Wrapped', path: '/wrapped' }, 
 ]
 
 interface NavProps {
@@ -241,7 +242,7 @@ function Nav({ current, creditsOverride }: NavProps) {
 
             <button
               type="button"
-              onClick={() => navigate('/perfil')}
+              onClick={() => navigate(authUser?.id ? '/perfil' : '/login')}
               className="w-10 h-10 md:w-12 md:h-12 rounded-full outline outline-2 outline-offset-[-2px] outline-gray-200 overflow-hidden bg-gray-300 cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0"
             >
               <img
@@ -262,6 +263,7 @@ function Nav({ current, creditsOverride }: NavProps) {
         navPages={navPages}
         current={current}
         navHeight={navHeight}
+        isLoggedIn={!!authUser?.id}
       />
     </>
   )
