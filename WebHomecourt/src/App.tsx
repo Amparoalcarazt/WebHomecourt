@@ -24,8 +24,8 @@ import MyFriends from './pages/MyFriends';
 import { WrappedPage } from './pages/Wrapped';
 import Comparison from './pages/Comparison';
 import Collection from './pages/Collection';
+import NotFound from './pages/NotFound'
 import AppLayout from './components/AppLayout';
-
 import { useAuth } from './context/AuthContext'
 import { Navigate } from 'react-router-dom'
 
@@ -49,7 +49,6 @@ function App() {
         <Route path="/session" element={<UserSession />} /> 
         <Route path="/complete-register" element={<CompleteRegister />} />
         <Route path='/edit-avatar' element={<EditAvatar/>}></Route>
-        <Route element={<AppLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/agenda" element={<Agenda />} />
           <Route path="/brackets" element={<Brackets />} />
@@ -65,11 +64,11 @@ function App() {
           <Route path="/admin/event" element={<AdminRoute><EventReportDetails /></AdminRoute>} />
           <Route path="/editar-perfil" element={<EditarPerfil />} />
           <Route path="/admin/monitor" element={<AdminRoute><Monitor /></AdminRoute>} />
-          <Route path='/wrapped' element={<WrappedPage />} />
-          <Route path='/comparison' element={<Comparison/>}></Route>
-          <Route path='/historial-lakers' element={<HistorialLakers/>}></Route>
-          <Route path='/collection' element={<Collection/>}></Route>
-        </Route>
+        <Route path='/wrapped' element={<WrappedPage />} />
+        <Route path='/comparison' element={<Comparison/>}></Route>
+        <Route path='/historial-lakers' element={<HistorialLakers/>}></Route>
+        <Route path='/collection' element={<Collection/>}></Route>
+        <Route path='*' element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
   )
