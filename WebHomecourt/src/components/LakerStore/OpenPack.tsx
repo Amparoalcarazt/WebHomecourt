@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { supabase } from "../../lib/supabase"
 import Button from '../button.tsx';
+import type { DisplayWonCard } from '../../hooks/Collection/collectionTypes.tsx';
+import CardFront from '../Collection/CardFront.tsx'; 
+import CardBack from '../Collection/CardBack.tsx';
 
 // Visual pack render
 type OpenPackProp = {
@@ -114,25 +117,7 @@ function OpenPack(prop: OpenPackProp) {
         else if (newCount === 3) {
             setOpenText("Congrats!");
             setImageURL(""); // Hides image, here will later display the cards won as a sort of board
-
-            // Call api function and saves it
-            /*buyPack(prop.packId, prop.userId).then(cards => setWonCards(cards));
-
-            // The user did not have credits so return was empty... might also happen if connection is lost when opening the pack and supabase fails 
-            if (wonCards.length == 0) {
-                setOpenText("I'm sorry, you cannot afford this pack at the moment. Keep playing to win more credits!");
-                setOpenEnabled(false); // To block user from buying again
-                return;
-            }*/
-
-            // Esto si de chat no sabía como hacer la lectura con validación de length adentro del call
-            /*buyPack(prop.packId, prop.userId).then(cards => {
-                setWonCards(cards);
-                if (!cards || cards.length === 0) {
-                    setOpenText("I'm sorry, you cannot afford this pack at the moment. Keep playing to win more credits!");
-                    setOpenEnabled(false);
-                }
-            });*/
+            
             try {
                 const cards = await buyPack(prop.packId, prop.userId);
                 //setWonCards(cards);
