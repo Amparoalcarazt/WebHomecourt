@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from "../../lib/supabase"
 import Button from '../button.tsx';
 import type { DisplayWonCard } from '../../hooks/Collection/collectionTypes.tsx';
-import CardFront from '../Collection/CardFront.tsx'; 
+import CardFront from '../Collection/CardFront.tsx';
 import CardBack from '../Collection/CardBack.tsx';
 
 // Visual pack render
@@ -37,7 +37,7 @@ type WonCards = {
 // Now the actual API logic based on pack they're buying and their id
 async function buyPack(pack_id: number, user_id: string) {
     // Call supabase funct
-    const { data, error } = await supabase.rpc("randomize_cards", {
+    const { data, error } = await supabase.rpc("randomize_display_cards", {
         p_pack: Number(pack_id),
         p_user_id: user_id, // Must add month cause they're 0 based in typescript
     });
@@ -56,6 +56,7 @@ async function buyPack(pack_id: number, user_id: string) {
 
     console.log("raw data:", JSON.stringify(data, null, 2)) // A ver como se ve lo q fue fetched
 
+    /*
     // Takes results del data and turns into the CollectedCard obj
     const cards: WonCards[] = data.map(row => {
         // Creates the game items 
@@ -68,6 +69,31 @@ async function buyPack(pack_id: number, user_id: string) {
             updated_credits: row.updated_credits,
             random_case: row.random_case,
             card_rarity_id: row.card_rarity_id
+        }
+    });*/
+
+    // Takes results del data and turns into the CollectedCard obj
+    const cards: DisplayWonCard[] = data.map(row => {
+        // Creates the game items 
+        return {
+            card_id: row.card_id,
+            player_name: row.player_name,
+            web_url: row.web_url,
+            attack: row.attack,
+            defense: row.defense,
+            velocity: row.velocity,
+            rarity_id: row.rarity_id,
+            rarity_label: row.rarity_label,
+            times_unlocked: row.times_unlocked,
+            first_unlock: row.first_unlock,
+            pack_name: row.pack_name,
+
+            // Extras for display type
+            card_slot: row.card_slot, // Pack data empty if no cards are present for that category
+            luck: row.luck,
+            luck_rarity_id: row.luck_rarity_id,
+            updated_credits: row.updated_credits,
+            random_case: row.random_case,
         }
     });
 
@@ -86,7 +112,8 @@ function OpenPack(prop: OpenPackProp) {
     const [isOpening, setIsOpening] = useState(false);
 
     // Temporary variable to get the info from the table
-    //const [wonCards, setWonCards] = useState<WonCards[]>([]);
+    const [wonCards, setWonCards] = useState<DisplayWonCard[]>([]);
+    const [cardFront, setCardFront] = useState(true);
 
     // Initial function to render the base components
     useEffect(() => {
@@ -117,10 +144,10 @@ function OpenPack(prop: OpenPackProp) {
         else if (newCount === 3) {
             setOpenText("Congrats!");
             setImageURL(""); // Hides image, here will later display the cards won as a sort of board
-            
+
             try {
                 const cards = await buyPack(prop.packId, prop.userId);
-                //setWonCards(cards);
+                setWonCards(cards);
 
                 if (!cards || cards.length === 0) {
                     setOpenText("Sorry, you cannot afford this pack at the moment. Keep playing to win more credits!");
@@ -151,7 +178,7 @@ function OpenPack(prop: OpenPackProp) {
                 setOpenEnabled(false);
             }
 
-            setIsOpening(false); 
+            setIsOpening(false);
         } else if (newCount > 3) {
             if (!openEnabled) return; // Must have permission to oepn again
 
@@ -214,32 +241,40 @@ function OpenPack(prop: OpenPackProp) {
                     <div className="w-150 h-auto px-6">
                         <div className="flex flex-col w-full rounded-lg bg-zinc-100 items-center justify-center mb-4">
                             {imageURL ? (
-                                <img src={imageURL} className="h-75 md:h-75 w-auto animate-[pulse_0.75s_ease-in-out_2]" onClick={openEnabled ? () => opening() : () => {}} />
+                                <img src={imageURL} className="h-75 md:h-75 w-auto animate-[pulse_0.75s_ease-in-out_2]" onClick={openEnabled ? () => opening() : () => { }} />
                             ) : (
                                 <div className="flex flex-col w-150 h-75 max-h-72 text-center items-center justify-start overflow-y-auto py-4 px-2 gap-y-4">
-                                    {/*{wonCards.length > 0 ? (
-                                    wonCards.map((card) => (
-                                        // Usando key composed de slot and then the actual id pq duplicate cards give error
-                                        
-                                        <div key={`${card.card_slot}_${card.won_card_id}`} className="rounded-lg bg-white px-3 py-4">
-                                            <p className="text-xs">{card.card_slot}. Card {card.won_card_id}</p>
-                                            <p>featuring {card.player_name} type {card.card_rarity_id}</p>
-                                        </div>
+                                    {wonCards.length > 0 ? (
+                                        wonCards.map((card) => (
+                                            // Usando key composed de slot and then the actual id pq duplicate cards give error
+
+                                            <div key={`${card.card_slot}_${card.card_id}`} className="">
+                                                {/*<p className="text-xs">{card.card_slot}. Card {card.card_id}</p>
+                                            <p>featuring {card.player_name} type {card.rarity_label}</p>*/}
+                                                {/* Card front and back switching  */}
+                                                <div onClick={() => {}}>
+                                                    {cardFront ? (
+                                                        <CardFront card={card} />
+                                                    ) : (
+                                                        <CardFront card={card} />
+                                                    )}
+                                                </div>
+                                            </div>
                                         )
-                                    )) 
-                                    :
-                                    <p></p>
-                                }*/}
+                                        ))
+                                        :
+                                        <p></p>
+                                    }
                                 </div>
                             )
                             }
                             {/* Open manually via button */}
-                            <div className="w-full px-4 md:px-4 pb-4">
+                            <div className="w-full px-4 md:px-4 pb-4 z-10">
                                 <Button
                                     text={openTextButton}
                                     type={openEnabled ? 'primary' : 'primarydisable'}
                                     //onClick={() => opening()} // Logic to open package
-                                    onClick={openEnabled ? () => opening() : () => {}} // Only let open if they can actually afford to do so
+                                    onClick={openEnabled ? () => opening() : () => { }} // Only let open if they can actually afford to do so
                                     className="w-full"
                                 />
                             </div>

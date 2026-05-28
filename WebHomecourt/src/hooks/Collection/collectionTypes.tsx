@@ -36,7 +36,7 @@ export type CollectionCard = DisplayCard & {
 // Extension for the cards that got won and to also let it work w the json of the slot, luck, and case 
 export type DisplayWonCard = DisplayCard & {
     card_slot: number;
-    luck : number;
+    luck: number;
     luck_rarity_id: number,
     updated_credits: number, // Useful to check if user can try again or whether they are out
     random_case: number, // Just for debugging
