@@ -21,18 +21,6 @@ type OpenPackProp = {
     onCreditsUpdated: (newCredits: number) => void; // Todo pq react no puede auto refresh no manches
 }
 
-// Information about wins from the API
-type WonCards = {
-    card_slot: number,
-    luck: number,
-    luck_rarity_id: number,
-    won_card_id: string
-    player_name: string,
-    updated_credits: number, // Useful to check if user can try again or whether they are out
-    random_case: number, // Just for debugging
-    card_rarity_id: number
-}
-
 // Now the actual API logic based on pack they're buying and their id
 async function buyPack(pack_id: number, user_id: string) {
     // Call supabase funct
@@ -54,22 +42,6 @@ async function buyPack(pack_id: number, user_id: string) {
     if (!Array.isArray(data)) return []
 
     console.log("raw data:", JSON.stringify(data, null, 2)) // A ver como se ve lo q fue fetched
-
-    /*
-    // Takes results del data and turns into the CollectedCard obj
-    const cards: WonCards[] = data.map(row => {
-        // Creates the game items 
-        return {
-            card_slot: row.card_slot, // Pack data empty if no cards are present for that category
-            luck: row.luck,
-            luck_rarity_id: row.luck_rarity_id,
-            won_card_id: row.won_card_id,
-            player_name: row.player_name,
-            updated_credits: row.updated_credits,
-            random_case: row.random_case,
-            card_rarity_id: row.card_rarity_id
-        }
-    });*/
 
     // Takes results del data and turns into the CollectedCard obj
     const cards: DisplayWonCard[] = data.map(row => {
@@ -124,6 +96,7 @@ function OpenPack(prop: OpenPackProp) {
         setOpenTextButton("OPEN");
     }, [prop.open, prop.packId]);
 
+    // Function to set unique cards once cards have been won
     useEffect(() => {
         const uniqueMap = new Map();
         for (const item of wonCards) {
@@ -218,21 +191,11 @@ function OpenPack(prop: OpenPackProp) {
         setIsOpening(false); // Turns off opening state
     }
 
-    // Logic to keep only unique cards and set a counter of that instead 
-    /*
-    const uniqueMap = new Map();
-    for (const item of wonCards) {
-        uniqueMap.set(item.card_id, item);
-    }
-    setUniqueWonCards(Array.from(uniqueMap.values())); // Force convert the array to match my format
-    */
-
     // Logic to paginate the cards won that were recieved itself
     const PAGE_SIZE = 1; // Only one card at a time 
     const totalPages = Math.ceil(uniqueWonCards.length / PAGE_SIZE); // How many pages will be needed rounded up 
     const paginated = uniqueWonCards.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE); // Divide by pages
 
-    // Robando basic struct de pop-up de pantalla Adolfo
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/40" />
@@ -245,7 +208,7 @@ function OpenPack(prop: OpenPackProp) {
                             <p className="justify-start text-white mt-2 text-xl text-zinc-300">{prop.packName}</p>
                         </div>
 
-                        {/* Robado de Adolfo */}
+                        {/* Close button */}
                         <button
                             type="button"
                             onClick={prop.onClose}
@@ -258,7 +221,8 @@ function OpenPack(prop: OpenPackProp) {
 
                     </div>
                 </div>
-                {/* Opening pack content, I need to make it so that after the function to open the pack is done executing, I then do a fetch to get the user credits again and check whether the button to open it should work or whether I should diable from front end*/}
+
+                {/* Opening pack content */}
                 <div className="flex flex-col text-center items-center mt-3">
                     <h5 className="mb-2">{openText}</h5>
 
@@ -270,8 +234,6 @@ function OpenPack(prop: OpenPackProp) {
                             <span className="pl-3 text-xl">{prop.packCost}</span>
                         </div>
                     }
-
-                    {/*<p>Temp show user {prop.userId} and pack {prop.packId}</p>*/}
 
                     {/* Opening board space */}
                     <div className="w-150 h-auto px-6">
