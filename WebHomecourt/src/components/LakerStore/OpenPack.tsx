@@ -3,7 +3,6 @@ import { supabase } from "../../lib/supabase"
 import Button from '../button.tsx';
 import type { DisplayWonCard } from '../../hooks/Collection/collectionTypes.tsx';
 import CardFront from '../Collection/CardFront.tsx';
-import CardBack from '../Collection/CardBack.tsx';
 
 // Visual pack render
 type OpenPackProp = {
@@ -110,10 +109,12 @@ function OpenPack(prop: OpenPackProp) {
     const [openTextButton, setOpenTextButton] = useState("OPEN"); // To let user complete multiple buys
     const [imageURL, setImageURL] = useState('');
     const [isOpening, setIsOpening] = useState(false);
+    const [viewPrice, setViewPrice] = useState(true); // To show and hide the pack cost once bought
 
     // Temporary variable to get the info from the table
     const [wonCards, setWonCards] = useState<DisplayWonCard[]>([]);
     const [cardFront, setCardFront] = useState(true);
+    const [page, setPage] = useState(0);
 
     // Initial function to render the base components
     useEffect(() => {
@@ -144,6 +145,7 @@ function OpenPack(prop: OpenPackProp) {
         else if (newCount === 3) {
             setOpenText("Congrats!");
             setImageURL(""); // Hides image, here will later display the cards won as a sort of board
+            setViewPrice(false); // Hides price 
 
             try {
                 const cards = await buyPack(prop.packId, prop.userId);
@@ -188,6 +190,7 @@ function OpenPack(prop: OpenPackProp) {
             setOpenText('Press the pack or the open button to see what you get!');
             setOpenTextButton("OPEN");
             setImageURL(prop.packImg);
+            setViewPrice(true);
         }
         else {
             // Idk fallback smth is wrong
@@ -199,11 +202,16 @@ function OpenPack(prop: OpenPackProp) {
         setIsOpening(false); // Turns off opening state
     }
 
+    // Logic to paginate the cards won that were recieved itself
+    const PAGE_SIZE = 1; // Only one card at a time 
+    const totalPages = Math.ceil(wonCards.length / PAGE_SIZE); // How many pages will be needed rounded up 
+    const paginated = wonCards.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE); // Divide by pages
+
     // Robando basic struct de pop-up de pantalla Adolfo
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/40" />
-            <div className="relative z-10 w-150 rounded-lg bg-white shadow-lg overflow-hidden">
+            <div className="relative z-10 w-[40rem] h-[45rem] rounded-lg bg-white shadow-lg overflow-hidden">
                 {/* Header */}
                 <div className="border-b border-gray-200 px-6 py-6 bg-morado-lakers">
                     <div className="flex items-start justify-between">
@@ -229,46 +237,65 @@ function OpenPack(prop: OpenPackProp) {
                 <div className="flex flex-col text-center items-center mt-3">
                     <h5 className="mb-2">{openText}</h5>
 
-                    <div className="flex flex-row w-fit justify-center items-center p-2.5 gap-3.5 mb-3 rounded-2xl outline -outline-offset-1 outline-black/25">
-                        <span className="text-xl">Pack cost: </span>
-                        <span className="material-symbols-outlined text-amarillo-lakers text-2xl pl-3">payments</span>
-                        <span className="pl-3 text-xl">{prop.packCost}</span>
-                    </div>
+                    {/* Renters price only if hasn't bought a pack yet */}
+                    {viewPrice &&
+                        <div className="flex flex-row w-fit justify-center items-center p-2.5 gap-3.5 mb-3 rounded-2xl outline -outline-offset-1 outline-black/25">
+                            <span className="text-xl">Pack cost: </span>
+                            <span className="material-symbols-outlined text-amarillo-lakers text-2xl pl-3">payments</span>
+                            <span className="pl-3 text-xl">{prop.packCost}</span>
+                        </div>
+                    }
 
                     {/*<p>Temp show user {prop.userId} and pack {prop.packId}</p>*/}
 
                     {/* Opening board space */}
                     <div className="w-150 h-auto px-6">
+                        {/* Actual view area, check if there's a way to expand the thing once opened */}
                         <div className="flex flex-col w-full rounded-lg bg-zinc-100 items-center justify-center mb-4">
                             {imageURL ? (
                                 <img src={imageURL} className="h-75 md:h-75 w-auto animate-[pulse_0.75s_ease-in-out_2]" onClick={openEnabled ? () => opening() : () => { }} />
                             ) : (
-                                <div className="flex flex-col w-150 h-75 max-h-72 text-center items-center justify-start overflow-y-auto py-4 px-2 gap-y-4">
-                                    {wonCards.length > 0 ? (
-                                        wonCards.map((card) => (
-                                            // Usando key composed de slot and then the actual id pq duplicate cards give error
+                                // Shows the open cards and arrows to navigate along the cards 
 
-                                            <div key={`${card.card_slot}_${card.card_id}`} className="">
-                                                {/*<p className="text-xs">{card.card_slot}. Card {card.card_id}</p>
-                                            <p>featuring {card.player_name} type {card.rarity_label}</p>*/}
-                                                {/* Card front and back switching  */}
-                                                <div onClick={() => {}}>
-                                                    {cardFront ? (
-                                                        <CardFront card={card} />
-                                                    ) : (
-                                                        <CardFront card={card} />
-                                                    )}
-                                                </div>
-                                            </div>
-                                        )
-                                        ))
-                                        :
-                                        <p></p>
-                                    }
+                                <div className="flex flex-row w-150 h-75 max-h-72 text-center items-center justify-between py-4 px-2 gap-y-4">
+                                    {/* No left arrow for now so empty div */}
+                                    <div className="flex flex-row justify-right pl-8">
+                                        <div className="flex flex-col justify-center items-center">
+                                            <button
+                                                onClick={() => setPage((p) => Math.max(0, p - 1))}
+                                                disabled={page === 0}
+                                                className="text-black disabled:opacity-30 hover:opacity-75 transition text-8xl px-4"
+                                            >
+                                                ‹
+                                            </button>
+                                            <h4 className="text-lg">Previuos</h4>
+                                        </div>
+                                    </div>
+
+                                    {/* Shows the cards */}
+                                    {paginated.map((card) => (
+                                        <CardFront card={card} />
+                                    ))}
+
+                                    {/* Button to view next card */}
+                                    <div className="flex flex-row justify-right pr-12">
+                                        <div className="flex flex-col justify-center items-center">
+                                            <button
+                                                onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                                                disabled={page >= totalPages - 1}
+                                                className="text-black disabled:opacity-30 hover:opacity-75 transition text-8xl px-4"
+                                            >
+                                                ›
+                                            </button>
+                                            <h4 className="text-lg">Next</h4>
+                                        </div>
+                                    </div>
+
                                 </div>
                             )
                             }
-                            {/* Open manually via button */}
+
+                            {/* Open pack manually via button */}
                             <div className="w-full px-4 md:px-4 pb-4 z-10">
                                 <Button
                                     text={openTextButton}
@@ -278,24 +305,19 @@ function OpenPack(prop: OpenPackProp) {
                                     className="w-full"
                                 />
                             </div>
-
                         </div>
                     </div>
-
-                    {/* Cancel button */}
-                    <div className="w-full px-10 pb-4">
-                        <Button
-                            text="Close"
-                            type="secondary"
-                            onClick={prop.onClose}
-                            className="w-full"
-                        />
-                    </div>
-
                 </div>
 
-
-                {/* */}
+                {/* Cancel button */}
+                <div className="w-full px-10 pb-4">
+                    <Button
+                        text="Close"
+                        type="secondary"
+                        onClick={prop.onClose}
+                        className="w-full"
+                    />
+                </div>
             </div>
         </div>
     )
