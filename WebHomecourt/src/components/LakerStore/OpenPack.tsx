@@ -113,7 +113,7 @@ function OpenPack(prop: OpenPackProp) {
 
     // Temporary variable to get the info from the table
     const [wonCards, setWonCards] = useState<DisplayWonCard[]>([]);
-    const [cardFront, setCardFront] = useState(true);
+    const [uniqueWonCards, setUniqueWonCards] = useState<DisplayWonCard[]>([]);
     const [page, setPage] = useState(0);
 
     // Initial function to render the base components
@@ -202,6 +202,9 @@ function OpenPack(prop: OpenPackProp) {
         setIsOpening(false); // Turns off opening state
     }
 
+    // Logic to keep only unique cards and set a counter of that instead 
+    
+
     // Logic to paginate the cards won that were recieved itself
     const PAGE_SIZE = 1; // Only one card at a time 
     const totalPages = Math.ceil(wonCards.length / PAGE_SIZE); // How many pages will be needed rounded up 
@@ -211,7 +214,7 @@ function OpenPack(prop: OpenPackProp) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/40" />
-            <div className="relative z-10 w-[40rem] h-[45rem] rounded-lg bg-white shadow-lg overflow-hidden">
+            <div className="relative z-10 w-[40rem] h-[48rem] rounded-lg bg-white shadow-lg overflow-hidden">
                 {/* Header */}
                 <div className="border-b border-gray-200 px-6 py-6 bg-morado-lakers">
                     <div className="flex items-start justify-between">
@@ -253,11 +256,10 @@ function OpenPack(prop: OpenPackProp) {
                         {/* Actual view area, check if there's a way to expand the thing once opened */}
                         <div className="flex flex-col w-full rounded-lg bg-zinc-100 items-center justify-center mb-4">
                             {imageURL ? (
-                                <img src={imageURL} className="h-75 md:h-75 w-auto animate-[pulse_0.75s_ease-in-out_2]" onClick={openEnabled ? () => opening() : () => { }} />
+                                <img src={imageURL} className="h-96 w-auto animate-[pulse_0.75s_ease-in-out_2]" onClick={openEnabled ? () => opening() : () => { }} />
                             ) : (
                                 // Shows the open cards and arrows to navigate along the cards 
-
-                                <div className="flex flex-row w-150 h-75 max-h-72 text-center items-center justify-between py-4 px-2 gap-y-4">
+                                <div className="flex flex-row w-full text-center items-center justify-between py-4 px-2 gap-y-4">
                                     {/* No left arrow for now so empty div */}
                                     <div className="flex flex-row justify-right pl-8">
                                         <div className="flex flex-col justify-center items-center">
@@ -268,7 +270,7 @@ function OpenPack(prop: OpenPackProp) {
                                             >
                                                 ‹
                                             </button>
-                                            <h4 className="text-lg">Previuos</h4>
+                                            <h5 className="text-lg">Previuos</h5>
                                         </div>
                                     </div>
 
@@ -278,7 +280,7 @@ function OpenPack(prop: OpenPackProp) {
                                     ))}
 
                                     {/* Button to view next card */}
-                                    <div className="flex flex-row justify-right pr-12">
+                                    <div className="flex flex-row justify-right pr-8">
                                         <div className="flex flex-col justify-center items-center">
                                             <button
                                                 onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
@@ -287,7 +289,7 @@ function OpenPack(prop: OpenPackProp) {
                                             >
                                                 ›
                                             </button>
-                                            <h4 className="text-lg">Next</h4>
+                                            <h5 className="text-lg">Next</h5>
                                         </div>
                                     </div>
 
