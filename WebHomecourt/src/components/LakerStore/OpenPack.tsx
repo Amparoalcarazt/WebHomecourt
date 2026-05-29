@@ -124,6 +124,14 @@ function OpenPack(prop: OpenPackProp) {
         setOpenTextButton("OPEN");
     }, [prop.open, prop.packId]);
 
+    useEffect(() => {
+        const uniqueMap = new Map();
+        for (const item of wonCards) {
+            uniqueMap.set(item.card_id, item);
+        }
+        setUniqueWonCards(Array.from(uniqueMap.values()));
+    }, [wonCards]);
+
     // Function to handle inner clicking and switching images
     async function opening() {
         if (isOpening || !openEnabled) return; // Blocks if currently opening or if they are poor and can't open more
@@ -143,7 +151,7 @@ function OpenPack(prop: OpenPackProp) {
             setOpenText("You can almost see the cards now...");
         }
         else if (newCount === 3) {
-            setOpenText("Congrats!");
+            setOpenText(""); // Just eliminates to then render the counter of cards
             setImageURL(""); // Hides image, here will later display the cards won as a sort of board
             setViewPrice(false); // Hides price 
 
@@ -159,13 +167,21 @@ function OpenPack(prop: OpenPackProp) {
                     return;
                 }
 
+                // Logic to count new cards 
+                const uniqueMap = new Map();
+                for (const item of cards) {
+                    uniqueMap.set(item.card_id, item);
+                }
+                const uniqueCount = uniqueMap.size;
+
                 setImageURL("");
-                setOpenText("Congrats!");
+                setOpenText(`Congratulations, you won ${uniqueCount} new card${uniqueCount !== 1 ? 's' : ''}!`);
                 setOpenTextButton("OPEN AGAIN!");
 
                 const updatedCredits = cards[0]?.updated_credits ?? 0; // Checks first item if they have updated_credits field or otherwise set as 0
                 console.log(`New credits: ${updatedCredits}`);
                 prop.onCreditsUpdated(updatedCredits); // Pass to general store
+
 
                 if (updatedCredits < prop.packCost) {
                     setOpenTextButton(`Not enough credits, you have ${updatedCredits} remaining`);
@@ -203,12 +219,18 @@ function OpenPack(prop: OpenPackProp) {
     }
 
     // Logic to keep only unique cards and set a counter of that instead 
-    
+    /*
+    const uniqueMap = new Map();
+    for (const item of wonCards) {
+        uniqueMap.set(item.card_id, item);
+    }
+    setUniqueWonCards(Array.from(uniqueMap.values())); // Force convert the array to match my format
+    */
 
     // Logic to paginate the cards won that were recieved itself
     const PAGE_SIZE = 1; // Only one card at a time 
-    const totalPages = Math.ceil(wonCards.length / PAGE_SIZE); // How many pages will be needed rounded up 
-    const paginated = wonCards.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE); // Divide by pages
+    const totalPages = Math.ceil(uniqueWonCards.length / PAGE_SIZE); // How many pages will be needed rounded up 
+    const paginated = uniqueWonCards.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE); // Divide by pages
 
     // Robando basic struct de pop-up de pantalla Adolfo
     return (
